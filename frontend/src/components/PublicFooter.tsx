@@ -23,9 +23,9 @@ export const PublicFooter: React.FC<PublicFooterProps> = ({
   onNavigatePolicy,
 }) => {
   return (
-    <footer className="border-t border-slate-800/80 bg-[#060912] text-slate-400 text-xs selection:bg-indigo-600 selection:text-white">
+    <footer className="border-t border-slate-800/90 bg-[#090f1d] text-slate-300 text-xs selection:bg-indigo-600 selection:text-white">
       {/* Trust & Compliance Ribbon */}
-      <div className="border-b border-slate-800/60 py-6 px-4 sm:px-6">
+      <div className="border-b border-slate-800/70 bg-[#0c1424]/50 py-6 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4 text-xs">
           <div className="flex items-center space-x-3">
             <div className="p-2 rounded-xl bg-violet-500/10 border border-violet-500/20 text-violet-400 font-bold">
@@ -64,15 +64,15 @@ export const PublicFooter: React.FC<PublicFooterProps> = ({
               <img
                 src="/aibotcall-emblem.png"
                 alt="AiBotCall"
-                className="h-7 w-7 sm:h-[30px] sm:w-[30px] object-contain drop-shadow-[0_2px_10px_rgba(139,92,246,0.4)] group-hover:scale-105 transition-transform"
+                className="h-7 w-7 sm:h-[30px] sm:w-[30px] object-contain logo-glow group-hover:scale-110 transition-transform duration-300"
               />
               <div className="flex flex-col">
                 <div className="flex items-center text-[17px] sm:text-[18px] font-black tracking-tight leading-none">
-                  <span className="text-violet-400">Ai</span>
+                  <span className="text-violet-400 group-hover:brightness-125 transition-all">Ai</span>
                   <span className="text-white">Bot</span>
-                  <span className="text-cyan-400">Call</span>
+                  <span className="text-cyan-400 group-hover:brightness-125 transition-all">Call</span>
                 </div>
-                <span className="text-[8.5px] text-cyan-400/80 font-bold tracking-widest uppercase mt-0.5">
+                <span className="text-[8.5px] text-cyan-400/90 font-bold tracking-widest uppercase mt-0.5">
                   AI Voice Telephony
                 </span>
               </div>

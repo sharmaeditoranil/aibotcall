@@ -205,7 +205,7 @@ export const BlogPage: React.FC<BlogPageProps> = ({
   });
 
   return (
-    <div className="min-h-screen bg-[#070a13] text-slate-100 font-sans selection:bg-indigo-600 selection:text-white">
+    <div className="min-h-screen bg-[#0b1120] text-slate-100 font-sans selection:bg-indigo-600 selection:text-white">
       {/* Unified Public Header */}
       <PublicHeader
         activePage="blog"

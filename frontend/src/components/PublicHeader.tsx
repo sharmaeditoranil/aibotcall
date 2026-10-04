@@ -33,7 +33,7 @@ export const PublicHeader: React.FC<PublicHeaderProps> = ({
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-[#070a13]/92 backdrop-blur-xl border-b border-slate-800/80 px-4 sm:px-6 py-2.5 sm:py-3 transition-all">
+    <header className="sticky top-0 z-50 bg-[#0d1527]/92 backdrop-blur-xl border-b border-slate-700/60 px-4 sm:px-6 py-2.5 sm:py-3 transition-all shadow-lg shadow-black/10">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Sleek, Perfectly-Proportioned Brand Logo */}
         <div
@@ -47,17 +47,20 @@ export const PublicHeader: React.FC<PublicHeaderProps> = ({
             <img
               src="/aibotcall-emblem.png"
               alt="AiBotCall"
-              className="h-7 w-7 sm:h-[30px] sm:w-[30px] object-contain drop-shadow-[0_2px_10px_rgba(139,92,246,0.4)] group-hover:scale-105 transition-transform"
+              className="h-7 w-7 sm:h-[30px] sm:w-[30px] object-contain logo-glow group-hover:scale-110 transition-transform duration-300"
             />
-            <span className="absolute -bottom-0.5 -right-0.5 w-2 h-2 bg-emerald-400 rounded-full border border-[#070a13]"></span>
+            <span className="absolute -bottom-0.5 -right-0.5 flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400 border border-[#0d1527]"></span>
+            </span>
           </div>
           <div className="flex flex-col">
             <div className="flex items-center text-[17px] sm:text-[18px] font-black tracking-tight leading-none">
-              <span className="text-violet-400">Ai</span>
+              <span className="text-violet-400 group-hover:brightness-125 transition-all">Ai</span>
               <span className="text-white">Bot</span>
-              <span className="text-cyan-400">Call</span>
+              <span className="text-cyan-400 group-hover:brightness-125 transition-all">Call</span>
             </div>
-            <span className="text-[8.5px] text-cyan-400/80 font-bold tracking-widest uppercase mt-0.5 hidden xs:inline-block">
+            <span className="text-[8.5px] text-cyan-400/90 font-bold tracking-widest uppercase mt-0.5 hidden xs:inline-block">
               AI Voice Telephony
             </span>
           </div>

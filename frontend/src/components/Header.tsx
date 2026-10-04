@@ -17,7 +17,7 @@ export const Header: React.FC<HeaderProps> = ({
   isRefreshing,
 }) => {
   return (
-    <header className="h-16 border-b border-slate-800/80 bg-[#090e1c]/85 backdrop-blur-md px-6 flex items-center justify-between sticky top-0 z-20">
+    <header className="h-16 border-b border-slate-700/60 bg-[#0d1424]/90 backdrop-blur-md px-6 flex items-center justify-between sticky top-0 z-20">
       <div>
         <h2 className="text-base font-bold text-white tracking-tight">{title}</h2>
         {subtitle && <p className="text-xs text-slate-400">{subtitle}</p>}

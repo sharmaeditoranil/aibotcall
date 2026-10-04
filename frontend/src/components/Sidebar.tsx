@@ -65,17 +65,20 @@ export const Sidebar: React.FC<SidebarProps> = ({
   ];
 
   return (
-    <aside className="w-64 bg-[#080c18] border-r border-slate-800/80 flex flex-col h-screen select-none backdrop-blur-xl shrink-0 z-30">
+    <aside className="w-64 bg-[#0d1424] border-r border-slate-700/60 flex flex-col h-screen select-none backdrop-blur-xl shrink-0 z-30 shadow-xl">
       {/* Brand Header with Official 3D Emblem & Razor-Sharp Typography */}
-      <div className="p-4 border-b border-slate-800/80 bg-slate-950/40">
+      <div className="p-4 border-b border-slate-700/60 bg-[#0a101d]/60">
         <div className="flex items-center space-x-2.5">
           <div className="relative">
             <img
               src="/aibotcall-emblem.png"
               alt="AiBotCall"
-              className="w-8 h-8 object-contain drop-shadow-[0_2px_12px_rgba(139,92,246,0.45)] shrink-0"
+              className="w-8 h-8 object-contain logo-glow shrink-0 hover:scale-110 transition-transform duration-300"
             />
-            <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-[#080c18]"></span>
+            <span className="absolute -bottom-0.5 -right-0.5 flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400 border border-[#0d1424]"></span>
+            </span>
           </div>
           <div className="flex flex-col">
             <div className="flex items-center text-lg font-black tracking-tight leading-none">

@@ -45,7 +45,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
   onNavigatePolicy,
 }) => {
   return (
-    <div className="min-h-screen bg-[#070a13] text-slate-100 font-sans selection:bg-indigo-600 selection:text-white">
+    <div className="min-h-screen bg-[#0b1120] text-slate-100 font-sans selection:bg-indigo-600 selection:text-white">
       {/* Unified Public Header */}
       <PublicHeader
         activePage="about"
@@ -61,7 +61,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
       {/* Hero Section */}
       <main className="max-w-6xl mx-auto px-6 py-14 space-y-20">
         <section className="text-center space-y-6 relative overflow-hidden">
-          <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/30 text-violet-300 text-xs font-bold uppercase tracking-wider">
+          <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-[#162340]/90 border border-violet-500/40 text-violet-300 text-xs font-bold uppercase tracking-wider shadow-md">
             <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
             <span>Smart Automation · Better Communication · Business Growth</span>
           </div>
@@ -80,27 +80,27 @@ export const AboutPage: React.FC<AboutPageProps> = ({
 
           {/* Stats Grid with Brand Colors */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-6 max-w-4xl mx-auto">
-            <div className="p-6 rounded-3xl bg-[#0f172a]/70 border border-indigo-500/20 text-center space-y-1 shadow-lg">
+            <div className="p-6 rounded-3xl bg-[#131d35]/85 border border-indigo-500/30 text-center space-y-1 shadow-lg shimmer-card">
               <p className="text-3xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-cyan-400">1,200+</p>
-              <p className="text-xs font-semibold text-slate-400">Active Businesses Scaled</p>
+              <p className="text-xs font-semibold text-slate-300">Active Businesses Scaled</p>
             </div>
-            <div className="p-6 rounded-3xl bg-[#0f172a]/70 border border-blue-500/20 text-center space-y-1 shadow-lg">
+            <div className="p-6 rounded-3xl bg-[#131d35]/85 border border-cyan-500/30 text-center space-y-1 shadow-lg shimmer-card">
               <p className="text-3xl sm:text-4xl font-black text-cyan-400">45M+</p>
-              <p className="text-xs font-semibold text-slate-400">Interactions & Minutes</p>
+              <p className="text-xs font-semibold text-slate-300">Interactions & Minutes</p>
             </div>
-            <div className="p-6 rounded-3xl bg-[#0f172a]/70 border border-violet-500/20 text-center space-y-1 shadow-lg">
+            <div className="p-6 rounded-3xl bg-[#131d35]/85 border border-violet-500/30 text-center space-y-1 shadow-lg shimmer-card">
               <p className="text-3xl sm:text-4xl font-black text-violet-400">99.99%</p>
-              <p className="text-xs font-semibold text-slate-400">Cloud Uptime SLA</p>
+              <p className="text-xs font-semibold text-slate-300">Cloud Uptime SLA</p>
             </div>
-            <div className="p-6 rounded-3xl bg-[#0f172a]/70 border border-sky-500/20 text-center space-y-1 shadow-lg">
+            <div className="p-6 rounded-3xl bg-[#131d35]/85 border border-sky-500/30 text-center space-y-1 shadow-lg shimmer-card">
               <p className="text-3xl sm:text-4xl font-black text-sky-400">0%</p>
-              <p className="text-xs font-semibold text-slate-400">Hidden Markups</p>
+              <p className="text-xs font-semibold text-slate-300">Hidden Markups</p>
             </div>
           </div>
         </section>
 
         {/* Founder & Leadership Section ("Hamare Peechhe Kaun Hain?") with Authentic Photo */}
-        <section className="p-8 sm:p-12 rounded-3xl bg-gradient-to-br from-[#0e1628] via-[#090e1b] to-violet-950/20 border border-indigo-500/30 shadow-2xl space-y-8">
+        <section className="p-8 sm:p-12 rounded-3xl bg-gradient-to-br from-[#0e1628] via-[#10192e] to-violet-950/30 border border-indigo-500/30 shadow-2xl space-y-8">
           <div className="text-center max-w-2xl mx-auto space-y-2">
             <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-300 text-xs font-bold uppercase tracking-wider">
               <Award className="w-3.5 h-3.5 text-cyan-400" />

@@ -187,7 +187,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   ];
 
   return (
-    <div className="min-h-screen bg-[#080c14] text-slate-100 font-sans selection:bg-emerald-500 selection:text-white">
+    <div className="min-h-screen bg-[#0b1120] text-slate-100 font-sans selection:bg-indigo-600 selection:text-white">
       {/* Unified Public Navigation Bar */}
       <PublicHeader
         activePage="home"
@@ -202,13 +202,18 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
       {/* Hero Section */}
       <section className="relative pt-16 pb-20 px-6 overflow-hidden">
-        {/* Glow Spheres */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[850px] h-[450px] bg-gradient-to-tr from-violet-600/15 via-blue-600/15 to-cyan-500/15 rounded-full blur-[140px] pointer-events-none" />
+        {/* Luminous Aurora Mesh Glow Spheres */}
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[950px] h-[520px] bg-gradient-to-tr from-violet-600/30 via-blue-600/25 to-cyan-400/25 rounded-full blur-[130px] pointer-events-none" />
 
         <div className="max-w-5xl mx-auto text-center relative z-10 space-y-6">
-          <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/30 text-violet-300 text-xs font-bold tracking-wide">
-            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+          <div className="inline-flex items-center space-x-2.5 px-4 py-1.5 rounded-full bg-[#162340]/90 border border-cyan-400/40 text-cyan-300 text-xs font-bold tracking-wide shadow-lg shadow-cyan-500/10 backdrop-blur-md">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-400"></span>
+            </span>
             <span>Autonomous Two-Way Voice Telephony</span>
+            <span className="text-slate-600">|</span>
+            <span className="text-violet-300 text-[11px] font-semibold">⚡ Sub-500ms Latency</span>
           </div>
 
           <h1 className="text-4xl sm:text-6xl font-black text-white tracking-tight leading-[1.1]">
@@ -225,21 +230,21 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
             <button
               onClick={() => onOpenAuth('register')}
-              className="w-full sm:w-auto py-3.5 px-8 rounded-2xl bg-gradient-brand hover:brightness-110 text-white font-bold text-sm shadow-xl glow-brand-sm transition-all active:scale-95 flex items-center justify-center space-x-2 cursor-pointer"
+              className="w-full sm:w-auto py-3.5 px-8 rounded-2xl bg-gradient-brand hover:brightness-110 text-white font-bold text-sm shadow-xl glow-brand-sm transition-all active:scale-95 flex items-center justify-center space-x-2 cursor-pointer shimmer-card"
             >
               <span>Get Started Free (30 Mins)</span>
               <ArrowRight className="w-4 h-4" />
             </button>
             <button
               onClick={() => onOpenAuth('login')}
-              className="w-full sm:w-auto py-3.5 px-6 rounded-2xl bg-slate-900/80 hover:bg-slate-800 text-slate-200 border border-slate-800 text-sm font-semibold transition-colors cursor-pointer"
+              className="w-full sm:w-auto py-3.5 px-6 rounded-2xl bg-[#162340]/80 hover:bg-[#1a2b50] text-slate-200 border border-slate-700/80 text-sm font-semibold transition-colors cursor-pointer"
             >
               Live Admin Demo
             </button>
           </div>
 
           {/* Interactive Audio Preview Widget */}
-          <div className="mt-8 max-w-xl mx-auto p-4 rounded-2xl bg-slate-900/80 border border-indigo-500/30 glass-card shadow-2xl flex items-center justify-between">
+          <div className="mt-8 max-w-xl mx-auto p-4 rounded-2xl bg-[#131d35]/90 border border-cyan-500/30 glass-card shadow-2xl shadow-indigo-950/40 flex items-center justify-between hover:border-cyan-400/60 transition-all">
             <div className="flex items-center space-x-3">
               <button
                 onClick={togglePlayAudio}
@@ -253,7 +258,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               </div>
             </div>
 
-            <div className="flex items-center space-x-1 h-8 px-4">
+            <div className="flex items-center space-x-1.5 h-8 px-4">
               {[14, 28, 18, 32, 22, 12, 26, 30, 16, 20, 24, 18].map((h, idx) => (
                 <div
                   key={idx}
@@ -263,13 +268,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               ))}
             </div>
 
-            <span className="text-[11px] font-mono text-slate-400">{isPlayingDemo ? 'Playing...' : '0:14'}</span>
+            <span className="text-[11px] font-mono text-cyan-300 font-semibold">{isPlayingDemo ? 'Playing...' : '0:14'}</span>
           </div>
         </div>
 
         {/* Hero Visual Dashboard Showcase */}
         <div className="mt-14 max-w-6xl mx-auto relative">
-          <div className="rounded-3xl border border-indigo-500/30 shadow-2xl shadow-indigo-950/50 overflow-hidden bg-slate-950 group relative">
+          <div className="rounded-3xl border border-indigo-500/40 shadow-2xl shadow-indigo-950/60 overflow-hidden bg-slate-900 group relative shimmer-card">
             <div className="absolute top-4 left-6 z-20 flex items-center space-x-2">
               <span className="w-3 h-3 rounded-full bg-red-500/80" />
               <span className="w-3 h-3 rounded-full bg-amber-500/80" />
@@ -286,7 +291,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </section>
 
       {/* Live Phone Interaction Split Showcase */}
-      <section className="py-20 px-6 border-t border-slate-800/80 bg-gradient-to-b from-slate-950/60 to-[#080c14]">
+      <section className="py-20 px-6 border-t border-slate-800/80 bg-gradient-to-b from-[#0e1628]/90 via-[#0f172a] to-[#0b1120]">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
             <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold uppercase tracking-wider">
@@ -302,32 +307,32 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             </p>
 
             <div className="space-y-3 pt-2">
-              <div className="flex items-start space-x-3 p-3.5 rounded-2xl bg-[#0f172a]/70 border border-slate-800">
+              <div className="flex items-start space-x-3 p-3.5 rounded-2xl bg-[#131d35]/80 border border-slate-700/60 shadow-md">
                 <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
                 <div>
                   <h4 className="text-xs font-bold text-white">Full Indian PSTN Carrier Integration</h4>
-                  <p className="text-[11px] text-slate-400">Direct carrier trunk routing via Exotel for crystal clear audio with zero packet drops.</p>
+                  <p className="text-[11px] text-slate-300">Direct carrier trunk routing via Exotel for crystal clear audio with zero packet drops.</p>
                 </div>
               </div>
-              <div className="flex items-start space-x-3 p-3.5 rounded-2xl bg-[#0f172a]/70 border border-slate-800">
+              <div className="flex items-start space-x-3 p-3.5 rounded-2xl bg-[#131d35]/80 border border-slate-700/60 shadow-md">
                 <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
                 <div>
                   <h4 className="text-xs font-bold text-white">Strict Topic Adherence & Anti-Hallucination</h4>
-                  <p className="text-[11px] text-slate-400">AI answers exclusively from your verified business Knowledge Base and rejects off-topic chit-chat.</p>
+                  <p className="text-[11px] text-slate-300">AI answers exclusively from your verified business Knowledge Base and rejects off-topic chit-chat.</p>
                 </div>
               </div>
-              <div className="flex items-start space-x-3 p-3.5 rounded-2xl bg-[#0f172a]/70 border border-slate-800">
+              <div className="flex items-start space-x-3 p-3.5 rounded-2xl bg-[#131d35]/80 border border-slate-700/60 shadow-md">
                 <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
                 <div>
                   <h4 className="text-xs font-bold text-white">Automatic Call Recording & Instant CRM Webhooks</h4>
-                  <p className="text-[11px] text-slate-400">Delivers transcripts and lead dispositions to WhatsApp CRM and custom APIs in under 1 second.</p>
+                  <p className="text-[11px] text-slate-300">Delivers transcripts and lead dispositions to WhatsApp CRM and custom APIs in under 1 second.</p>
                 </div>
               </div>
             </div>
           </div>
 
           <div className="relative">
-            <div className="rounded-3xl border border-emerald-500/30 shadow-2xl shadow-emerald-950/40 overflow-hidden bg-slate-950">
+            <div className="rounded-3xl border border-emerald-500/30 shadow-2xl shadow-emerald-950/40 overflow-hidden bg-slate-900">
               <img
                 src="/assets/phone_mockup.jpg"
                 alt="AI Voice Calling Realtime Phone Interaction"
@@ -339,13 +344,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </section>
 
       {/* Features Grid */}
-      <section className="py-20 px-6 border-t border-slate-800/80 bg-slate-950/40">
+      <section className="py-20 px-6 border-t border-slate-800/80 bg-[#0d1527]/50">
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
               Built for High-Converting Admissions & Sales
             </h2>
-            <p className="text-xs sm:text-sm text-slate-400 mt-3">
+            <p className="text-xs sm:text-sm text-slate-300 mt-3">
               Combines telecom-grade Exotel infrastructure with OpenAI Realtime intelligence for zero-latency conversations.
             </p>
           </div>
@@ -356,13 +361,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               return (
                 <div
                   key={i}
-                  className="p-6 rounded-3xl bg-[#0f172a]/60 border border-slate-800 glass-card glass-card-hover space-y-3"
+                  className="p-6 rounded-3xl bg-[#131d35]/70 border border-slate-700/60 glass-card glass-card-hover space-y-3 shadow-lg"
                 >
                   <div className="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center">
                     <Icon className="w-5 h-5" />
                   </div>
                   <h3 className="text-base font-bold text-white">{f.title}</h3>
-                  <p className="text-xs text-slate-400 leading-relaxed">{f.desc}</p>
+                  <p className="text-xs text-slate-300 leading-relaxed">{f.desc}</p>
                 </div>
               );
             })}
@@ -371,8 +376,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </section>
 
       {/* Leadership & Vision Highlight: Meet Anil Sharma */}
-      <section className="py-16 px-6 border-t border-slate-800/80 bg-gradient-to-b from-[#070a13] via-[#0d1326] to-[#070a13]">
-        <div className="max-w-5xl mx-auto rounded-3xl p-8 sm:p-10 bg-slate-900/60 border border-indigo-500/20 shadow-2xl relative overflow-hidden">
+      <section className="py-16 px-6 border-t border-slate-800/80 bg-gradient-to-b from-[#0b1120] via-[#10192e] to-[#0b1120]">
+        <div className="max-w-5xl mx-auto rounded-3xl p-8 sm:p-10 bg-[#131d35]/80 border border-indigo-500/30 shadow-2xl relative overflow-hidden">
           <div className="absolute top-0 right-0 w-80 h-80 bg-violet-600/10 rounded-full blur-3xl pointer-events-none" />
 
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center relative z-10">
@@ -446,8 +451,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 key={idx}
                 className={`p-6 rounded-3xl border flex flex-col justify-between transition-all ${
                   tier.popular
-                    ? 'bg-gradient-to-b from-emerald-950/40 via-slate-900 to-slate-950 border-emerald-500/60 shadow-xl shadow-emerald-900/20'
-                    : 'bg-[#0f172a]/60 border-slate-800'
+                    ? 'bg-gradient-to-b from-cyan-950/30 via-[#162340] to-[#111a30] border-cyan-400/50 shadow-xl shadow-cyan-950/20'
+                    : 'bg-[#131d35]/80 border-slate-700/60 shadow-md'
                 }`}
               >
                 <div>
