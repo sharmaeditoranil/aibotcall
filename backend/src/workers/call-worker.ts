@@ -63,12 +63,12 @@ export function createCallWorker(): Worker {
       });
 
       if (org && org.credits_balance_minutes <= 0) {
-        logger.warn({ internalCallId, organizationId }, 'Outbound call cancelled: Insufficient credit balance');
+        logger.warn({ internalCallId, organizationId }, 'Outbound call cancelled: Subscription minutes and Pay As You Go backup credits are exhausted');
         await prisma.call.update({
           where: { id: callRecordId },
           data: {
             status: 'cancelled',
-            summary: 'Call declined: Insufficient calling credits. Please top up your voice minutes.',
+            summary: 'Call declined: Subscription minutes & Pay As You Go backup credits exhausted. Top up Pay As You Go minutes (₹4.87/min) to resume calling.',
           },
         });
         if (contactId) {

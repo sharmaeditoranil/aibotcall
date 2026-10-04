@@ -140,12 +140,22 @@ export async function billingRoute(fastify: FastifyInstance) {
       const totalSeconds = totalCallsDuration._sum.duration_seconds || 0;
       const totalMinutesUsed = Math.round((totalSeconds / 60) * 10) / 10;
 
+      const BUNDLED_MINUTES: Record<string, number> = {
+        FREE_TRIAL: 30,
+        STARTER: 200,
+        GROWTH: 600,
+        ENTERPRISE: 1500,
+      };
+
       return {
         plan: org.plan,
+        bundled_minutes: BUNDLED_MINUTES[org.plan] || 30,
         credits_balance_minutes: Math.round(org.credits_balance_minutes * 10) / 10,
         total_minutes_used: totalMinutesUsed,
         total_calls: totalCallsDuration._count,
         max_concurrency: org.max_concurrency,
+        payg_fallback_active: true,
+        payg_rate_per_min: 4.87,
         transactions,
         available_packages: PACKAGES,
         razorpay_key_id: config.razorpay.keyId,

@@ -23,16 +23,23 @@ import {
   Volume2,
   Check,
   Star,
+  MessageSquare,
+  FileText,
+  HelpCircle,
+  ChevronDown,
+  ChevronUp,
+  Calendar,
 } from 'lucide-react';
 
 interface LandingPageProps {
   onOpenAuth: (mode: 'login' | 'register', plan?: string) => void;
   onOpenPricing: () => void;
-  onOpenPolicy?: (policy: 'terms' | 'privacy' | 'refund' | 'contact' | 'about' | 'blog') => void;
+  onOpenPolicy?: (policy: 'terms' | 'privacy' | 'refund' | 'security' | 'data-privacy' | 'call-consent-policy') => void;
   onOpenAbout?: () => void;
   onOpenContact?: () => void;
   onOpenBlog?: () => void;
   onOpenDocs?: () => void;
+  onNavigateSeoPage?: (slug: string) => void;
 }
 
 export const LandingPage: React.FC<LandingPageProps> = ({
@@ -43,8 +50,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   onOpenContact,
   onOpenBlog,
   onOpenDocs,
+  onNavigateSeoPage,
 }) => {
   const [isPlayingDemo, setIsPlayingDemo] = useState(false);
+  const [expandedFaq, setExpandedFaq] = useState<number | null>(0);
 
   // Play audio sample demo in browser
   const togglePlayAudio = () => {
@@ -60,7 +69,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
     } else {
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(
-        "Namaste Aarav ji! Main Skills Academy se Ritu bol rahi hoon. Aapne professional video editing course ke liye enquiry ki thi. Kya aap online live batch seekhna chahte hain ya classroom batch?"
+        "Namaste ji! Main AiBotCall se bol rahi hoon. Aapne hamari website par AI Voice Calling Software ke liye enquiry submit ki thi. Kya main aapko batane ke liye 1 minute le sakti hoon ki kaise hamara AI agent aapke naye leads ko 5 second me call karke qualify kar sakta hai?"
       );
       utterance.pitch = 1.05;
       utterance.rate = 0.98;
@@ -79,36 +88,86 @@ export const LandingPage: React.FC<LandingPageProps> = ({
     }
   };
 
-  const features = [
+  const workflowSteps = [
+    { num: '01', title: 'Lead Generated', desc: 'Customer fills an enquiry form on your Website, Facebook Ad, or Portal.', icon: Users },
+    { num: '02', title: 'Webhook Trigger', desc: 'Your form or CRM dispatches a webhook to AiBotCall in milliseconds.', icon: Zap },
+    { num: '03', title: 'AI Dials in 5 Seconds', desc: 'AiBotCall initiates an outbound carrier phone call to the customer instantly.', icon: PhoneCall },
+    { num: '04', title: 'Human AI Conversation', desc: 'AI speaks in fluent Hindi/English, answers questions & overcomes objections.', icon: Bot },
+    { num: '05', title: 'Lead Qualified', desc: 'AI tags lead status (Hot, Warm, Cold), books meetings, or confirms appointments.', icon: CheckCircle2 },
+    { num: '06', title: 'CRM & WhatsApp Sync', desc: 'Call recording, transcript & summary sync to CRM and trigger WhatsApp via AiBotFlow.', icon: Send },
+  ];
+
+  const capabilities = [
     {
-      icon: Zap,
-      title: '5-Second Instant AI Dialing',
-      desc: 'When a customer fills a lead form on your website or landing page, AiBotCall dials their phone in under 5 seconds to qualify them while their intent is at its highest.',
+      icon: PhoneCall,
+      title: 'Inbound AI Receptionist',
+      slug: 'inbound-ai-call-agent',
+      desc: 'Answers customer calls 24/7 on the first ring. Answers questions from your knowledge base, takes messages, and eliminates wait times.',
     },
     {
-      icon: Bot,
-      title: 'Natural Hindi, Hinglish & English',
-      desc: 'Speaks with human-like conversational warmth, pauses, and empathy. Seamlessly understands customer language switching without robotic delays.',
+      icon: Zap,
+      title: 'Outbound AI Calling',
+      slug: 'outbound-ai-calling',
+      desc: 'Autonomous phone outreach for sales qualification, lead re-engagement, event confirmations, and customer follow-up.',
     },
     {
       icon: Radio,
-      title: 'Bulk Voice Broadcast Campaigns',
-      desc: 'Import thousands of course or sales leads via CSV. Dial contacts with intelligent rate-limiting, retry rules for busy numbers, and live progress analytics.',
+      title: 'AI Call Broadcast (Bulk)',
+      slug: 'ai-call-broadcast',
+      desc: 'Launch thousands of concurrent two-way voice calls simultaneously with CSV contact imports, variable tags, and retry logic.',
     },
     {
-      icon: Sparkles,
-      title: 'Real-Time Barge-In (Interruption)',
-      desc: 'Customers can naturally interrupt the AI assistant at any moment. The system immediately stops speaking and listens to the customer.',
+      icon: Bot,
+      title: '5-Second Website Lead Calling',
+      slug: 'website-lead-calling',
+      desc: 'Automatically ring prospect phones within 5 seconds of form submission while their purchase intent is at its highest.',
     },
     {
-      icon: ShieldCheck,
-      title: 'Zero-Code Dynamic Knowledge Base',
-      desc: 'Update course fees, batch schedules, branch addresses, and FAQs from your dashboard. AI accesses verified answers through safe server-side function tools.',
+      icon: MessageSquare,
+      title: 'AiBotFlow WhatsApp CRM Sync',
+      slug: 'integrations',
+      desc: 'Seamlessly connected with sister platform AiBotFlow to send PDF brochures, location pins, and payment links after every voice call.',
     },
     {
-      icon: Send,
-      title: 'Deal CRM & WhatsApp CRM Sync',
-      desc: 'Complete call recordings, turn-by-turn transcripts, AI summaries, and lead qualification statuses are pushed to your CRM with HMAC SHA-256 signatures.',
+      icon: Volume2,
+      title: 'Natural Hindi, Hinglish & English',
+      slug: 'ai-voice-agent-india',
+      desc: 'Speaks with genuine Indian conversational cadence, respectful honorifics, and real-time interruption (barge-in) support.',
+    },
+  ];
+
+  const geoFaqs = [
+    {
+      q: 'What is AiBotCall and how does it work?',
+      a: 'AiBotCall is an enterprise AI Voice Calling Software in India that autonomously dials and receives phone calls using conversational speech-to-speech AI. Operating with sub-500ms latency on Indian telecom networks via Exotel, it enables businesses to call website leads in under 5 seconds, qualify prospective buyers, and sync call recordings to their CRM.'
+    },
+    {
+      q: 'Can an AI voice agent automatically call a website lead?',
+      a: 'Yes. When a prospect submits an enquiry form on WordPress, Webflow, Shopify, or Facebook Ads, a webhook triggers AiBotCall in milliseconds. The AI agent places an outbound carrier phone call in under 5 seconds, addresses the customer by name, clarifies their requirements, and books an appointment.'
+    },
+    {
+      q: 'Can AiBotCall make outbound calls and receive inbound calls?',
+      a: 'Yes. AiBotCall operates as both an Outbound AI Calling system (for speed-to-lead follow-up, cold qualification, and mass broadcast campaigns) and an Inbound AI Call Agent (answering 24/7 on virtual mobile, landline, or toll-free numbers with zero hold time).'
+    },
+    {
+      q: 'Can call results and recordings be sent to a CRM?',
+      a: 'Yes. At the conclusion of every conversation, AiBotCall dispatches an HMAC SHA-256 authenticated webhook containing complete audio recording URLs, turn-by-turn transcripts, sentiment analysis, and lead qualification tags to your CRM (HubSpot, Salesforce, Zoho, LeadSquared, or Google Sheets).'
+    },
+    {
+      q: 'Can it integrate with AiBotFlow WhatsApp CRM?',
+      a: 'Yes. AiBotCall and AiBotFlow are tightly integrated platforms. While AiBotCall conducts the live phone conversation, sister platform AiBotFlow triggers official WhatsApp Business API messaging to deliver catalogs, site visit pins, or payment links to the customer immediately.'
+    },
+    {
+      q: 'What is the difference between an AI Voice Agent and traditional IVR?',
+      a: 'Traditional IVR forces callers through rigid numeric keypad trees ("press 1 for sales, press 2 for accounts") and cannot understand spoken intent. An AI Voice Agent speaks and listens naturally: callers talk conversationally, interrupt freely, ask questions, and receive intelligent answers without pressing keys.'
+    },
+    {
+      q: 'How does AI voice calling help sales teams?',
+      a: 'AiBotCall eliminates manual cold calling fatigue. The AI agent dials leads, filters out invalid numbers, conducts initial BANT qualification (Budget, Authority, Need, Timeline), and schedules meetings on sales reps calendars, allowing human closers to focus exclusively on closing ready buyers.'
+    },
+    {
+      q: 'What happens if my monthly subscription call minutes finish?',
+      a: 'Your calls never stop or drop! AiBotCall features an automated Pay-As-You-Go fallback system. If your monthly bundled minutes are exhausted, calls automatically continue using your Pay-As-You-Go wallet balance at our flat rate of ₹4.87/minute with zero interruption to your campaigns or webhook lead calls.'
     },
   ];
 
@@ -119,7 +178,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       price: '₹0',
       period: 'instant start',
       minutes: '30 Voice Minutes Included',
-      desc: 'Perfect for evaluating real speech quality on your mobile phone.',
+      desc: 'Perfect for evaluating real speech quality on your mobile phone in 60 seconds.',
       features: [
         '30 Free Calling Minutes',
         '1 AI Voice Agent',
@@ -135,10 +194,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       name: 'Starter',
       price: '₹999',
       period: '/month',
-      minutes: '200 Minutes Included (Flat ₹4.87/extra min)',
-      desc: 'Ideal for local coaching academies, clinics, and service agencies.',
+      minutes: '200 Minutes Included',
+      desc: 'Ideal for local coaching academies, clinics, and solo consultants.',
       features: [
         '200 Voice Minutes Included',
+        '⚡ Auto Pay-As-You-Go fallback (₹4.87/min)',
         '3 AI Voice Agents',
         '5 Concurrent Lines',
         'CRM Outgoing Webhook Sync',
@@ -153,10 +213,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       name: 'Growth',
       price: '₹2,499',
       period: '/month',
-      minutes: '600 Minutes Included (Flat ₹4.87/extra min)',
-      desc: 'For high-growth institutions, real estate firms, and e-commerce.',
+      minutes: '600 Minutes Included',
+      desc: 'For high-growth institutions, real estate brokers, and active sales outreach.',
       features: [
         '600 Voice Minutes Included',
+        '⚡ Continuous Calling: Zero-drop Pay As You Go fallback (₹4.87/min)',
         '10 AI Voice Agents',
         '10 Concurrent Lines',
         'Unlimited Broadcast Campaigns',
@@ -172,10 +233,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       name: 'Enterprise Scale',
       price: '₹5,999',
       period: '/month',
-      minutes: '1,500 Minutes Included (Flat ₹4.87/extra min)',
+      minutes: '1,500 Minutes Included',
       desc: 'High-volume call centers and multi-branch educational academies.',
       features: [
         '1,500 Voice Minutes Included',
+        '⚡ Seamless Pay-As-You-Go overdraft protection (₹4.87/min)',
         'Unlimited AI Agents',
         '30 Concurrent Lines',
         'Dedicated Virtual Caller IDs (ExoPhones)',
@@ -189,21 +251,22 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   ];
 
   return (
-    <div className="min-h-screen bg-[#0b1120] text-slate-100 font-sans selection:bg-indigo-600 selection:text-white">
-      {/* Unified Public Navigation Bar */}
+    <div className="min-h-screen bg-[#0b1120] text-slate-100 font-sans selection:bg-cyan-500 selection:text-white">
+      {/* Unified Public Navigation Bar with Clean Dropdowns */}
       <PublicHeader
         activePage="home"
         onNavigateHome={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        onNavigateAbout={() => (onOpenAbout ? onOpenAbout() : onOpenPolicy?.('about'))}
-        onNavigateBlog={() => (onOpenBlog ? onOpenBlog() : onOpenPolicy?.('blog'))}
+        onNavigateAbout={() => (onOpenAbout ? onOpenAbout() : onOpenPolicy?.('about' as any))}
+        onNavigateBlog={() => (onOpenBlog ? onOpenBlog() : onOpenPolicy?.('blog' as any))}
         onNavigateDocs={onOpenDocs}
         onNavigatePricing={onOpenPricing}
-        onNavigateContact={() => (onOpenContact ? onOpenContact() : onOpenPolicy?.('contact'))}
+        onNavigateContact={() => (onOpenContact ? onOpenContact() : onOpenPolicy?.('contact' as any))}
         onNavigateLogin={() => onOpenAuth('login')}
         onNavigateRegister={() => onOpenAuth('register')}
+        onNavigateSeoPage={onNavigateSeoPage}
       />
 
-      {/* Hero Section */}
+      {/* Hero Section with Official Single H1 and Above-The-Fold Value Concept */}
       <section className="relative pt-16 pb-20 px-6 overflow-hidden">
         {/* Luminous Aurora Mesh Glow Spheres */}
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[950px] h-[520px] bg-gradient-to-tr from-violet-600/30 via-blue-600/25 to-cyan-400/25 rounded-full blur-[130px] pointer-events-none" />
@@ -214,28 +277,34 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-400"></span>
             </span>
-            <span>Autonomous Two-Way Voice Telephony</span>
+            <span>AI Voice Calling Software in India</span>
             <span className="text-slate-600">|</span>
-            <span className="text-violet-300 text-[11px] font-semibold">⚡ Sub-500ms Latency</span>
+            <span className="text-violet-300 text-[11px] font-semibold">⚡ Sub-500ms Indian Telephony</span>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl font-black text-white tracking-tight leading-[1.1]">
-            Turn Website Leads into <br />
+          {/* Primary H1 */}
+          <h1 className="text-4xl sm:text-6xl font-black text-white tracking-tight leading-[1.12]">
+            AI Voice Agent for <br />
             <span className="text-gradient-brand">
-              Live AI Phone Calls in 5 Seconds
+              Inbound & Outbound Calls
             </span>
           </h1>
 
-          <p className="max-w-2xl mx-auto text-sm sm:text-base text-slate-300 leading-relaxed">
-            AiBotCall automatically calls prospective customers and clients as soon as they submit an enquiry. It speaks fluent <b>Hindi, Hinglish & English</b>, understands preferences, answers fees and batch questions, and syncs directly to your CRM.
+          {/* User's Exact Value Concept */}
+          <p className="max-w-3xl mx-auto text-sm sm:text-base text-slate-200 leading-relaxed font-medium bg-[#131d35]/60 border border-slate-700/60 p-4 rounded-2xl shadow-md">
+            Website enquiry आते ही AI automatically customer को call करे, conversation करे, lead qualify करे और result आपके CRM या WhatsApp system में send करे.
+          </p>
+
+          <p className="max-w-2xl mx-auto text-xs sm:text-sm text-slate-400 leading-relaxed">
+            Deploy conversational AI Voice Agents in India with native Hindi, English, and Hinglish speech. Connect with leads in under 5 seconds with per-second billing at flat ₹4.87/minute.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
             <button
               onClick={() => onOpenAuth('register')}
-              className="w-full sm:w-auto py-3.5 px-8 rounded-2xl bg-gradient-brand hover:brightness-110 text-white font-bold text-sm shadow-xl glow-brand-sm transition-all active:scale-95 flex items-center justify-center space-x-2 cursor-pointer shimmer-card"
+              className="w-full sm:w-auto py-3.5 px-8 rounded-2xl bg-gradient-brand hover:brightness-110 text-white font-bold text-sm shadow-xl glow-brand-sm transition-all active:scale-95 flex items-center justify-center space-x-2 cursor-pointer"
             >
-              <span>Get Started Free (30 Mins)</span>
+              <span>Start Free Trial (30 Free Mins)</span>
               <ArrowRight className="w-4 h-4" />
             </button>
             <button
@@ -252,12 +321,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               <button
                 onClick={togglePlayAudio}
                 className="w-12 h-12 rounded-full bg-gradient-brand text-white flex items-center justify-center shadow-lg glow-brand-sm hover:scale-105 transition-transform cursor-pointer"
+                aria-label="Play audio demo"
               >
                 {isPlayingDemo ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 ml-0.5" />}
               </button>
               <div className="text-left">
-                <p className="text-xs font-bold text-white">Agent Ritu (Admissions Counselor)</p>
-                <p className="text-[11px] text-cyan-400">Click to listen: Hindi/Hinglish Voice Demo</p>
+                <p className="text-xs font-bold text-white">Agent Ritu (Admissions & Sales Counselor)</p>
+                <p className="text-[11px] text-cyan-400">Click to listen: Natural Hindi/Hinglish Voice Sample</p>
               </div>
             </div>
 
@@ -293,84 +363,42 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         </div>
       </section>
 
-      {/* Live Phone Interaction Split Showcase */}
-      <section className="py-20 px-6 border-t border-slate-800/80 bg-gradient-to-b from-[#0e1628]/90 via-[#0f172a] to-[#0b1120]">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-6">
-            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold uppercase tracking-wider">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Next-Gen Telephony Experience</span>
+      {/* Visual Product Workflow Diagram: Important Product Differentiator */}
+      <section className="py-16 px-6 border-t border-slate-800/80 bg-gradient-to-b from-[#0b1120] via-[#0f172a] to-[#0b1120]">
+        <div className="max-w-6xl mx-auto space-y-8">
+          <div className="text-center max-w-2xl mx-auto space-y-2">
+            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-bold uppercase tracking-wider">
+              <Zap className="w-3.5 h-3.5" />
+              <span>Speed-to-Lead Automation</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
-              Human-Like Speech Quality with <br />
-              <span className="text-emerald-400">Sub-500ms Conversational Latency</span>
-            </h2>
-            <p className="text-sm text-slate-300 leading-relaxed">
-              No robotic IVR menus, no awkward pauses. AiBotCall listens to customer responses with real-time barge-in, adapts to Hindi, English, and local dialects, and automatically collects customer preferences.
-            </p>
-
-            <div className="space-y-3 pt-2">
-              <div className="flex items-start space-x-3 p-3.5 rounded-2xl bg-[#131d35]/80 border border-slate-700/60 shadow-md">
-                <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="text-xs font-bold text-white">Full Indian PSTN Carrier Integration</h4>
-                  <p className="text-[11px] text-slate-300">Direct carrier trunk routing via Exotel for crystal clear audio with zero packet drops.</p>
-                </div>
-              </div>
-              <div className="flex items-start space-x-3 p-3.5 rounded-2xl bg-[#131d35]/80 border border-slate-700/60 shadow-md">
-                <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="text-xs font-bold text-white">Strict Topic Adherence & Anti-Hallucination</h4>
-                  <p className="text-[11px] text-slate-300">AI answers exclusively from your verified business Knowledge Base and rejects off-topic chit-chat.</p>
-                </div>
-              </div>
-              <div className="flex items-start space-x-3 p-3.5 rounded-2xl bg-[#131d35]/80 border border-slate-700/60 shadow-md">
-                <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="text-xs font-bold text-white">Automatic Call Recording & Instant CRM Webhooks</h4>
-                  <p className="text-[11px] text-slate-300">Delivers transcripts and lead dispositions to WhatsApp CRM and custom APIs in under 1 second.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="relative">
-            <div className="rounded-3xl border border-emerald-500/30 shadow-2xl shadow-emerald-950/40 overflow-hidden bg-slate-900">
-              <img
-                src="/assets/phone_mockup.jpg"
-                alt="AI Voice Calling Realtime Phone Interaction"
-                className="w-full object-cover rounded-3xl"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Grid */}
-      <section className="py-20 px-6 border-t border-slate-800/80 bg-[#0d1527]/50">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-16">
             <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
-              Built for High-Converting Admissions & Sales
+              The 6-Step Voice AI Automation Workflow
             </h2>
-            <p className="text-xs sm:text-sm text-slate-300 mt-3">
-              Combines telecom-grade Exotel infrastructure with OpenAI Realtime intelligence for zero-latency conversations.
+            <p className="text-xs sm:text-sm text-slate-400">
+              See how new leads convert automatically from enquiry to CRM without manual dialing.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {features.map((f, i) => {
-              const Icon = f.icon;
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {workflowSteps.map((step, idx) => {
+              const StepIcon = step.icon;
               return (
                 <div
-                  key={i}
-                  className="p-6 rounded-3xl bg-[#131d35]/70 border border-slate-700/60 glass-card glass-card-hover space-y-3 shadow-lg"
+                  key={idx}
+                  className="p-6 rounded-3xl bg-[#131d35]/70 border border-slate-700/60 relative group hover:border-cyan-500/50 transition-all space-y-3 shadow-lg"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center">
-                    <Icon className="w-5 h-5" />
+                  <div className="flex items-center justify-between">
+                    <span className="text-2xl font-black text-cyan-400/40 group-hover:text-cyan-400 transition-colors font-mono">
+                      {step.num}
+                    </span>
+                    <div className="p-2.5 rounded-xl bg-cyan-500/10 text-cyan-400 group-hover:bg-cyan-500/20 transition-all">
+                      <StepIcon className="w-5 h-5" />
+                    </div>
                   </div>
-                  <h3 className="text-base font-bold text-white">{f.title}</h3>
-                  <p className="text-xs text-slate-300 leading-relaxed">{f.desc}</p>
+                  <h3 className="text-base font-bold text-white group-hover:text-cyan-300 transition-colors">
+                    {step.title}
+                  </h3>
+                  <p className="text-xs text-slate-300 leading-relaxed">{step.desc}</p>
                 </div>
               );
             })}
@@ -378,7 +406,94 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         </div>
       </section>
 
-      {/* Leadership & Vision Highlight: Meet Anil Sharma */}
+      {/* Core AI Voice Capabilities Grid with Direct SEO Landing Page Links */}
+      <section className="py-20 px-6 border-t border-slate-800/80 bg-[#0d1527]/50">
+        <div className="max-w-7xl mx-auto space-y-12">
+          <div className="text-center max-w-2xl mx-auto space-y-2">
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
+              Complete AI Calling Platform for Indian Businesses
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-300">
+              Enterprise telecom infrastructure, sub-500ms latency, and seamless CRM integrations.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {capabilities.map((c, i) => {
+              const Icon = c.icon;
+              return (
+                <div
+                  key={i}
+                  className="p-7 rounded-3xl bg-[#131d35]/80 border border-slate-700/60 glass-card glass-card-hover flex flex-col justify-between space-y-4 shadow-lg group"
+                >
+                  <div className="space-y-3">
+                    <div className="w-11 h-11 rounded-2xl bg-cyan-500/15 border border-cyan-500/30 text-cyan-400 flex items-center justify-center group-hover:scale-105 transition-transform">
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    <h3 className="text-lg font-bold text-white group-hover:text-cyan-300 transition-colors">
+                      {c.title}
+                    </h3>
+                    <p className="text-xs text-slate-300 leading-relaxed">{c.desc}</p>
+                  </div>
+
+                  <button
+                    onClick={() => onNavigateSeoPage?.(c.slug)}
+                    className="text-xs font-semibold text-cyan-400 hover:text-cyan-300 flex items-center space-x-1.5 pt-2 cursor-pointer"
+                  >
+                    <span>Learn more about {c.title}</span>
+                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Omnichannel Architecture Synergy (AiBotCall + AiBotFlow) */}
+      <section className="py-14 px-6 border-t border-slate-800/80 bg-gradient-to-r from-violet-950/40 via-[#0e172a] to-cyan-950/40">
+        <div className="max-w-5xl mx-auto rounded-3xl p-8 border border-cyan-500/30 shadow-2xl flex flex-col lg:flex-row items-center justify-between gap-8">
+          <div className="space-y-3 text-center lg:text-left">
+            <span className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-violet-500/20 text-violet-300 border border-violet-500/30">
+              The Power of Two
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+              Combine AI Voice Calling with WhatsApp CRM
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-300 max-w-xl leading-relaxed">
+              <strong className="text-cyan-300">AiBotCall</strong> handles the live voice phone calls and speech qualification. Sister platform{' '}
+              <a
+                href="https://aibotflow.in"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-violet-300 hover:text-white underline font-semibold"
+              >
+                AiBotFlow
+              </a>{' '}
+              manages official Meta WhatsApp Business API automation, broadcast campaigns, and visual Kanban CRM pipelines.
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-3 shrink-0">
+            <a
+              href="https://aibotflow.in"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="py-3 px-6 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-bold transition-all flex items-center justify-center space-x-2"
+            >
+              <span>Explore AiBotFlow WhatsApp</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+            <button
+              onClick={() => onOpenAuth('register')}
+              className="py-3 px-6 rounded-xl bg-gradient-brand hover:brightness-110 text-white text-xs font-bold shadow-md glow-brand-sm transition-all"
+            >
+              Start Free Voice Trial
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Leadership & Vision: Meet Founder Anil Sharma */}
       <section className="py-16 px-6 border-t border-slate-800/80 bg-gradient-to-b from-[#0b1120] via-[#10192e] to-[#0b1120]">
         <div className="max-w-5xl mx-auto rounded-3xl p-8 sm:p-10 bg-[#131d35]/80 border border-indigo-500/30 shadow-2xl relative overflow-hidden">
           <div className="absolute top-0 right-0 w-80 h-80 bg-violet-600/10 rounded-full blur-3xl pointer-events-none" />
@@ -412,23 +527,17 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               </p>
               <div className="pt-2 flex flex-wrap items-center gap-3">
                 <button
-                  onClick={() => (onOpenAbout ? onOpenAbout() : onOpenPolicy?.('about'))}
+                  onClick={() => (onOpenAbout ? onOpenAbout() : onOpenPolicy?.('about' as any))}
                   className="py-2.5 px-4 rounded-xl bg-gradient-brand hover:brightness-110 text-white text-xs font-bold transition-all shadow-md glow-brand-sm cursor-pointer flex items-center space-x-2"
                 >
                   <span>Read Full About Us</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </button>
                 <button
-                  onClick={() => (onOpenBlog ? onOpenBlog() : onOpenPolicy?.('blog'))}
+                  onClick={() => (onOpenBlog ? onOpenBlog() : onOpenPolicy?.('blog' as any))}
                   className="py-2.5 px-4 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 text-xs font-semibold transition-all cursor-pointer flex items-center space-x-1.5"
                 >
                   <span>Read Founder's Telephony Playbook</span>
-                </button>
-                <button
-                  onClick={() => (onOpenContact ? onOpenContact() : onOpenPolicy?.('contact'))}
-                  className="py-2.5 px-4 rounded-xl bg-slate-900/60 hover:bg-slate-800 text-slate-300 border border-slate-700 text-xs font-semibold transition-all cursor-pointer"
-                >
-                  <span>Connect with Us</span>
                 </button>
               </div>
             </div>
@@ -441,10 +550,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
-              Simple, Transparent SaaS Pricing
+              Simple, Affordable SaaS Pricing
             </h2>
             <p className="text-xs sm:text-sm text-slate-400 mt-3">
-              Start with 30 free trial calling minutes. Upgrade or buy top-up bundles as your volume scales.
+              Start with 30 free trial calling minutes. Flat ₹4.87 per minute calling with zero hidden telecom markups.
             </p>
           </div>
 
@@ -498,17 +607,68 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         </div>
       </section>
 
-      {/* Unified Public Footer */}
+      {/* GEO & AI Search Answer Engine Optimization Blocks */}
+      <section className="py-20 px-6 border-t border-slate-800/80 bg-[#0e1628]/60">
+        <div className="max-w-4xl mx-auto space-y-8">
+          <div className="text-center space-y-2">
+            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-violet-500/10 border border-violet-500/30 text-violet-300 text-xs font-bold uppercase tracking-wider">
+              <Bot className="w-3.5 h-3.5 text-cyan-400" />
+              <span>AI Search & Knowledge Center</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+              Frequently Asked Questions & Technical Overview
+            </h2>
+            <p className="text-xs text-slate-400">
+              Direct, factual answers about AiBotCall capabilities, compliance, and integration.
+            </p>
+          </div>
+
+          <div className="space-y-3">
+            {geoFaqs.map((faq, i) => {
+              const isOpen = expandedFaq === i;
+              return (
+                <div
+                  key={i}
+                  className="rounded-2xl bg-[#131d35]/90 border border-slate-700/60 overflow-hidden transition-all shadow-md"
+                >
+                  <button
+                    onClick={() => setExpandedFaq(isOpen ? null : i)}
+                    className="w-full p-5 text-left flex items-center justify-between text-xs sm:text-sm font-bold text-white hover:text-cyan-300 transition-colors cursor-pointer"
+                  >
+                    <span className="flex items-center space-x-2.5">
+                      <HelpCircle className="w-4 h-4 text-cyan-400 shrink-0" />
+                      <span>{faq.q}</span>
+                    </span>
+                    {isOpen ? (
+                      <ChevronUp className="w-4 h-4 text-cyan-400 shrink-0" />
+                    ) : (
+                      <ChevronDown className="w-4 h-4 text-slate-400 shrink-0" />
+                    )}
+                  </button>
+                  {isOpen && (
+                    <div className="px-5 pb-5 text-xs text-slate-300 leading-relaxed border-t border-slate-800/60 pt-3">
+                      {faq.a}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Unified Public Footer with 5-Column SEO Links */}
       <PublicFooter
         onNavigateHome={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        onNavigateAbout={() => (onOpenAbout ? onOpenAbout() : onOpenPolicy?.('about'))}
-        onNavigateBlog={() => (onOpenBlog ? onOpenBlog() : onOpenPolicy?.('blog'))}
+        onNavigateAbout={() => (onOpenAbout ? onOpenAbout() : onOpenPolicy?.('about' as any))}
+        onNavigateBlog={() => (onOpenBlog ? onOpenBlog() : onOpenPolicy?.('blog' as any))}
         onNavigateDocs={onOpenDocs}
         onNavigatePricing={onOpenPricing}
-        onNavigateContact={() => (onOpenContact ? onOpenContact() : onOpenPolicy?.('contact'))}
+        onNavigateContact={() => (onOpenContact ? onOpenContact() : onOpenPolicy?.('contact' as any))}
         onNavigateLogin={() => onOpenAuth('login')}
         onNavigateRegister={() => onOpenAuth('register')}
         onNavigatePolicy={(policy) => onOpenPolicy?.(policy)}
+        onNavigateSeoPage={onNavigateSeoPage}
       />
     </div>
   );

@@ -144,6 +144,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
       desc: 'Ideal for coaching academies, clinics, local service agencies, and solo founders.',
       features: [
         '200 Calling minutes included each month',
+        '⚡ Auto Pay-As-You-Go rollover (₹4.87/min on exhaustion)',
         '3 AI Voice Agents (Hindi / English / Hinglish)',
         '5 Concurrent telephony lines',
         'CSV Broadcast Campaigns',
@@ -168,13 +169,14 @@ export const PricingPage: React.FC<PricingPageProps> = ({
       desc: 'For high-growth businesses, real estate brokers, and active sales outreach.',
       features: [
         '600 Calling minutes included each month',
+        '⚡ Continuous Calling: Zero-drop Pay As You Go fallback (₹4.87/min)',
         '10 AI Voice Agents with custom voices',
         '10 Concurrent telephony lines',
         'Unlimited CSV Broadcast Campaigns',
         'Custom template variables {{name}}, {{city}}',
         'Multi-user team workspace permissions',
         'Priority low-latency telephony trunk',
-        'Instant Razorpay minute top-up at flat ₹4.87/min',
+        'Instant Razorpay minute top-up anytime',
       ],
       buttonText: 'Start Growth Plan (₹2,499/mo)',
       popular: true,
@@ -193,6 +195,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
       desc: 'For high-volume contact centers, pan-India ed-tech firms, and enterprises.',
       features: [
         '1,500 Calling minutes included each month',
+        '⚡ Seamless Pay-As-You-Go overdraft protection (₹4.87/min)',
         'Unlimited AI Voice Agents',
         '30 Concurrent telephony lines',
         'Dedicated Virtual Caller ID (ExoPhone)',
@@ -235,6 +238,10 @@ export const PricingPage: React.FC<PricingPageProps> = ({
     {
       q: 'Which payment methods are accepted through Razorpay?',
       a: 'Razorpay accepts all Indian payment methods including UPI (Google Pay, PhonePe, Paytm, BHIM), Debit & Credit Cards (RuPay, Visa, Mastercard), and NetBanking from 50+ Indian banks.',
+    },
+    {
+      q: 'What happens if my subscription call minutes run out mid-month?',
+      a: 'Your calls will NEVER stop or drop! AiBotCall is engineered with an enterprise Continuous Calling Protection system. When your subscription plan’s bundled monthly minutes are exhausted, calls automatically roll over to your Pay As You Go wallet balance at our flat rate of ₹4.87/minute. Your outbound broadcast campaigns, instant website lead calls, and 24/7 inbound AI receptionists remain 100% active with zero interruption.',
     },
     {
       q: 'Can I switch between Pay As You Go and monthly plans at any time?',
@@ -609,6 +616,68 @@ export const PricingPage: React.FC<PricingPageProps> = ({
                 </div>
               );
             })}
+          </div>
+
+          {/* Zero-Downtime Guarantee Banner for Subscribers */}
+          <div className="mt-12 p-8 rounded-3xl bg-gradient-to-r from-violet-950/40 via-[#0d1629] to-cyan-950/40 border border-slate-700/60 shadow-2xl relative overflow-hidden">
+            <div className="max-w-4xl mx-auto space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="flex items-center space-x-3">
+                  <div className="p-3 rounded-2xl bg-gradient-brand text-white shadow-lg glow-brand-sm">
+                    <ShieldCheck className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-black text-white tracking-tight flex items-center space-x-2">
+                      <span>Zero-Downtime Guarantee: Hybrid Calling Protection</span>
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                        100% Uptime
+                      </span>
+                    </h3>
+                    <p className="text-xs text-slate-300 mt-0.5">
+                      Agar aapke subscription ke bundled call minutes khatam ho jayein, toh call kabhi nahi rukegi!
+                    </p>
+                  </div>
+                </div>
+                <div className="shrink-0">
+                  <span className="px-3.5 py-1.5 rounded-xl bg-slate-900/90 text-cyan-300 border border-cyan-500/30 text-xs font-bold font-mono">
+                    Fallback: ₹4.87 / minute
+                  </span>
+                </div>
+              </div>
+
+              {/* 3 Step Flow */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+                <div className="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-2">
+                  <div className="text-xs font-black text-cyan-400 uppercase tracking-wider flex items-center space-x-1.5">
+                    <span className="w-5 h-5 rounded-full bg-cyan-500/20 flex items-center justify-center text-[10px] font-bold border border-cyan-500/40">1</span>
+                    <span>Bundled Minutes Active</span>
+                  </div>
+                  <p className="text-xs text-slate-300 leading-relaxed">
+                    Aapke plan ke included 200, 600 ya 1,500 monthly minutes pehle use hote hain bina kisi extra charge ke.
+                  </p>
+                </div>
+
+                <div className="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-2">
+                  <div className="text-xs font-black text-emerald-400 uppercase tracking-wider flex items-center space-x-1.5">
+                    <span className="w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center text-[10px] font-bold border border-emerald-500/40">2</span>
+                    <span>Instant PAYG Rollover</span>
+                  </div>
+                  <p className="text-xs text-slate-300 leading-relaxed">
+                    Minutes 0 hote hi system automatically Pay-As-You-Go wallet balance se call deduct karta hai at standard ₹4.87/min.
+                  </p>
+                </div>
+
+                <div className="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-2">
+                  <div className="text-xs font-black text-violet-400 uppercase tracking-wider flex items-center space-x-1.5">
+                    <span className="w-5 h-5 rounded-full bg-violet-500/20 flex items-center justify-center text-[10px] font-bold border border-violet-500/40">3</span>
+                    <span>Zero Call Drops</span>
+                  </div>
+                  <p className="text-xs text-slate-300 leading-relaxed">
+                    Website lead webhooks, Facebook lead ad calls, aur inbound receptionists bina rukaavat ke 24/7 continuous chalte hain.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
       )}

@@ -249,7 +249,39 @@ export const Billing: React.FC = () => {
         </div>
       )}
 
-      {/* Credit Balance Card */}
+      {/* Low Balance Warning Banner */}
+      {(billingData?.credits_balance_minutes ?? 0) <= 20 && (
+        <div className="p-4.5 rounded-2xl bg-gradient-to-r from-amber-950/60 via-amber-900/30 to-slate-900 border border-amber-500/50 shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-fade-in">
+          <div className="flex items-start sm:items-center space-x-3">
+            <div className="p-2 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30 shrink-0">
+              <AlertCircle className="w-5 h-5" />
+            </div>
+            <div>
+              <h4 className="text-sm font-bold text-white flex items-center space-x-2">
+                <span>Calling Credits Low ({billingData?.credits_balance_minutes ?? 0} Mins Left)</span>
+                <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                  Action Recommended
+                </span>
+              </h4>
+              <p className="text-xs text-slate-300 mt-0.5">
+                Top up a Pay As You Go backup pack below at flat ₹4.87/min. When your bundled plan minutes end, calls automatically roll over with <b>zero dropped leads</b>.
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => {
+              setTopupCategory('payg');
+              handleRazorpayPayment('pkg_payg_250');
+            }}
+            disabled={processing}
+            className="shrink-0 px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:brightness-110 text-slate-950 text-xs font-black shadow-md cursor-pointer transition-all disabled:opacity-50"
+          >
+            Add 250 Backup Mins (₹1,218)
+          </button>
+        </div>
+      )}
+
+      {/* Credit Balance & Hybrid System Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="p-6 rounded-3xl bg-gradient-to-br from-emerald-950/60 to-slate-900 border border-emerald-500/40 glass-card relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
@@ -263,8 +295,12 @@ export const Billing: React.FC = () => {
             </h3>
             <span className="text-xs text-emerald-400 font-semibold uppercase">Minutes</span>
           </div>
-          <p className="text-[11px] text-slate-400 mt-2">
-            Auto-deducted based on real answered call talk-time. Minutes never expire!
+          <div className="mt-3 flex items-center space-x-1.5 text-[11px] text-emerald-300/90 font-medium">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>Pay As You Go Protection: Active</span>
+          </div>
+          <p className="text-[11px] text-slate-400 mt-1">
+            Auto-deducted based on real connected call talk-time. Minutes never expire!
           </p>
         </div>
 
@@ -273,28 +309,59 @@ export const Billing: React.FC = () => {
             <span className="text-xs font-bold uppercase tracking-wider">Current Subscription</span>
             <ShieldCheck className="w-5 h-5 text-teal-400" />
           </div>
-          <h3 className="text-2xl font-bold text-white tracking-tight">
-            {billingData?.plan ? billingData.plan.replace('_', ' ') : 'FREE TRIAL'}
-          </h3>
-          <p className="text-[11px] text-slate-400 mt-2">
+          <div className="flex items-baseline space-x-2">
+            <h3 className="text-2xl font-bold text-white tracking-tight">
+              {billingData?.plan ? billingData.plan.replace('_', ' ') : 'FREE TRIAL'}
+            </h3>
+          </div>
+          <p className="text-[11px] text-cyan-400 font-semibold mt-1">
+            Bundled Quota: {billingData?.bundled_minutes || (billingData?.plan === 'GROWTH' ? 600 : billingData?.plan === 'STARTER' ? 200 : billingData?.plan === 'ENTERPRISE' ? 1500 : 30)} Mins/month
+          </p>
+          <p className="text-[11px] text-slate-400 mt-1.5">
             Capacity: <b>{billingData?.max_concurrency || 2} concurrent lines</b> active simultaneously
           </p>
         </div>
 
-        <div className="p-6 rounded-3xl bg-slate-900/60 border border-slate-800 glass-card">
-          <div className="flex items-center justify-between mb-3 text-slate-400">
-            <span className="text-xs font-bold uppercase tracking-wider">Total Lifetime Talk-Time</span>
-            <Clock className="w-5 h-5 text-blue-400" />
+        <div className="p-6 rounded-3xl bg-gradient-to-br from-violet-950/40 via-slate-900/70 to-slate-900 border border-violet-500/30 glass-card">
+          <div className="flex items-center justify-between mb-3 text-violet-400">
+            <span className="text-xs font-bold uppercase tracking-wider">Continuous Calling Protection</span>
+            <Zap className="w-5 h-5 text-cyan-400" />
           </div>
           <div className="flex items-baseline space-x-2">
-            <h3 className="text-2xl font-bold text-white tracking-tight">
-              {billingData?.total_minutes_used ?? 0}
-            </h3>
-            <span className="text-xs text-slate-400">Minutes</span>
+            <span className="text-sm font-bold text-white">Hybrid Fallback Mode:</span>
+            <span className="text-xs font-extrabold text-emerald-400 uppercase tracking-wide">Enabled</span>
           </div>
-          <p className="text-[11px] text-slate-400 mt-2">
-            Across <b>{billingData?.total_calls ?? 0} AI calls</b> delivered
+          <p className="text-[11px] text-slate-300 leading-relaxed mt-2">
+            Jab subscription plan ke minutes khatam ho jaate hain, calls rukne ke bajaye seamlessly <b>Pay As You Go (₹4.87/min)</b> se deduct hoti hain. Zero call drop guarantee!
           </p>
+        </div>
+      </div>
+
+      {/* Enterprise Fallback Explanation Banner */}
+      <div className="p-5 rounded-2xl bg-gradient-to-r from-violet-950/40 via-[#0d1629] to-cyan-950/40 border border-slate-700/60 shadow-lg">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div className="space-y-1.5">
+            <div className="flex items-center space-x-2">
+              <span className="p-1.5 rounded-lg bg-gradient-brand text-white shadow-sm">
+                <ShieldCheck className="w-4 h-4" />
+              </span>
+              <h4 className="text-sm font-bold text-white">
+                How Subscription + Pay As You Go Works Seamlessly:
+              </h4>
+            </div>
+            <p className="text-xs text-slate-300 leading-relaxed max-w-4xl">
+              <b>1. Monthly Subscription Minutes</b> consume first. &nbsp;•&nbsp;
+              <b>2. Seamless Overdraft Rollover:</b> Jab bundled minutes 0 hote hain, system automatic Pay-As-You-Go wallet balance use karta hai at flat ₹4.87/min. &nbsp;•&nbsp;
+              <b>3. Zero Campaign Interruptions:</b> Outbound CSV broadcasts, website webhook calls, aur inbound AI receptionists continuous live rehte hain bina kisi interruption ke!
+            </p>
+          </div>
+          <button
+            onClick={() => setTopupCategory('payg')}
+            className="shrink-0 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/40 text-xs font-bold transition-all cursor-pointer flex items-center space-x-1.5"
+          >
+            <Zap className="w-3.5 h-3.5 text-cyan-400" />
+            <span>Pre-load PAYG Buffer</span>
+          </button>
         </div>
       </div>
 

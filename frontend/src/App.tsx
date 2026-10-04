@@ -29,6 +29,8 @@ import { ContactUsPage } from './pages/ContactUsPage';
 import { AboutPage } from './pages/AboutPage';
 import { BlogPage } from './pages/BlogPage';
 import { DocsPage } from './pages/DocsPage';
+import { SeoLandingPage } from './pages/SeoLandingPage';
+import { SEO_PAGES_DATA } from './data/seoPagesData';
 import { Profile } from './pages/Profile';
 import { CallDetailModal } from './components/CallDetailModal';
 import { QuickCallModal } from './components/QuickCallModal';
@@ -42,22 +44,27 @@ export const App: React.FC = () => {
   const [profileSection, setProfileSection] = useState<'details' | 'billing' | 'referrals'>('details');
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const getInitialAuthView = (): 'landing' | 'pricing' | 'login' | 'register' | 'terms' | 'privacy' | 'refund' | 'contact' | 'about' | 'blog' | 'docs' => {
-    const path = window.location.pathname.toLowerCase();
-    if (path.includes('docs') || path.includes('documentation') || path.includes('guide')) return 'docs';
-    if (path.includes('blog')) return 'blog';
-    if (path.includes('about')) return 'about';
-    if (path.includes('terms')) return 'terms';
-    if (path.includes('privacy')) return 'privacy';
-    if (path.includes('refund') || path.includes('cancellation')) return 'refund';
-    if (path.includes('contact')) return 'contact';
-    if (path.includes('pricing')) return 'pricing';
-    if (path.includes('login')) return 'login';
-    if (path.includes('register')) return 'register';
-    return 'landing';
+  const getInitialNavigation = (): { view: 'landing' | 'pricing' | 'login' | 'register' | 'terms' | 'privacy' | 'refund' | 'contact' | 'about' | 'blog' | 'docs' | 'seo'; slug?: string } => {
+    const rawPath = window.location.pathname.toLowerCase().replace(/^\/+|\/+$/g, '');
+    if (rawPath in SEO_PAGES_DATA) {
+      return { view: 'seo', slug: rawPath };
+    }
+    if (rawPath.includes('docs') || rawPath.includes('documentation') || rawPath.includes('guide')) return { view: 'docs' };
+    if (rawPath.includes('blog')) return { view: 'blog' };
+    if (rawPath.includes('about')) return { view: 'about' };
+    if (rawPath.includes('terms')) return { view: 'terms' };
+    if (rawPath.includes('privacy')) return { view: 'privacy' };
+    if (rawPath.includes('refund') || rawPath.includes('cancellation')) return { view: 'refund' };
+    if (rawPath.includes('contact')) return { view: 'contact' };
+    if (rawPath.includes('pricing')) return { view: 'pricing' };
+    if (rawPath.includes('login')) return { view: 'login' };
+    if (rawPath.includes('register')) return { view: 'register' };
+    return { view: 'landing' };
   };
 
-  const [authView, setAuthView] = useState<'landing' | 'pricing' | 'login' | 'register' | 'terms' | 'privacy' | 'refund' | 'contact' | 'about' | 'blog' | 'docs'>(getInitialAuthView);
+  const initialNav = getInitialNavigation();
+  const [authView, setAuthView] = useState<'landing' | 'pricing' | 'login' | 'register' | 'terms' | 'privacy' | 'refund' | 'contact' | 'about' | 'blog' | 'docs' | 'seo'>(initialNav.view);
+  const [currentSeoSlug, setCurrentSeoSlug] = useState<string>(initialNav.slug || 'ai-voice-calling-software');
   const [selectedPlan, setSelectedPlan] = useState<string>('FREE_TRIAL');
 
   // Modals
@@ -119,23 +126,79 @@ export const App: React.FC = () => {
     setTimeout(() => setIsRefreshing(false), 600);
   };
 
+  // Handle browser back/forward buttons
+  useEffect(() => {
+    const handlePopState = () => {
+      const nav = getInitialNavigation();
+      if (nav.view === 'seo' && nav.slug) {
+        setCurrentSeoSlug(nav.slug);
+      }
+      setAuthView(nav.view);
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
   // If user is not authenticated
   if (!token || !user) {
     const sharedPublicNav = {
-      onBackToHome: () => setAuthView('landing'),
-      onGoToAbout: () => setAuthView('about'),
-      onGoToBlog: () => setAuthView('blog'),
-      onGoToDocs: () => setAuthView('docs'),
-      onNavigateDocs: () => setAuthView('docs'),
-      onGoToPricing: () => setAuthView('pricing'),
-      onGoToContact: () => setAuthView('contact'),
-      onGoToLogin: () => setAuthView('login'),
+      onBackToHome: () => {
+        window.history.pushState({}, '', '/');
+        setAuthView('landing');
+      },
+      onGoToAbout: () => {
+        window.history.pushState({}, '', '/about/');
+        setAuthView('about');
+      },
+      onGoToBlog: () => {
+        window.history.pushState({}, '', '/blog/');
+        setAuthView('blog');
+      },
+      onGoToDocs: () => {
+        window.history.pushState({}, '', '/docs/');
+        setAuthView('docs');
+      },
+      onNavigateDocs: () => {
+        window.history.pushState({}, '', '/docs/');
+        setAuthView('docs');
+      },
+      onGoToPricing: () => {
+        window.history.pushState({}, '', '/pricing/');
+        setAuthView('pricing');
+      },
+      onGoToContact: () => {
+        window.history.pushState({}, '', '/contact/');
+        setAuthView('contact');
+      },
+      onGoToLogin: () => {
+        window.history.pushState({}, '', '/login/');
+        setAuthView('login');
+      },
       onGoToRegister: () => {
         setSelectedPlan('FREE_TRIAL');
+        window.history.pushState({}, '', '/register/');
         setAuthView('register');
       },
-      onNavigatePolicy: (policy: 'terms' | 'privacy' | 'refund') => setAuthView(policy),
+      onNavigatePolicy: (policy: 'terms' | 'privacy' | 'refund' | 'security' | 'data-privacy' | 'call-consent-policy') => {
+        if (policy === 'security' || policy === 'data-privacy' || policy === 'call-consent-policy') {
+          setCurrentSeoSlug(policy);
+          window.history.pushState({}, '', `/${policy}/`);
+          setAuthView('seo');
+        } else {
+          window.history.pushState({}, '', `/${policy}/`);
+          setAuthView(policy);
+        }
+      },
+      onNavigateSeoPage: (slug: string) => {
+        setCurrentSeoSlug(slug);
+        window.history.pushState({}, '', `/${slug}/`);
+        setAuthView('seo');
+      },
     };
+
+    if (authView === 'seo') {
+      return <SeoLandingPage slug={currentSeoSlug} {...sharedPublicNav} />;
+    }
 
     if (authView === 'landing') {
       return (
@@ -144,12 +207,28 @@ export const App: React.FC = () => {
             if (plan) setSelectedPlan(plan);
             setAuthView(mode);
           }}
-          onOpenPricing={() => setAuthView('pricing')}
-          onOpenPolicy={(policy) => setAuthView(policy)}
-          onOpenAbout={() => setAuthView('about')}
-          onOpenContact={() => setAuthView('contact')}
-          onOpenBlog={() => setAuthView('blog')}
-          onOpenDocs={() => setAuthView('docs')}
+          onOpenPricing={() => {
+            window.history.pushState({}, '', '/pricing/');
+            setAuthView('pricing');
+          }}
+          onOpenPolicy={(policy) => sharedPublicNav.onNavigatePolicy(policy as any)}
+          onOpenAbout={() => {
+            window.history.pushState({}, '', '/about/');
+            setAuthView('about');
+          }}
+          onOpenContact={() => {
+            window.history.pushState({}, '', '/contact/');
+            setAuthView('contact');
+          }}
+          onOpenBlog={() => {
+            window.history.pushState({}, '', '/blog/');
+            setAuthView('blog');
+          }}
+          onOpenDocs={() => {
+            window.history.pushState({}, '', '/docs/');
+            setAuthView('docs');
+          }}
+          onNavigateSeoPage={sharedPublicNav.onNavigateSeoPage}
         />
       );
     }

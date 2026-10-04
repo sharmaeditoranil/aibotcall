@@ -106,18 +106,37 @@ export const Login: React.FC<LoginProps> = ({
       <div className="sm:mx-auto sm:w-full sm:max-w-md z-10 px-4">
         {/* Brand Banner */}
         <div className="text-center mb-6">
-          <div className="inline-flex justify-center mb-3 cursor-pointer" onClick={onBackToLanding}>
-            <img
-              src="/aibotcall-logo-full.png"
-              alt="AiBotCall"
-              className="h-8 sm:h-9 w-auto object-contain drop-shadow-md hover:scale-105 transition-transform"
-            />
+          <div
+            className="inline-flex items-center justify-center space-x-3 mb-3 cursor-pointer group select-none"
+            onClick={onBackToLanding}
+          >
+            <div className="relative">
+              <img
+                src="/aibotcall-emblem.png"
+                alt="AiBotCall"
+                className="h-10 w-10 object-contain logo-glow group-hover:scale-110 transition-transform duration-300"
+              />
+              <span className="absolute -bottom-0.5 -right-0.5 flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400 border border-[#0d1527]"></span>
+              </span>
+            </div>
+            <div className="flex flex-col text-left">
+              <div className="flex items-center text-2xl font-black tracking-tight leading-none">
+                <span className="text-violet-400 group-hover:brightness-125 transition-all">Ai</span>
+                <span className="text-white">Bot</span>
+                <span className="text-cyan-400 group-hover:brightness-125 transition-all">Call</span>
+              </div>
+              <span className="text-[9px] text-cyan-400/90 font-bold tracking-widest uppercase mt-0.5">
+                AI Voice Telephony
+              </span>
+            </div>
           </div>
-          <h1 className="text-2xl font-black text-white tracking-tight">
-            Sign In to <span className="text-gradient-brand">AiBotCall</span>
+          <h1 className="text-xl font-bold text-white tracking-tight">
+            Sign In to Your Workspace
           </h1>
-          <p className="text-[11px] text-cyan-400/90 font-medium tracking-wider uppercase mt-0.5">
-            AI Voice Calls & Smart Automation
+          <p className="text-xs text-slate-400 mt-1">
+            Access your AI agents, webhook logs, and automated calling campaigns
           </p>
         </div>
 

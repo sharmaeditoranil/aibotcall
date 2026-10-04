@@ -1,0 +1,53 @@
+# Robots.txt for AiBotCall (https://voice.aibotflow.in)
+User-agent: *
+Allow: /
+Allow: /ai-voice-calling-software/
+Allow: /ai-voice-agent-india/
+Allow: /outbound-ai-calling/
+Allow: /inbound-ai-call-agent/
+Allow: /ai-call-broadcast/
+Allow: /ai-lead-follow-up/
+Allow: /ai-appointment-booking/
+Allow: /website-lead-calling/
+Allow: /ai-call-automation/
+Allow: /integrations/
+Allow: /pricing/
+Allow: /ai-voice-agent-for-real-estate/
+Allow: /ai-calling-for-education/
+Allow: /ai-calling-for-coaching-institutes/
+Allow: /ai-calling-for-healthcare/
+Allow: /ai-calling-for-sales-teams/
+Allow: /ai-calling-for-customer-support/
+Allow: /about/
+Allow: /contact/
+Allow: /blog/
+Allow: /docs/
+Allow: /terms/
+Allow: /privacy-policy/
+Allow: /refund-policy/
+Allow: /security/
+Allow: /data-privacy/
+Allow: /call-consent-policy/
+
+# Disallow private user console, app endpoints & internal API
+Disallow: /api/
+Disallow: /overview
+Disallow: /agents
+Disallow: /campaigns
+Disallow: /leads
+Disallow: /calls
+Disallow: /knowledge-base
+Disallow: /webhooks
+Disallow: /suppression
+Disallow: /api-keys
+Disallow: /tester
+Disallow: /settings
+Disallow: /billing
+Disallow: /team
+Disallow: /superadmin
+Disallow: /numbers
+Disallow: /referrals
+Disallow: /profile
+
+# Sitemap Index Reference
+Sitemap: https://voice.aibotflow.in/sitemap.xml
