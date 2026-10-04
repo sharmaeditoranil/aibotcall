@@ -106,15 +106,17 @@ export const Login: React.FC<LoginProps> = ({
       <div className="sm:mx-auto sm:w-full sm:max-w-md z-10 px-4">
         {/* Brand Banner */}
         <div className="text-center mb-6">
-          <div className="inline-flex p-3 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 shadow-xl shadow-emerald-500/20 mb-3">
-            <div className="w-10 h-10 bg-slate-950 rounded-xl flex items-center justify-center">
-              <PhoneCall className="w-5 h-5 text-emerald-400" />
-            </div>
+          <div className="inline-flex justify-center mb-3 cursor-pointer" onClick={onBackToLanding}>
+            <img
+              src="/aibotcall-logo-full.png"
+              alt="AiBotCall"
+              className="h-11 sm:h-12 w-auto object-contain drop-shadow-lg"
+            />
           </div>
           <h1 className="text-2xl font-black text-white tracking-tight">
-            Sign In to <span className="text-emerald-400">AiBotCall</span>
+            Sign In to <span className="text-gradient-brand">AiBotCall</span>
           </h1>
-          <p className="text-[11px] text-emerald-400/90 font-medium tracking-wider uppercase mt-0.5">
+          <p className="text-[11px] text-cyan-400/90 font-medium tracking-wider uppercase mt-0.5">
             AI Voice Calls & Smart Automation
           </p>
         </div>
@@ -186,7 +188,7 @@ export const Login: React.FC<LoginProps> = ({
             <button
               type="submit"
               disabled={loading}
-              className="w-full mt-2 py-3 px-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl text-xs font-bold shadow-lg shadow-emerald-900/30 transition-all active:scale-95 flex items-center justify-center space-x-2 disabled:opacity-50"
+              className="w-full mt-2 py-3 px-4 bg-gradient-brand hover:brightness-110 text-white rounded-xl text-xs font-bold shadow-lg glow-brand-sm transition-all active:scale-95 flex items-center justify-center space-x-2 disabled:opacity-50"
             >
               <span>{loading ? 'Authenticating...' : 'Sign In to Workspace'}</span>
               <ArrowRight className="w-4 h-4" />
@@ -198,9 +200,9 @@ export const Login: React.FC<LoginProps> = ({
             <button
               type="button"
               onClick={handleFillDemo}
-              className="w-full py-2 px-3 rounded-xl bg-slate-900/80 hover:bg-slate-800/80 border border-slate-800 text-[11px] text-slate-300 flex items-center justify-center space-x-1.5 transition-all"
+              className="w-full py-2 px-3 rounded-xl bg-slate-900/80 hover:bg-slate-800/80 border border-indigo-500/20 text-[11px] text-slate-300 flex items-center justify-center space-x-1.5 transition-all"
             >
-              <Zap className="w-3.5 h-3.5 text-amber-400" />
+              <Zap className="w-3.5 h-3.5 text-cyan-400" />
               <span>Fill Default Admin Credentials (1-Click)</span>
             </button>
           </div>
@@ -212,7 +214,7 @@ export const Login: React.FC<LoginProps> = ({
               <button
                 type="button"
                 onClick={onGoToRegister}
-                className="text-emerald-400 hover:text-emerald-300 font-bold transition-colors ml-1"
+                className="text-cyan-400 hover:text-cyan-300 font-bold transition-colors ml-1"
               >
                 Sign Up & Get 30 Free Minutes
               </button>

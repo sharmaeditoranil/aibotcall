@@ -26,9 +26,10 @@ import {
 interface LandingPageProps {
   onOpenAuth: (mode: 'login' | 'register', plan?: string) => void;
   onOpenPricing: () => void;
-  onOpenPolicy?: (policy: 'terms' | 'privacy' | 'refund' | 'contact' | 'about') => void;
+  onOpenPolicy?: (policy: 'terms' | 'privacy' | 'refund' | 'contact' | 'about' | 'blog') => void;
   onOpenAbout?: () => void;
   onOpenContact?: () => void;
+  onOpenBlog?: () => void;
 }
 
 export const LandingPage: React.FC<LandingPageProps> = ({
@@ -37,6 +38,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   onOpenPolicy,
   onOpenAbout,
   onOpenContact,
+  onOpenBlog,
 }) => {
   const [isPlayingDemo, setIsPlayingDemo] = useState(false);
 
@@ -185,40 +187,42 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   return (
     <div className="min-h-screen bg-[#080c14] text-slate-100 font-sans selection:bg-emerald-500 selection:text-white">
       {/* Navigation Bar */}
-      <header className="sticky top-0 z-50 bg-[#080c14]/85 backdrop-blur-xl border-b border-slate-800/80 px-6 py-4">
+      <header className="sticky top-0 z-50 bg-[#070a13]/90 backdrop-blur-xl border-b border-slate-800/80 px-6 py-3.5">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 p-0.5 flex items-center justify-center shadow-lg shadow-emerald-500/20">
-              <div className="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
-                <PhoneCall className="h-5 w-5 text-emerald-400" />
-              </div>
-            </div>
-            <div>
-              <span className="font-extrabold text-lg text-white tracking-tight">
-                AiBot<span className="text-emerald-400">Call</span>
-              </span>
-              <span className="hidden sm:inline-block ml-2 text-[10px] text-emerald-400/80 font-semibold tracking-wider uppercase border-l border-slate-700 pl-2">
-                AI Voice Calls & Smart Automation
-              </span>
-            </div>
+          <div
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="cursor-pointer flex items-center group"
+          >
+            <img
+              src="/aibotcall-logo-full.png"
+              alt="AiBotCall"
+              className="h-9 sm:h-11 w-auto object-contain hover:opacity-95 transition-opacity drop-shadow-md"
+            />
           </div>
 
           <div className="flex items-center space-x-2 sm:space-x-3">
             <button
               onClick={() => (onOpenAbout ? onOpenAbout() : onOpenPolicy?.('about'))}
-              className="py-2 px-2.5 sm:px-3 rounded-xl text-xs font-semibold text-slate-300 hover:text-emerald-400 transition-colors cursor-pointer"
+              className="py-2 px-2.5 sm:px-3 rounded-xl text-xs font-semibold text-slate-300 hover:text-cyan-400 transition-colors cursor-pointer"
             >
               About Us
             </button>
             <button
+              onClick={() => (onOpenBlog ? onOpenBlog() : onOpenPolicy?.('blog'))}
+              className="py-2 px-2.5 sm:px-3 rounded-xl text-xs font-semibold text-slate-300 hover:text-cyan-400 transition-colors cursor-pointer flex items-center space-x-1"
+            >
+              <span>Blog</span>
+              <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-violet-500/20 text-violet-300 border border-violet-500/30 font-bold uppercase tracking-wider">Playbooks</span>
+            </button>
+            <button
               onClick={onOpenPricing}
-              className="py-2 px-2.5 sm:px-3 rounded-xl text-xs font-semibold text-slate-300 hover:text-emerald-400 transition-colors cursor-pointer"
+              className="py-2 px-2.5 sm:px-3 rounded-xl text-xs font-semibold text-slate-300 hover:text-cyan-400 transition-colors cursor-pointer"
             >
               Pricing
             </button>
             <button
               onClick={() => (onOpenContact ? onOpenContact() : onOpenPolicy?.('contact'))}
-              className="hidden sm:inline-block py-2 px-3 rounded-xl text-xs font-semibold text-slate-300 hover:text-emerald-400 transition-colors cursor-pointer"
+              className="hidden sm:inline-block py-2 px-3 rounded-xl text-xs font-semibold text-slate-300 hover:text-cyan-400 transition-colors cursor-pointer"
             >
               Contact
             </button>
@@ -230,7 +234,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             </button>
             <button
               onClick={() => onOpenAuth('register')}
-              className="py-2 px-3 sm:px-4 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-md shadow-emerald-900/30 transition-all active:scale-95 cursor-pointer"
+              className="py-2 px-3 sm:px-4 rounded-xl text-xs font-bold text-white bg-gradient-brand hover:brightness-110 shadow-md glow-brand-sm transition-all active:scale-95 cursor-pointer"
             >
               <span className="hidden sm:inline">Start Free Trial (30 Mins)</span>
               <span className="sm:hidden">Try Free</span>
@@ -242,17 +246,17 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       {/* Hero Section */}
       <section className="relative pt-16 pb-20 px-6 overflow-hidden">
         {/* Glow Spheres */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-emerald-500/15 rounded-full blur-[140px] pointer-events-none" />
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[850px] h-[450px] bg-gradient-to-tr from-violet-600/15 via-blue-600/15 to-cyan-500/15 rounded-full blur-[140px] pointer-events-none" />
 
         <div className="max-w-5xl mx-auto text-center relative z-10 space-y-6">
-          <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold tracking-wide">
-            <Sparkles className="w-3.5 h-3.5" />
+          <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/30 text-violet-300 text-xs font-bold tracking-wide">
+            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
             <span>Autonomous Two-Way Voice Telephony</span>
           </div>
 
           <h1 className="text-4xl sm:text-6xl font-black text-white tracking-tight leading-[1.1]">
             Turn Website Leads into <br />
-            <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">
+            <span className="text-gradient-brand">
               Live AI Phone Calls in 5 Seconds
             </span>
           </h1>
@@ -264,7 +268,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
             <button
               onClick={() => onOpenAuth('register')}
-              className="w-full sm:w-auto py-3.5 px-8 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-sm shadow-xl shadow-emerald-900/40 transition-all active:scale-95 flex items-center justify-center space-x-2 cursor-pointer"
+              className="w-full sm:w-auto py-3.5 px-8 rounded-2xl bg-gradient-brand hover:brightness-110 text-white font-bold text-sm shadow-xl glow-brand-sm transition-all active:scale-95 flex items-center justify-center space-x-2 cursor-pointer"
             >
               <span>Get Started Free (30 Mins)</span>
               <ArrowRight className="w-4 h-4" />
@@ -278,17 +282,17 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           </div>
 
           {/* Interactive Audio Preview Widget */}
-          <div className="mt-8 max-w-xl mx-auto p-4 rounded-2xl bg-slate-900/80 border border-emerald-500/30 glass-card shadow-2xl flex items-center justify-between">
+          <div className="mt-8 max-w-xl mx-auto p-4 rounded-2xl bg-slate-900/80 border border-indigo-500/30 glass-card shadow-2xl flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <button
                 onClick={togglePlayAudio}
-                className="w-12 h-12 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center shadow-lg shadow-emerald-500/30 hover:scale-105 transition-transform cursor-pointer"
+                className="w-12 h-12 rounded-full bg-gradient-brand text-white flex items-center justify-center shadow-lg glow-brand-sm hover:scale-105 transition-transform cursor-pointer"
               >
                 {isPlayingDemo ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 ml-0.5" />}
               </button>
               <div className="text-left">
                 <p className="text-xs font-bold text-white">Agent Ritu (Admissions Counselor)</p>
-                <p className="text-[11px] text-emerald-400">Click to listen: Hindi/Hinglish Voice Demo</p>
+                <p className="text-[11px] text-cyan-400">Click to listen: Hindi/Hinglish Voice Demo</p>
               </div>
             </div>
 
@@ -296,7 +300,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               {[14, 28, 18, 32, 22, 12, 26, 30, 16, 20, 24, 18].map((h, idx) => (
                 <div
                   key={idx}
-                  className={`w-1 rounded-full bg-emerald-400 ${isPlayingDemo ? 'animate-pulse' : ''}`}
+                  className={`w-1 rounded-full bg-gradient-to-t from-violet-500 to-cyan-400 ${isPlayingDemo ? 'animate-pulse' : ''}`}
                   style={{ height: `${h}px` }}
                 />
               ))}
@@ -308,12 +312,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
         {/* Hero Visual Dashboard Showcase */}
         <div className="mt-14 max-w-6xl mx-auto relative">
-          <div className="rounded-3xl border border-emerald-500/30 shadow-2xl shadow-emerald-950/50 overflow-hidden bg-slate-950 group relative">
+          <div className="rounded-3xl border border-indigo-500/30 shadow-2xl shadow-indigo-950/50 overflow-hidden bg-slate-950 group relative">
             <div className="absolute top-4 left-6 z-20 flex items-center space-x-2">
               <span className="w-3 h-3 rounded-full bg-red-500/80" />
               <span className="w-3 h-3 rounded-full bg-amber-500/80" />
               <span className="w-3 h-3 rounded-full bg-emerald-500/80" />
-              <span className="ml-3 text-xs font-mono text-slate-400">app.aibotflow.in — AI Voice Calling Engine</span>
+              <span className="ml-3 text-xs font-mono text-slate-400">voice.aibotflow.in — AI Voice Calling Engine</span>
             </div>
             <img
               src="/assets/dashboard_mockup.jpg"
@@ -410,29 +414,33 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </section>
 
       {/* Leadership & Vision Highlight: Meet Anil Sharma */}
-      <section className="py-16 px-6 border-t border-slate-800/80 bg-gradient-to-b from-slate-950 via-[#0c1220] to-[#080c14]">
-        <div className="max-w-5xl mx-auto rounded-3xl p-8 sm:p-10 bg-slate-900/60 border border-slate-800/80 shadow-2xl">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+      <section className="py-16 px-6 border-t border-slate-800/80 bg-gradient-to-b from-[#070a13] via-[#0d1326] to-[#070a13]">
+        <div className="max-w-5xl mx-auto rounded-3xl p-8 sm:p-10 bg-slate-900/60 border border-indigo-500/20 shadow-2xl relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-80 h-80 bg-violet-600/10 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center relative z-10">
             <div className="md:col-span-4 text-center md:text-left space-y-3">
-              <div className="w-24 h-24 mx-auto md:mx-0 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 p-0.5 shadow-lg shadow-emerald-500/20">
-                <div className="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center text-3xl font-black text-emerald-400">
-                  AS
-                </div>
+              <div className="w-28 h-28 mx-auto md:mx-0 rounded-2xl bg-gradient-to-tr from-violet-600 via-blue-500 to-cyan-400 p-0.5 shadow-xl shadow-indigo-500/20 overflow-hidden">
+                <img
+                  src="/assets/anil_sharma.jpg"
+                  alt="Anil Sharma - Founder"
+                  className="w-full h-full object-cover rounded-[14px]"
+                />
               </div>
               <div>
                 <h3 className="text-xl font-bold text-white">Anil Sharma</h3>
-                <p className="text-xs font-semibold text-emerald-400">Founder & Creative Technologist</p>
+                <p className="text-xs font-semibold text-gradient-brand">Founder & Creative Technologist</p>
                 <p className="text-[11px] text-slate-400 mt-0.5">Founder, Quick Art Photography Academy</p>
               </div>
             </div>
 
             <div className="md:col-span-8 space-y-4">
-              <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-wider">
-                <Sparkles className="w-3.5 h-3.5" />
+              <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-300 text-xs font-bold uppercase tracking-wider">
+                <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
                 <span>Leadership & Vision</span>
               </span>
               <h3 className="text-2xl font-extrabold text-white tracking-tight">
-                Creative Industry Se Lekar <span className="text-emerald-400">Smart Business Automation</span> Tak
+                Creative Industry Se Lekar <span className="text-gradient-brand">Smart Business Automation</span> Tak
               </h3>
               <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
                 10+ saal ke creative filmmaking aur educational workflow experience ke saath, Anil Sharma ka maksad har business ke liye customer communication ko aasaan banana hai. Unka anubhav batata hai ki ek website lead ko pehle 5 minute ke andar personalized voice response milne par conversion <strong>4 guna tak badh jata hai</strong>.
@@ -440,14 +448,20 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               <div className="pt-2 flex flex-wrap items-center gap-3">
                 <button
                   onClick={() => (onOpenAbout ? onOpenAbout() : onOpenPolicy?.('about'))}
-                  className="py-2 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all cursor-pointer flex items-center space-x-2"
+                  className="py-2.5 px-4 rounded-xl bg-gradient-brand hover:brightness-110 text-white text-xs font-bold transition-all shadow-md glow-brand-sm cursor-pointer flex items-center space-x-2"
                 >
                   <span>Read Full About Us</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </button>
                 <button
+                  onClick={() => (onOpenBlog ? onOpenBlog() : onOpenPolicy?.('blog'))}
+                  className="py-2.5 px-4 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 text-xs font-semibold transition-all cursor-pointer flex items-center space-x-1.5"
+                >
+                  <span>Read Founder's Telephony Playbook</span>
+                </button>
+                <button
                   onClick={() => (onOpenContact ? onOpenContact() : onOpenPolicy?.('contact'))}
-                  className="py-2 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold transition-all cursor-pointer"
+                  className="py-2.5 px-4 rounded-xl bg-slate-900/60 hover:bg-slate-800 text-slate-300 border border-slate-700 text-xs font-semibold transition-all cursor-pointer"
                 >
                   <span>Connect with Us</span>
                 </button>
@@ -559,15 +573,18 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         <div className="max-w-7xl mx-auto space-y-10">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="space-y-3">
-              <div className="flex items-center space-x-2 text-white font-bold text-base">
-                <PhoneCall className="w-5 h-5 text-emerald-400" />
-                <span>AiBotCall</span>
+              <div className="flex items-center space-x-2">
+                <img
+                  src="/aibotcall-logo-full.png"
+                  alt="AiBotCall"
+                  className="h-9 w-auto object-contain"
+                />
               </div>
               <p className="text-xs text-slate-400 leading-relaxed">
                 Autonomous two-way AI conversational phone calling platform for admissions, sales qualification, and broadcast campaigns.
               </p>
               <p className="text-[11px] text-slate-500">
-                Operated by AiBotCall Technologies Pvt. Ltd.
+                Operated by AiBotCall Technologies Pvt. Ltd. · Founded by Anil Sharma
               </p>
             </div>
 
@@ -575,17 +592,17 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               <h4 className="font-bold text-white uppercase tracking-wider text-xs mb-3">Product</h4>
               <ul className="space-y-2 text-xs">
                 <li>
-                  <button onClick={onOpenPricing} className="hover:text-emerald-400 cursor-pointer">
+                  <button onClick={onOpenPricing} className="hover:text-cyan-400 cursor-pointer">
                     Pricing & Calling Plans
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => onOpenAuth('register')} className="hover:text-emerald-400 cursor-pointer">
+                  <button onClick={() => onOpenAuth('register')} className="hover:text-cyan-400 cursor-pointer">
                     Free Trial (30 Mins)
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => onOpenAuth('login')} className="hover:text-emerald-400 cursor-pointer">
+                  <button onClick={() => onOpenAuth('login')} className="hover:text-cyan-400 cursor-pointer">
                     Dashboard Login
                   </button>
                 </li>
@@ -600,15 +617,24 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 <li>
                   <button
                     onClick={() => (onOpenAbout ? onOpenAbout() : onOpenPolicy?.('about'))}
-                    className="hover:text-emerald-400 cursor-pointer text-emerald-400 font-semibold"
+                    className="hover:text-cyan-400 cursor-pointer text-cyan-400 font-semibold"
                   >
                     About Us & Leadership
                   </button>
                 </li>
                 <li>
                   <button
+                    onClick={() => (onOpenBlog ? onOpenBlog() : onOpenPolicy?.('blog'))}
+                    className="hover:text-cyan-400 cursor-pointer text-violet-300 font-semibold flex items-center space-x-1.5"
+                  >
+                    <span>Blog & AI Playbooks</span>
+                    <span className="text-[9px] px-1 py-0.2 rounded bg-violet-500/20 text-violet-300 font-mono">NEW</span>
+                  </button>
+                </li>
+                <li>
+                  <button
                     onClick={() => onOpenPolicy?.('terms')}
-                    className="hover:text-emerald-400 cursor-pointer"
+                    className="hover:text-cyan-400 cursor-pointer"
                   >
                     Terms & Conditions
                   </button>
@@ -616,7 +642,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 <li>
                   <button
                     onClick={() => onOpenPolicy?.('privacy')}
-                    className="hover:text-emerald-400 cursor-pointer"
+                    className="hover:text-cyan-400 cursor-pointer"
                   >
                     Privacy Policy
                   </button>
@@ -624,7 +650,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 <li>
                   <button
                     onClick={() => onOpenPolicy?.('refund')}
-                    className="hover:text-emerald-400 cursor-pointer"
+                    className="hover:text-cyan-400 cursor-pointer"
                   >
                     Refund & Cancellation Policy
                   </button>
@@ -632,7 +658,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 <li>
                   <button
                     onClick={() => (onOpenContact ? onOpenContact() : onOpenPolicy?.('contact'))}
-                    className="hover:text-emerald-400 cursor-pointer"
+                    className="hover:text-cyan-400 cursor-pointer"
                   >
                     Contact Us & Grievance Redressal
                   </button>

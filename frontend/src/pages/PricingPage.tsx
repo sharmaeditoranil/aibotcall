@@ -218,35 +218,27 @@ export const PricingPage: React.FC<PricingPageProps> = ({
   return (
     <div className="min-h-screen bg-[#080c14] text-slate-100 font-sans selection:bg-emerald-500 selection:text-slate-950">
       {/* Header Navigation */}
-      <header className="sticky top-0 z-50 bg-[#080c14]/80 backdrop-blur-xl border-b border-slate-800/80">
+      <header className="sticky top-0 z-50 bg-[#070a13]/90 backdrop-blur-xl border-b border-slate-800/80">
         <div className="max-w-7xl mx-auto px-6 h-18 flex items-center justify-between">
           <div
             onClick={onBackToHome}
-            className="flex items-center space-x-3 cursor-pointer group"
+            className="flex items-center cursor-pointer group"
           >
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 p-0.5 flex items-center justify-center shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition-transform">
-              <div className="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
-                <PhoneCall className="h-5 w-5 text-emerald-400" />
-              </div>
-            </div>
-            <div>
-              <span className="font-black text-xl text-white tracking-tight">
-                AiBot<span className="text-emerald-400">Call</span>
-              </span>
-              <p className="text-[10px] text-emerald-400/80 font-medium tracking-wide uppercase">
-                AI Voice Calls & Smart Automation
-              </p>
-            </div>
+            <img
+              src="/aibotcall-logo-full.png"
+              alt="AiBotCall"
+              className="h-9 sm:h-11 w-auto object-contain hover:opacity-95 transition-opacity drop-shadow-md"
+            />
           </div>
 
           <nav className="hidden md:flex items-center space-x-8 text-xs font-semibold text-slate-300">
-            <button onClick={onBackToHome} className="hover:text-emerald-400 transition-colors">
+            <button onClick={onBackToHome} className="hover:text-cyan-400 transition-colors">
               Home
             </button>
-            <button onClick={onBackToHome} className="hover:text-emerald-400 transition-colors">
+            <button onClick={onBackToHome} className="hover:text-cyan-400 transition-colors">
               Features
             </button>
-            <span className="text-emerald-400 font-bold border-b-2 border-emerald-400 pb-0.5">
+            <span className="text-cyan-400 font-bold border-b-2 border-cyan-400 pb-0.5">
               Pricing & Plans
             </span>
           </nav>
@@ -254,13 +246,13 @@ export const PricingPage: React.FC<PricingPageProps> = ({
           <div className="flex items-center space-x-3">
             <button
               onClick={onGoToLogin}
-              className="text-xs font-bold text-slate-300 hover:text-white px-3 py-2 transition-colors"
+              className="text-xs font-bold text-slate-300 hover:text-white px-3 py-2 transition-colors cursor-pointer"
             >
               Sign In
             </button>
             <button
               onClick={() => onSelectPlan('PAY_AS_YOU_GO')}
-              className="py-2.5 px-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold shadow-md shadow-emerald-900/30 transition-all active:scale-95 flex items-center space-x-1.5"
+              className="py-2.5 px-4 rounded-xl bg-gradient-brand hover:brightness-110 text-white text-xs font-bold shadow-md glow-brand-sm transition-all active:scale-95 flex items-center space-x-1.5 cursor-pointer"
             >
               <span>Start Pay As You Go</span>
               <ArrowRight className="w-3.5 h-3.5" />

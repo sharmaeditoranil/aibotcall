@@ -128,13 +128,15 @@ export const Register: React.FC<RegisterProps> = ({
       <div className="sm:mx-auto sm:w-full sm:max-w-md z-10 px-4">
         {/* Brand Banner */}
         <div className="text-center mb-6">
-          <div className="inline-flex p-3 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 shadow-xl shadow-emerald-500/20 mb-3">
-            <div className="w-10 h-10 bg-slate-950 rounded-xl flex items-center justify-center">
-              <PhoneCall className="w-5 h-5 text-emerald-400" />
-            </div>
+          <div className="inline-flex justify-center mb-3 cursor-pointer" onClick={onBackToLanding}>
+            <img
+              src="/aibotcall-logo-full.png"
+              alt="AiBotCall"
+              className="h-11 sm:h-12 w-auto object-contain drop-shadow-lg"
+            />
           </div>
           <h1 className="text-2xl font-black text-white tracking-tight">
-            Create Your <span className="text-emerald-400">AiBotCall</span> Account
+            Create Your <span className="text-gradient-brand">AiBotCall</span> Account
           </h1>
           <p className="text-xs text-slate-400 mt-1">
             Get 30 free calling minutes instantly to test live AI calls on your phone
@@ -142,15 +144,15 @@ export const Register: React.FC<RegisterProps> = ({
         </div>
 
         {/* Selected Plan Pill */}
-        <div className="mb-5 p-3 rounded-2xl bg-emerald-950/40 border border-emerald-500/30 flex items-center justify-between">
+        <div className="mb-5 p-3 rounded-2xl bg-indigo-950/40 border border-indigo-500/30 flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <Sparkles className="w-4 h-4 text-emerald-400" />
+            <Sparkles className="w-4 h-4 text-cyan-400" />
             <div>
               <span className="text-xs font-bold text-white">{currentPlanInfo.name}</span>
-              <p className="text-[10px] text-emerald-400">{currentPlanInfo.minutes}</p>
+              <p className="text-[10px] text-cyan-400">{currentPlanInfo.minutes}</p>
             </div>
           </div>
-          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-violet-500/20 text-violet-300 border border-violet-500/40">
             {currentPlanInfo.tag}
           </span>
         </div>
@@ -270,7 +272,7 @@ export const Register: React.FC<RegisterProps> = ({
             <button
               type="submit"
               disabled={loading}
-              className="w-full mt-3 py-3 px-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl text-xs font-bold shadow-lg shadow-emerald-900/30 transition-all active:scale-95 flex items-center justify-center space-x-2 disabled:opacity-50"
+              className="w-full mt-3 py-3 px-4 bg-gradient-brand hover:brightness-110 text-white rounded-xl text-xs font-bold shadow-lg glow-brand-sm transition-all active:scale-95 flex items-center justify-center space-x-2 disabled:opacity-50 cursor-pointer"
             >
               <span>{loading ? 'Creating Workspace...' : 'Create Account & Get 30 Free Mins'}</span>
               <ArrowRight className="w-4 h-4" />

@@ -27,6 +27,7 @@ import { PrivacyPolicyPage } from './pages/PrivacyPolicyPage';
 import { RefundPolicyPage } from './pages/RefundPolicyPage';
 import { ContactUsPage } from './pages/ContactUsPage';
 import { AboutPage } from './pages/AboutPage';
+import { BlogPage } from './pages/BlogPage';
 import { Profile } from './pages/Profile';
 import { CallDetailModal } from './components/CallDetailModal';
 import { QuickCallModal } from './components/QuickCallModal';
@@ -40,8 +41,9 @@ export const App: React.FC = () => {
   const [profileSection, setProfileSection] = useState<'details' | 'billing' | 'referrals'>('details');
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const getInitialAuthView = (): 'landing' | 'pricing' | 'login' | 'register' | 'terms' | 'privacy' | 'refund' | 'contact' | 'about' => {
+  const getInitialAuthView = (): 'landing' | 'pricing' | 'login' | 'register' | 'terms' | 'privacy' | 'refund' | 'contact' | 'about' | 'blog' => {
     const path = window.location.pathname.toLowerCase();
+    if (path.includes('blog')) return 'blog';
     if (path.includes('about')) return 'about';
     if (path.includes('terms')) return 'terms';
     if (path.includes('privacy')) return 'privacy';
@@ -53,7 +55,7 @@ export const App: React.FC = () => {
     return 'landing';
   };
 
-  const [authView, setAuthView] = useState<'landing' | 'pricing' | 'login' | 'register' | 'terms' | 'privacy' | 'refund' | 'contact' | 'about'>(getInitialAuthView);
+  const [authView, setAuthView] = useState<'landing' | 'pricing' | 'login' | 'register' | 'terms' | 'privacy' | 'refund' | 'contact' | 'about' | 'blog'>(getInitialAuthView);
   const [selectedPlan, setSelectedPlan] = useState<string>('FREE_TRIAL');
 
   // Modals
@@ -128,6 +130,7 @@ export const App: React.FC = () => {
           onOpenPolicy={(policy) => setAuthView(policy)}
           onOpenAbout={() => setAuthView('about')}
           onOpenContact={() => setAuthView('contact')}
+          onOpenBlog={() => setAuthView('blog')}
         />
       );
     }
@@ -136,6 +139,23 @@ export const App: React.FC = () => {
       return (
         <AboutPage
           onBackToHome={() => setAuthView('landing')}
+          onGoToContact={() => setAuthView('contact')}
+          onGoToPricing={() => setAuthView('pricing')}
+          onGoToBlog={() => setAuthView('blog')}
+          onGoToRegister={() => {
+            setSelectedPlan('GROWTH');
+            setAuthView('register');
+          }}
+          onGoToLogin={() => setAuthView('login')}
+        />
+      );
+    }
+
+    if (authView === 'blog') {
+      return (
+        <BlogPage
+          onBackToHome={() => setAuthView('landing')}
+          onGoToAbout={() => setAuthView('about')}
           onGoToContact={() => setAuthView('contact')}
           onGoToPricing={() => setAuthView('pricing')}
           onGoToRegister={() => {
@@ -164,6 +184,7 @@ export const App: React.FC = () => {
         <ContactUsPage
           onBackToHome={() => setAuthView('landing')}
           onGoToAbout={() => setAuthView('about')}
+          onGoToBlog={() => setAuthView('blog')}
         />
       );
     }
