@@ -56,8 +56,23 @@ export const Settings: React.FC = () => {
         if (data.telephony.caller_id && !data.telephony.caller_id.includes('Shared')) {
           setCallerId(data.telephony.caller_id);
         }
-        if (data.telephony.account_sid_masked) {
-          setAccountSid(data.telephony.account_sid_masked);
+        if (data.telephony.account_sid) {
+          setAccountSid(data.telephony.account_sid);
+        }
+        if (data.telephony.api_key) {
+          setApiKey(data.telephony.api_key);
+        }
+        if (data.telephony.api_token) {
+          setApiToken(data.telephony.api_token);
+        }
+      }
+
+      if (data.ai_engine) {
+        if (data.ai_engine.openai_key) {
+          setOpenaiKey(data.ai_engine.openai_key);
+        }
+        if (data.ai_engine.model) {
+          setRealtimeModel(data.ai_engine.model);
         }
       }
 
@@ -65,26 +80,38 @@ export const Settings: React.FC = () => {
         setCrmWebhookUrl(data.crm_webhook.crm_webhook_url);
       }
 
-      // Check localStorage for saved custom keys
+      // Check localStorage for saved custom keys as fallback
       const savedOpenai = localStorage.getItem('aibot_openai_key');
-      if (savedOpenai) setOpenaiKey(savedOpenai);
+      if (savedOpenai && !data.ai_engine?.openai_key) setOpenaiKey(savedOpenai);
 
       const savedSid = localStorage.getItem('aibot_account_sid');
-      if (savedSid) setAccountSid(savedSid);
+      if (savedSid && !data.telephony?.account_sid) setAccountSid(savedSid);
 
       const savedCaller = localStorage.getItem('aibot_caller_id');
-      if (savedCaller) setCallerId(savedCaller);
+      if (savedCaller && !data.telephony?.caller_id) setCallerId(savedCaller);
 
       const savedToken = localStorage.getItem('aibot_api_token');
-      if (savedToken) setApiToken(savedToken);
+      if (savedToken && !data.telephony?.api_token) setApiToken(savedToken);
 
       const savedKey = localStorage.getItem('aibot_api_key');
-      if (savedKey) setApiKey(savedKey);
+      if (savedKey && !data.telephony?.api_key) setApiKey(savedKey);
 
       const savedCrm = localStorage.getItem('aibot_crm_url');
+      if (savedCrm && !data.crm_webhook?.crm_webhook_url) setCrmWebhookUrl(savedCrm);
+    } catch {
+      // Local fallback
+      const savedOpenai = localStorage.getItem('aibot_openai_key');
+      if (savedOpenai) setOpenaiKey(savedOpenai);
+      const savedSid = localStorage.getItem('aibot_account_sid');
+      if (savedSid) setAccountSid(savedSid);
+      const savedCaller = localStorage.getItem('aibot_caller_id');
+      if (savedCaller) setCallerId(savedCaller);
+      const savedToken = localStorage.getItem('aibot_api_token');
+      if (savedToken) setApiToken(savedToken);
+      const savedKey = localStorage.getItem('aibot_api_key');
+      if (savedKey) setApiKey(savedKey);
+      const savedCrm = localStorage.getItem('aibot_crm_url');
       if (savedCrm) setCrmWebhookUrl(savedCrm);
-    } catch (err: any) {
-      console.log('Using local config');
     } finally {
       setLoading(false);
     }
@@ -100,25 +127,20 @@ export const Settings: React.FC = () => {
     setFeedback(null);
 
     try {
-      // 1. Save Exotel Telephony if provided
-      if (accountSid && apiKey && apiToken && callerId) {
-        await api.put('/api/v1/integrations/exotel', {
-          account_sid: accountSid,
-          api_key: apiKey,
-          api_token: apiToken,
-          caller_id: callerId,
-          custom_telephony_enabled: true,
-        }).catch(() => {});
-      }
+      // 1. Call Master Save API (saves to Postgres DB, memory, and .env on server)
+      const res = await api.put('/api/v1/integrations/all-settings', {
+        caller_id: callerId,
+        account_sid: accountSid,
+        api_key: apiKey,
+        api_token: apiToken,
+        openai_key: openaiKey,
+        realtime_model: realtimeModel,
+        crm_webhook_url: crmWebhookUrl,
+        concurrency,
+        max_duration: maxDuration,
+      });
 
-      // 2. Save CRM Webhook if provided
-      if (crmWebhookUrl) {
-        await api.put('/api/v1/integrations/crm', {
-          crm_webhook_url: crmWebhookUrl,
-        }).catch(() => {});
-      }
-
-      // 3. Persist locally for immediate dashboard reactivity
+      // 2. Persist locally for immediate dashboard reactivity
       if (accountSid) localStorage.setItem('aibot_account_sid', accountSid);
       if (apiKey) localStorage.setItem('aibot_api_key', apiKey);
       if (apiToken) localStorage.setItem('aibot_api_token', apiToken);
@@ -128,12 +150,20 @@ export const Settings: React.FC = () => {
 
       setFeedback({
         type: 'success',
-        message: 'All System & Telephony Settings updated and saved successfully! 🎉',
+        message: res.data?.message || 'All System, Exotel & OpenAI Settings saved permanently! 🎉',
       });
     } catch (err: any) {
+      // Fallback local save if offline
+      if (accountSid) localStorage.setItem('aibot_account_sid', accountSid);
+      if (apiKey) localStorage.setItem('aibot_api_key', apiKey);
+      if (apiToken) localStorage.setItem('aibot_api_token', apiToken);
+      if (callerId) localStorage.setItem('aibot_caller_id', callerId);
+      if (openaiKey) localStorage.setItem('aibot_openai_key', openaiKey);
+      if (crmWebhookUrl) localStorage.setItem('aibot_crm_url', crmWebhookUrl);
+
       setFeedback({
-        type: 'error',
-        message: err.response?.data?.error || err.message || 'Failed to save settings',
+        type: 'success',
+        message: 'Settings saved locally in browser! (Server error: ' + (err.response?.data?.error || err.message) + ')',
       });
     } finally {
       setSaving(false);

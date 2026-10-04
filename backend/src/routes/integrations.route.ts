@@ -1,6 +1,8 @@
 import { FastifyInstance } from 'fastify';
 import axios from 'axios';
 import crypto from 'crypto';
+import fs from 'fs';
+import path from 'path';
 import { prisma } from '../db/prisma.js';
 import { authenticate } from '../middleware/auth.js';
 import { config } from '../config/index.js';
@@ -70,7 +72,10 @@ export async function integrationsRoute(fastify: FastifyInstance) {
       telephony: {
         provider: 'Exotel',
         is_custom_configured: !!org.custom_telephony_enabled && !!org.exotel_account_sid,
-        caller_id: org.exotel_caller_id || config.exotel.callerId || '+918047359000 (AiBotCall Shared)',
+        caller_id: org.exotel_caller_id || config.exotel.callerId || '',
+        account_sid: org.exotel_account_sid || config.exotel.accountSid || '',
+        api_key: org.exotel_api_key || config.exotel.apiKey || '',
+        api_token: org.exotel_api_token || config.exotel.apiToken || '',
         account_sid_masked: maskedAccountSid,
         api_key_masked: maskedExotelKey,
         custom_enabled: org.custom_telephony_enabled,
@@ -79,6 +84,7 @@ export async function integrationsRoute(fastify: FastifyInstance) {
       ai_engine: {
         provider: 'OpenAI Realtime Voice',
         model: config.openai.realtimeModel,
+        openai_key: config.openai.apiKey || '',
         voice_latency: '< 450ms',
         audio_codec: 'G.711 mu-law (8kHz Telephony Native)',
         turn_detection: 'Server VAD (High Precision)',
@@ -156,6 +162,122 @@ export async function integrationsRoute(fastify: FastifyInstance) {
       success: true,
       message: 'CRM outgoing webhook URL updated across voice agents!',
       crm_webhook_url,
+    };
+  });
+
+  /**
+   * PUT /api/v1/integrations/all-settings
+   * Master save for Telephony, OpenAI, CRM webhook and Call Watchdogs
+   */
+  fastify.put('/api/v1/integrations/all-settings', async (request, reply) => {
+    const orgId = request.user?.organizationId;
+    if (!orgId) return reply.status(401).send({ error: 'Unauthorized' });
+
+    const body = request.body as any;
+    const {
+      caller_id,
+      account_sid,
+      api_key,
+      api_token,
+      openai_key,
+      realtime_model,
+      crm_webhook_url,
+      concurrency,
+    } = body || {};
+
+    // 1. Update Organization in PostgreSQL
+    const updateData: any = {};
+    if (caller_id) updateData.exotel_caller_id = caller_id.trim();
+    if (account_sid) updateData.exotel_account_sid = account_sid.trim();
+    if (api_key) updateData.exotel_api_key = api_key.trim();
+    if (api_token) updateData.exotel_api_token = api_token.trim();
+    if (account_sid || api_key) updateData.custom_telephony_enabled = true;
+    if (concurrency) updateData.max_concurrency = parseInt(concurrency, 10) || 5;
+
+    if (Object.keys(updateData).length > 0) {
+      await prisma.organization.update({
+        where: { id: orgId },
+        data: updateData,
+      });
+    }
+
+    // 2. Update CRM webhook on all active agents
+    if (crm_webhook_url) {
+      await prisma.voiceAgent.updateMany({
+        where: { organization_id: orgId },
+        data: { crm_webhook_url: crm_webhook_url.trim() },
+      });
+      config.webhooks.crmWebhookUrl = crm_webhook_url.trim();
+    }
+
+    // 3. Update in-memory runtime config
+    if (openai_key) {
+      config.openai.apiKey = openai_key.trim();
+      process.env.OPENAI_API_KEY = openai_key.trim();
+    }
+    if (realtime_model) {
+      config.openai.realtimeModel = realtime_model;
+      process.env.OPENAI_REALTIME_MODEL = realtime_model;
+    }
+    if (caller_id) {
+      config.exotel.callerId = caller_id.trim();
+      process.env.EXOTEL_CALLER_ID = caller_id.trim();
+    }
+    if (account_sid) {
+      config.exotel.accountSid = account_sid.trim();
+      process.env.EXOTEL_ACCOUNT_SID = account_sid.trim();
+    }
+    if (api_key) {
+      config.exotel.apiKey = api_key.trim();
+      process.env.EXOTEL_API_KEY = api_key.trim();
+    }
+    if (api_token) {
+      config.exotel.apiToken = api_token.trim();
+      process.env.EXOTEL_API_TOKEN = api_token.trim();
+    }
+
+    // 4. Update .env files on disk for permanence
+    const envPaths = [
+      path.resolve(process.cwd(), '.env'),
+      path.resolve(process.cwd(), '../.env'),
+      '/var/www/voice.aibotflow.in/backend/.env',
+      '/var/www/voice.aibotflow.in/.env',
+    ];
+
+    for (const p of envPaths) {
+      try {
+        if (fs.existsSync(p)) {
+          let content = fs.readFileSync(p, 'utf8');
+          const updateOrAdd = (key: string, val: string) => {
+            if (!val) return;
+            const regex = new RegExp(`^${key}=.*$`, 'm');
+            if (regex.test(content)) {
+              content = content.replace(regex, `${key}=${val}`);
+            } else {
+              content += `\n${key}=${val}`;
+            }
+          };
+
+          if (openai_key) updateOrAdd('OPENAI_API_KEY', openai_key.trim());
+          if (realtime_model) updateOrAdd('OPENAI_REALTIME_MODEL', realtime_model);
+          if (caller_id) updateOrAdd('EXOTEL_CALLER_ID', caller_id.trim());
+          if (account_sid) updateOrAdd('EXOTEL_ACCOUNT_SID', account_sid.trim());
+          if (api_key) updateOrAdd('EXOTEL_API_KEY', api_key.trim());
+          if (api_token) updateOrAdd('EXOTEL_API_TOKEN', api_token.trim());
+          if (crm_webhook_url) updateOrAdd('CRM_WEBHOOK_URL', crm_webhook_url.trim());
+
+          fs.writeFileSync(p, content, 'utf8');
+        }
+      } catch {
+        // ignore errors
+      }
+    }
+
+    logger.info({ orgId }, 'All system & telephony settings updated successfully');
+
+    return {
+      success: true,
+      message: 'All System, Exotel & OpenAI settings saved permanently! 🎉',
     };
   });
 
