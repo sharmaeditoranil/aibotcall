@@ -92,7 +92,7 @@ export const PrivacyPolicyPage: React.FC<PolicyProps> = ({ onBackToHome }) => {
             5. User Rights & Data Deletion
           </h2>
           <p>
-            You have the right to access, rectify, or permanently delete your contact lists, call transcripts, audio recordings, or entire organization account at any time. Simply use the delete controls in your dashboard or email <span className="text-emerald-400 font-mono">privacy@aibotcall.com</span>. We fulfill all valid deletion requests within 7 business days.
+            You have the right to access, rectify, or permanently delete your contact lists, call transcripts, audio recordings, or entire organization account at any time. Simply use the delete controls in your dashboard or email <span className="text-emerald-400 font-mono">support@aibotflow.in</span>. We fulfill all valid deletion requests within 7 business days.
           </p>
 
           <h2 className="text-base sm:text-lg font-bold text-white pt-4">
@@ -102,15 +102,16 @@ export const PrivacyPolicyPage: React.FC<PolicyProps> = ({ onBackToHome }) => {
             In compliance with the Information Technology Act 2000 and Digital Personal Data Protection Act 2023, the details of our Grievance Officer are:
           </p>
           <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-1 text-xs">
-            <p><b>Officer Name:</b> Grievance Redressal Team, AiBotCall</p>
-            <p><b>Email:</b> <span className="text-emerald-400 font-mono">grievance@aibotcall.com</span></p>
-            <p><b>Address:</b> AiBotCall Technologies Pvt. Ltd., 3rd Floor, Tech Park, Andheri East, Mumbai, Maharashtra 400069, India</p>
-            <p><b>Turnaround Time:</b> Within 48 hours of acknowledgement.</p>
+            <p><b>Officer Name:</b> Anil Sharma (Grievance Redressal Officer)</p>
+            <p><b>Email:</b> <span className="text-emerald-400 font-mono">support@aibotflow.in</span></p>
+            <p><b>Phone / WhatsApp:</b> <span className="text-emerald-400 font-mono">+91 99398 00780</span></p>
+            <p><b>Address:</b> AiBotCall / Ai Botflow, Gopalganj, Bihar 841428, India</p>
+            <p><b>Turnaround Time:</b> Within 24 hours of acknowledgement.</p>
           </div>
         </section>
 
         <div className="pt-8 border-t border-slate-800 flex justify-between items-center text-xs text-slate-500">
-          <span>© {new Date().getFullYear()} AiBotCall Technologies Pvt. Ltd.</span>
+          <span>© {new Date().getFullYear()} AiBotCall / Ai Botflow · Founded by Anil Sharma</span>
           <button
             onClick={onBackToHome}
             className="text-emerald-400 hover:text-emerald-300 font-semibold cursor-pointer"

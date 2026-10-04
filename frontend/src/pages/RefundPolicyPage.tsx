@@ -102,7 +102,7 @@ export const RefundPolicyPage: React.FC<PolicyProps> = ({ onBackToHome }) => {
         </section>
 
         <div className="pt-8 border-t border-slate-800 flex justify-between items-center text-xs text-slate-500">
-          <span>© {new Date().getFullYear()} AiBotCall Technologies Pvt. Ltd.</span>
+          <span>© {new Date().getFullYear()} AiBotCall / Ai Botflow · Founded by Anil Sharma</span>
           <button
             onClick={onBackToHome}
             className="text-emerald-400 hover:text-emerald-300 font-semibold cursor-pointer"

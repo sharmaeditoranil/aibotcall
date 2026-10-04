@@ -26,13 +26,17 @@ import {
 interface LandingPageProps {
   onOpenAuth: (mode: 'login' | 'register', plan?: string) => void;
   onOpenPricing: () => void;
-  onOpenPolicy?: (policy: 'terms' | 'privacy' | 'refund' | 'contact') => void;
+  onOpenPolicy?: (policy: 'terms' | 'privacy' | 'refund' | 'contact' | 'about') => void;
+  onOpenAbout?: () => void;
+  onOpenContact?: () => void;
 }
 
 export const LandingPage: React.FC<LandingPageProps> = ({
   onOpenAuth,
   onOpenPricing,
   onOpenPolicy,
+  onOpenAbout,
+  onOpenContact,
 }) => {
   const [isPlayingDemo, setIsPlayingDemo] = useState(false);
 
@@ -199,24 +203,37 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             </div>
           </div>
 
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-2 sm:space-x-3">
+            <button
+              onClick={() => (onOpenAbout ? onOpenAbout() : onOpenPolicy?.('about'))}
+              className="py-2 px-2.5 sm:px-3 rounded-xl text-xs font-semibold text-slate-300 hover:text-emerald-400 transition-colors cursor-pointer"
+            >
+              About Us
+            </button>
             <button
               onClick={onOpenPricing}
-              className="py-2 px-3 rounded-xl text-xs font-semibold text-slate-300 hover:text-emerald-400 transition-colors cursor-pointer"
+              className="py-2 px-2.5 sm:px-3 rounded-xl text-xs font-semibold text-slate-300 hover:text-emerald-400 transition-colors cursor-pointer"
             >
-              Pricing & Plans
+              Pricing
+            </button>
+            <button
+              onClick={() => (onOpenContact ? onOpenContact() : onOpenPolicy?.('contact'))}
+              className="hidden sm:inline-block py-2 px-3 rounded-xl text-xs font-semibold text-slate-300 hover:text-emerald-400 transition-colors cursor-pointer"
+            >
+              Contact
             </button>
             <button
               onClick={() => onOpenAuth('login')}
-              className="py-2 px-4 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors cursor-pointer"
+              className="py-2 px-3 sm:px-4 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors cursor-pointer"
             >
               Sign In
             </button>
             <button
               onClick={() => onOpenAuth('register')}
-              className="py-2 px-4 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-md shadow-emerald-900/30 transition-all active:scale-95 cursor-pointer"
+              className="py-2 px-3 sm:px-4 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-md shadow-emerald-900/30 transition-all active:scale-95 cursor-pointer"
             >
-              Start Free Trial (30 Mins)
+              <span className="hidden sm:inline">Start Free Trial (30 Mins)</span>
+              <span className="sm:hidden">Try Free</span>
             </button>
           </div>
         </div>
@@ -392,6 +409,54 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         </div>
       </section>
 
+      {/* Leadership & Vision Highlight: Meet Anil Sharma */}
+      <section className="py-16 px-6 border-t border-slate-800/80 bg-gradient-to-b from-slate-950 via-[#0c1220] to-[#080c14]">
+        <div className="max-w-5xl mx-auto rounded-3xl p-8 sm:p-10 bg-slate-900/60 border border-slate-800/80 shadow-2xl">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+            <div className="md:col-span-4 text-center md:text-left space-y-3">
+              <div className="w-24 h-24 mx-auto md:mx-0 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 p-0.5 shadow-lg shadow-emerald-500/20">
+                <div className="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center text-3xl font-black text-emerald-400">
+                  AS
+                </div>
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-white">Anil Sharma</h3>
+                <p className="text-xs font-semibold text-emerald-400">Founder & Creative Technologist</p>
+                <p className="text-[11px] text-slate-400 mt-0.5">Founder, Quick Art Photography Academy</p>
+              </div>
+            </div>
+
+            <div className="md:col-span-8 space-y-4">
+              <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-wider">
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Leadership & Vision</span>
+              </span>
+              <h3 className="text-2xl font-extrabold text-white tracking-tight">
+                Creative Industry Se Lekar <span className="text-emerald-400">Smart Business Automation</span> Tak
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                10+ saal ke creative filmmaking aur educational workflow experience ke saath, Anil Sharma ka maksad har business ke liye customer communication ko aasaan banana hai. Unka anubhav batata hai ki ek website lead ko pehle 5 minute ke andar personalized voice response milne par conversion <strong>4 guna tak badh jata hai</strong>.
+              </p>
+              <div className="pt-2 flex flex-wrap items-center gap-3">
+                <button
+                  onClick={() => (onOpenAbout ? onOpenAbout() : onOpenPolicy?.('about'))}
+                  className="py-2 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all cursor-pointer flex items-center space-x-2"
+                >
+                  <span>Read Full About Us</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+                <button
+                  onClick={() => (onOpenContact ? onOpenContact() : onOpenPolicy?.('contact'))}
+                  className="py-2 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold transition-all cursor-pointer"
+                >
+                  <span>Connect with Us</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Pricing Matrix */}
       <section className="py-20 px-6 border-t border-slate-800/80">
         <div className="max-w-7xl mx-auto">
@@ -529,9 +594,17 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
             <div>
               <h4 className="font-bold text-white uppercase tracking-wider text-xs mb-3">
-                Legal & Razorpay Compliance
+                Company & Legal
               </h4>
               <ul className="space-y-2 text-xs">
+                <li>
+                  <button
+                    onClick={() => (onOpenAbout ? onOpenAbout() : onOpenPolicy?.('about'))}
+                    className="hover:text-emerald-400 cursor-pointer text-emerald-400 font-semibold"
+                  >
+                    About Us & Leadership
+                  </button>
+                </li>
                 <li>
                   <button
                     onClick={() => onOpenPolicy?.('terms')}
@@ -558,7 +631,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 </li>
                 <li>
                   <button
-                    onClick={() => onOpenPolicy?.('contact')}
+                    onClick={() => (onOpenContact ? onOpenContact() : onOpenPolicy?.('contact'))}
                     className="hover:text-emerald-400 cursor-pointer"
                   >
                     Contact Us & Grievance Redressal
@@ -570,18 +643,18 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             <div>
               <h4 className="font-bold text-white uppercase tracking-wider text-xs mb-3">Contact Support</h4>
               <ul className="space-y-1.5 text-xs text-slate-400">
-                <li className="text-white font-medium">Helpline: +91 95138 86363</li>
+                <li className="text-white font-medium">VIP Hotline / WhatsApp: +91 99398 00780</li>
                 <li>Email: support@aibotflow.in</li>
                 <li>Billing: billing@aibotflow.in</li>
                 <li className="pt-2 text-[11px] text-slate-500">
-                  Andheri West, Mumbai, MH 400053, India
+                  Gopalganj, Bihar 841428, India
                 </li>
               </ul>
             </div>
           </div>
 
           <div className="pt-8 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-500">
-            <p>© {new Date().getFullYear()} AiBotCall Technologies Pvt. Ltd. All rights reserved.</p>
+            <p>© {new Date().getFullYear()} AiBotCall / Ai Botflow · Founded by Anil Sharma. All rights reserved.</p>
             <p>Certified Razorpay Payment Gateway & Telecom Integration</p>
           </div>
         </div>

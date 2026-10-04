@@ -92,19 +92,19 @@ export const TermsPage: React.FC<PolicyProps> = ({ onBackToHome }) => {
             7. Limitation of Liability & Governing Law
           </h2>
           <p>
-            In no event shall AiBotCall Technologies Pvt. Ltd., its directors, employees, or partners be liable for any indirect, incidental, or consequential damages resulting from telecommunication carrier outages, internet disruptions, or third-party API downtime. These Terms shall be governed by and construed in accordance with the laws of <b>India</b>, and courts in <b>Mumbai, Maharashtra</b> shall have exclusive jurisdiction.
+            In no event shall AiBotCall / Ai Botflow, its founder Anil Sharma, or technical partners be liable for any indirect, incidental, or consequential damages resulting from telecommunication carrier outages, internet disruptions, or third-party telephony provider downtime. These Terms shall be governed by and construed in accordance with the laws of <b>India</b>.
           </p>
 
           <h2 className="text-base sm:text-lg font-bold text-white pt-4">
             8. Grievance Officer & Contact
           </h2>
           <p>
-            For any queries or formal grievances regarding these Terms, please reach out to our legal officer at <span className="text-emerald-400 font-mono">legal@aibotcall.com</span> or via our Contact Us portal.
+            For any queries or formal grievances regarding these Terms, please reach out to our grievance officer Anil Sharma at <span className="text-emerald-400 font-mono">support@aibotflow.in</span> or via phone/WhatsApp at <span className="text-emerald-400 font-mono">+91 99398 00780</span>.
           </p>
         </section>
 
         <div className="pt-8 border-t border-slate-800 flex justify-between items-center text-xs text-slate-500">
-          <span>© {new Date().getFullYear()} AiBotCall Technologies Pvt. Ltd.</span>
+          <span>© {new Date().getFullYear()} AiBotCall / Ai Botflow · Founded by Anil Sharma</span>
           <button
             onClick={onBackToHome}
             className="text-emerald-400 hover:text-emerald-300 font-semibold cursor-pointer"
