@@ -197,7 +197,7 @@ export const PublicHeader: React.FC<PublicHeaderProps> = ({
             <img
               src="/aibotcall-emblem.png"
               alt="AiBotCall"
-              className="h-8.5 w-8.5 sm:h-9 sm:w-9 object-contain logo-glow group-hover:scale-110 transition-transform duration-300"
+              className="h-10 w-10 sm:h-11 sm:w-11 object-contain logo-glow group-hover:scale-105 transition-transform duration-300"
             />
             <span className="absolute -bottom-0.5 -right-0.5 flex h-2.5 w-2.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
