@@ -3,7 +3,7 @@ module.exports = {
     {
       name: 'aibotcall-backend',
       cwd: './backend',
-      script: 'dist/index.js',
+      script: 'dist/server.js',
       instances: 1,
       autorestart: true,
       watch: false,
@@ -17,7 +17,7 @@ module.exports = {
     {
       name: 'aibotcall-call-worker',
       cwd: './backend',
-      script: 'dist/workers/call-worker.js',
+      script: 'dist/workers/index.js',
       instances: 1,
       autorestart: true,
       watch: false,
