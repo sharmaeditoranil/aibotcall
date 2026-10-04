@@ -279,6 +279,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
         <div className="max-w-5xl mx-auto text-center relative z-10 space-y-6">
           <div className="inline-flex items-center space-x-2.5 px-4 py-1.5 rounded-full bg-[#162340]/90 border border-cyan-400/40 text-cyan-300 text-xs font-bold tracking-wide shadow-lg shadow-cyan-500/10 backdrop-blur-md">
+            <img src="/aibotcall-emblem.png" alt="AiBotCall" className="w-5 h-5 object-contain logo-glow" />
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-400"></span>

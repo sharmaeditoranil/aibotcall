@@ -126,9 +126,9 @@ export const PublicFooter: React.FC<PublicFooterProps> = ({
               />
               <div className="flex flex-col">
                 <div className="flex items-center text-lg font-black tracking-tight leading-none">
-                  <span className="text-violet-400 group-hover:brightness-125 transition-all">Ai</span>
+                  <span className="text-cyan-400 group-hover:brightness-125 transition-all">Ai</span>
                   <span className="text-white">Bot</span>
-                  <span className="text-cyan-400 group-hover:brightness-125 transition-all">Call</span>
+                  <span className="text-violet-400 group-hover:brightness-125 transition-all">Call</span>
                 </div>
                 <span className="text-[8.5px] text-cyan-400/90 font-bold tracking-widest uppercase mt-0.5">
                   AI Voice Telephony

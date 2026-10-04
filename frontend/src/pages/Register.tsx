@@ -145,9 +145,9 @@ export const Register: React.FC<RegisterProps> = ({
             </div>
             <div className="flex flex-col text-left">
               <div className="flex items-center text-2xl font-black tracking-tight leading-none">
-                <span className="text-violet-400 group-hover:brightness-125 transition-all">Ai</span>
+                <span className="text-cyan-400 group-hover:brightness-125 transition-all">Ai</span>
                 <span className="text-white">Bot</span>
-                <span className="text-cyan-400 group-hover:brightness-125 transition-all">Call</span>
+                <span className="text-violet-400 group-hover:brightness-125 transition-all">Call</span>
               </div>
               <span className="text-[9px] text-cyan-400/90 font-bold tracking-widest uppercase mt-0.5">
                 AI Voice Telephony

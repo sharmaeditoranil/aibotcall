@@ -84,9 +84,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
           <div className="flex flex-col">
             <div className="flex items-center text-lg font-black tracking-tight leading-none">
-              <span className="text-violet-400">Ai</span>
+              <span className="text-cyan-400">Ai</span>
               <span className="text-white">Bot</span>
-              <span className="text-cyan-400">Call</span>
+              <span className="text-violet-400">Call</span>
             </div>
             <span className="text-[9px] text-cyan-400/90 font-bold tracking-wider uppercase mt-1">
               AI Voice Telephony

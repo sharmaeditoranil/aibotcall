@@ -206,9 +206,9 @@ export const PublicHeader: React.FC<PublicHeaderProps> = ({
           </div>
           <div className="flex flex-col">
             <div className="flex items-center text-[19px] sm:text-[21px] font-black tracking-tight leading-none">
-              <span className="text-violet-400 group-hover:brightness-125 transition-all">Ai</span>
+              <span className="text-cyan-400 group-hover:brightness-125 transition-all">Ai</span>
               <span className="text-white">Bot</span>
-              <span className="text-cyan-400 group-hover:brightness-125 transition-all">Call</span>
+              <span className="text-violet-400 group-hover:brightness-125 transition-all">Call</span>
             </div>
             <span className="text-[9px] text-cyan-400/90 font-bold tracking-widest uppercase mt-0.5 hidden xs:inline-block">
               AI Voice Telephony
