@@ -42,11 +42,24 @@ export class ExotelProvider implements TelephonyProvider {
 
   /**
    * Triggers an outbound call using Exotel Call Connect API.
-   * Connects the customer directly to the Exotel Voice Stream / AgentStream Applet.
    */
   async makeCall(params: MakeCallParams): Promise<MakeCallResult> {
     const fromNumber = params.from || this.callerId;
     const toNumber = params.to;
+
+    // Format Indian numbers for Exotel: 10-digit with leading 0 (e.g. 09939967431)
+    const formatNumber = (num: string): string => {
+      let cleaned = (num || '').replace(/\D/g, '');
+      if (cleaned.startsWith('91') && cleaned.length === 12) {
+        cleaned = '0' + cleaned.substring(2);
+      } else if (cleaned.length === 10) {
+        cleaned = '0' + cleaned;
+      }
+      return cleaned;
+    };
+
+    const formattedTo = formatNumber(toNumber);
+    const formattedFrom = formatNumber(fromNumber);
 
     // Build URL query params for status callback and stream
     const statusCallback = `${params.statusCallbackUrl}?internal_call_id=${encodeURIComponent(
@@ -56,8 +69,9 @@ export class ExotelProvider implements TelephonyProvider {
     // Prepare payload for Exotel Connect API
     // Exotel accepts x-www-form-urlencoded
     const formData = new URLSearchParams();
-    formData.append('From', toNumber); // Customer phone
-    formData.append('CallerId', fromNumber); // Exophone virtual number
+    formData.append('From', formattedTo); // Customer phone (first party to dial)
+    formData.append('To', formattedFrom); // Second party (ExoPhone virtual number)
+    formData.append('CallerId', formattedFrom); // Exophone virtual number
     formData.append('CallType', 'trans'); // Transactional
     formData.append('StatusCallback', statusCallback);
     formData.append('StatusCallbackEventType', 'terminal');
@@ -77,8 +91,9 @@ export class ExotelProvider implements TelephonyProvider {
       {
         provider: 'exotel',
         internalCallId: params.internalCallId,
-        to: toNumber,
-        callerId: fromNumber,
+        from: formattedTo,
+        to: formattedFrom,
+        callerId: formattedFrom,
       },
       'Initiating outbound call via Exotel'
     );
@@ -105,11 +120,16 @@ export class ExotelProvider implements TelephonyProvider {
         raw: response.data,
       };
     } catch (err: any) {
-      const errorMsg =
+      let errorMsg =
         err.response?.data?.RestException?.Message ||
         err.response?.data?.message ||
         err.message ||
         'Unknown Exotel error';
+
+      if (typeof err.response?.data === 'string' && err.response.data.includes('<Message>')) {
+        const match = err.response.data.match(/<Message>(.*?)<\/Message>/);
+        if (match && match[1]) errorMsg = match[1];
+      }
 
       logger.error(
         {
