@@ -43,6 +43,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const menuItems = [
     { id: 'overview', label: 'Overview', icon: LayoutDashboard },
     { id: 'agents', label: 'AI Voice Agents', icon: Bot },
+    { id: 'numbers', label: 'My Numbers & DIDs', icon: Phone },
     { id: 'campaigns', label: 'Broadcast Campaigns', icon: Radio },
     { id: 'leads', label: 'Contacts / Leads', icon: Users },
     { id: 'calls', label: 'Calls Log', icon: PhoneCall },
