@@ -118,4 +118,22 @@ export async function agentsRoute(fastify: FastifyInstance) {
     const updated = await prisma.voiceAgent.findUnique({ where: { id } });
     return { success: true, agent: updated };
   });
+
+  /**
+   * DELETE /api/v1/agents/:id
+   */
+  fastify.delete('/api/v1/agents/:id', async (request, reply) => {
+    const orgId = request.user?.organizationId;
+    const { id } = request.params as { id: string };
+
+    const deleted = await prisma.voiceAgent.deleteMany({
+      where: { id, organization_id: orgId },
+    });
+
+    if (deleted.count === 0) {
+      return reply.status(404).send({ error: 'Agent not found' });
+    }
+
+    return { success: true, message: 'Agent deleted successfully' };
+  });
 }
