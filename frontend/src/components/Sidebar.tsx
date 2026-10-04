@@ -19,6 +19,7 @@ import {
   ShieldAlert,
   Phone,
   UserCircle,
+  Gift,
 } from 'lucide-react';
 import { User } from '../types';
 
@@ -44,6 +45,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const menuItems = [
     { id: 'overview', label: 'Overview', icon: LayoutDashboard },
     { id: 'profile', label: 'My Profile & Account', icon: UserCircle },
+    { id: 'referrals', label: 'Reseller & Affiliate (25%)', icon: Gift },
     { id: 'agents', label: 'AI Voice Agents', icon: Bot },
     { id: 'numbers', label: 'My Numbers & DIDs', icon: Phone },
     { id: 'campaigns', label: 'Broadcast Campaigns', icon: Radio },

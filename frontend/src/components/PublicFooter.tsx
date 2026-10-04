@@ -28,6 +28,8 @@ export interface PublicFooterProps {
   onNavigateRegister: () => void;
   onNavigatePolicy: (policy: 'terms' | 'privacy' | 'refund' | 'security' | 'data-privacy' | 'call-consent-policy') => void;
   onNavigateSeoPage?: (slug: string) => void;
+  onNavigateAffiliate?: () => void;
+  onNavigateWhoItsFor?: () => void;
 }
 
 export const PublicFooter: React.FC<PublicFooterProps> = ({
@@ -41,6 +43,8 @@ export const PublicFooter: React.FC<PublicFooterProps> = ({
   onNavigateRegister,
   onNavigatePolicy,
   onNavigateSeoPage,
+  onNavigateAffiliate,
+  onNavigateWhoItsFor,
 }) => {
   const handleSeoClick = (slug: string) => {
     if (onNavigateSeoPage) {
@@ -240,6 +244,24 @@ export const PublicFooter: React.FC<PublicFooterProps> = ({
               <span>Resources & Tech</span>
             </h3>
             <ul className="space-y-2 text-xs">
+              <li>
+                <button
+                  onClick={() => onNavigateAffiliate ? onNavigateAffiliate() : onNavigateRegister()}
+                  className="hover:text-cyan-300 transition-colors cursor-pointer text-left flex items-center space-x-1.5 text-cyan-400 font-bold"
+                >
+                  <span>Reseller & Affiliate Program</span>
+                  <span className="text-[9px] px-1.5 py-0.2 rounded-full bg-emerald-500/20 text-emerald-300 font-black">25% Comm</span>
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => onNavigateWhoItsFor ? onNavigateWhoItsFor() : handleSeoClick('ai-voice-calling-software')}
+                  className="hover:text-cyan-300 transition-colors cursor-pointer text-left flex items-center space-x-1.5"
+                >
+                  <span>Who It's For (All Industries)</span>
+                  <span className="text-[9px] px-1.5 py-0.2 rounded-full bg-violet-500/20 text-violet-300 font-bold">Guide</span>
+                </button>
+              </li>
               <li>
                 <button onClick={() => onNavigateDocs ? onNavigateDocs() : onNavigateBlog()} className="hover:text-cyan-300 transition-colors cursor-pointer text-left flex items-center space-x-1.5">
                   <span>Developer Docs</span>

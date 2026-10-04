@@ -30,6 +30,8 @@ import { AboutPage } from './pages/AboutPage';
 import { BlogPage } from './pages/BlogPage';
 import { DocsPage } from './pages/DocsPage';
 import { SeoLandingPage } from './pages/SeoLandingPage';
+import { AffiliatePage } from './pages/AffiliatePage';
+import { WhoItsForPage } from './pages/WhoItsForPage';
 import { SEO_PAGES_DATA } from './data/seoPagesData';
 import { Profile } from './pages/Profile';
 import { CallDetailModal } from './components/CallDetailModal';
@@ -44,8 +46,14 @@ export const App: React.FC = () => {
   const [profileSection, setProfileSection] = useState<'details' | 'billing' | 'referrals'>('details');
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const getInitialNavigation = (): { view: 'landing' | 'pricing' | 'login' | 'register' | 'terms' | 'privacy' | 'refund' | 'contact' | 'about' | 'blog' | 'docs' | 'seo'; slug?: string } => {
+  const getInitialNavigation = (): { view: 'landing' | 'pricing' | 'login' | 'register' | 'terms' | 'privacy' | 'refund' | 'contact' | 'about' | 'blog' | 'docs' | 'seo' | 'affiliate' | 'who-its-for'; slug?: string } => {
     const rawPath = window.location.pathname.toLowerCase().replace(/^\/+|\/+$/g, '');
+    if (rawPath.includes('affiliate') || rawPath.includes('reseller') || rawPath.includes('partner')) {
+      return { view: 'affiliate' };
+    }
+    if (rawPath.includes('solutions') || rawPath.includes('industries') || rawPath.includes('who-is-it-for') || rawPath.includes('who-its-for')) {
+      return { view: 'who-its-for' };
+    }
     if (rawPath in SEO_PAGES_DATA) {
       return { view: 'seo', slug: rawPath };
     }
@@ -63,7 +71,7 @@ export const App: React.FC = () => {
   };
 
   const initialNav = getInitialNavigation();
-  const [authView, setAuthView] = useState<'landing' | 'pricing' | 'login' | 'register' | 'terms' | 'privacy' | 'refund' | 'contact' | 'about' | 'blog' | 'docs' | 'seo'>(initialNav.view);
+  const [authView, setAuthView] = useState<'landing' | 'pricing' | 'login' | 'register' | 'terms' | 'privacy' | 'refund' | 'contact' | 'about' | 'blog' | 'docs' | 'seo' | 'affiliate' | 'who-its-for'>(initialNav.view);
   const [currentSeoSlug, setCurrentSeoSlug] = useState<string>(initialNav.slug || 'ai-voice-calling-software');
   const [selectedPlan, setSelectedPlan] = useState<string>('FREE_TRIAL');
 
@@ -194,7 +202,23 @@ export const App: React.FC = () => {
         window.history.pushState({}, '', `/${slug}/`);
         setAuthView('seo');
       },
+      onNavigateAffiliate: () => {
+        window.history.pushState({}, '', '/affiliate/');
+        setAuthView('affiliate');
+      },
+      onNavigateWhoItsFor: () => {
+        window.history.pushState({}, '', '/solutions/');
+        setAuthView('who-its-for');
+      },
     };
+
+    if (authView === 'affiliate') {
+      return <AffiliatePage {...sharedPublicNav} />;
+    }
+
+    if (authView === 'who-its-for') {
+      return <WhoItsForPage {...sharedPublicNav} />;
+    }
 
     if (authView === 'seo') {
       return <SeoLandingPage slug={currentSeoSlug} {...sharedPublicNav} />;
@@ -229,6 +253,8 @@ export const App: React.FC = () => {
             setAuthView('docs');
           }}
           onNavigateSeoPage={sharedPublicNav.onNavigateSeoPage}
+          onNavigateAffiliate={sharedPublicNav.onNavigateAffiliate}
+          onNavigateWhoItsFor={sharedPublicNav.onNavigateWhoItsFor}
         />
       );
     }

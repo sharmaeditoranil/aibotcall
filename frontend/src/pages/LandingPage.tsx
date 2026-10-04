@@ -40,6 +40,8 @@ interface LandingPageProps {
   onOpenBlog?: () => void;
   onOpenDocs?: () => void;
   onNavigateSeoPage?: (slug: string) => void;
+  onNavigateAffiliate?: () => void;
+  onNavigateWhoItsFor?: () => void;
 }
 
 export const LandingPage: React.FC<LandingPageProps> = ({
@@ -51,6 +53,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   onOpenBlog,
   onOpenDocs,
   onNavigateSeoPage,
+  onNavigateAffiliate,
+  onNavigateWhoItsFor,
 }) => {
   const [isPlayingDemo, setIsPlayingDemo] = useState(false);
   const [expandedFaq, setExpandedFaq] = useState<number | null>(0);
@@ -264,6 +268,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         onNavigateLogin={() => onOpenAuth('login')}
         onNavigateRegister={() => onOpenAuth('register')}
         onNavigateSeoPage={onNavigateSeoPage}
+        onNavigateAffiliate={onNavigateAffiliate}
+        onNavigateWhoItsFor={onNavigateWhoItsFor}
       />
 
       {/* Hero Section with Official Single H1 and Above-The-Fold Value Concept */}
@@ -669,6 +675,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         onNavigateRegister={() => onOpenAuth('register')}
         onNavigatePolicy={(policy) => onOpenPolicy?.(policy)}
         onNavigateSeoPage={onNavigateSeoPage}
+        onNavigateAffiliate={onNavigateAffiliate}
+        onNavigateWhoItsFor={onNavigateWhoItsFor}
       />
     </div>
   );

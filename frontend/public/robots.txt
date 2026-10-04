@@ -22,6 +22,8 @@ Allow: /about/
 Allow: /contact/
 Allow: /blog/
 Allow: /docs/
+Allow: /affiliate/
+Allow: /solutions/
 Allow: /terms/
 Allow: /privacy-policy/
 Allow: /refund-policy/

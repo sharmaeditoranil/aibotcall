@@ -31,7 +31,10 @@ interface PricingPageProps {
   onNavigateDocs?: () => void;
   onGoToContact?: () => void;
   onGoToRegister?: () => void;
-  onNavigatePolicy?: (policy: 'terms' | 'privacy' | 'refund') => void;
+  onNavigatePolicy?: (policy: 'terms' | 'privacy' | 'refund' | 'security' | 'data-privacy' | 'call-consent-policy') => void;
+  onNavigateSeoPage?: (slug: string) => void;
+  onNavigateAffiliate?: () => void;
+  onNavigateWhoItsFor?: () => void;
 }
 
 export const PricingPage: React.FC<PricingPageProps> = ({
@@ -45,6 +48,9 @@ export const PricingPage: React.FC<PricingPageProps> = ({
   onGoToContact,
   onGoToRegister,
   onNavigatePolicy,
+  onNavigateSeoPage,
+  onNavigateAffiliate,
+  onNavigateWhoItsFor,
 }) => {
   const [pricingModel, setPricingModel] = useState<'payg' | 'subscription'>('payg');
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
@@ -262,6 +268,9 @@ export const PricingPage: React.FC<PricingPageProps> = ({
         onNavigateContact={onGoToContact || onBackToHome}
         onNavigateLogin={onGoToLogin}
         onNavigateRegister={onGoToRegister || (() => onSelectPlan('FREE_TRIAL'))}
+        onNavigateSeoPage={onNavigateSeoPage}
+        onNavigateAffiliate={onNavigateAffiliate}
+        onNavigateWhoItsFor={onNavigateWhoItsFor}
       />
 
       {/* Hero Title */}
@@ -756,6 +765,9 @@ export const PricingPage: React.FC<PricingPageProps> = ({
         onNavigateLogin={onGoToLogin}
         onNavigateRegister={onGoToRegister || (() => onSelectPlan('FREE_TRIAL'))}
         onNavigatePolicy={onNavigatePolicy || ((p) => onBackToHome())}
+        onNavigateSeoPage={onNavigateSeoPage}
+        onNavigateAffiliate={onNavigateAffiliate}
+        onNavigateWhoItsFor={onNavigateWhoItsFor}
       />
     </div>
   );
