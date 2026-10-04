@@ -65,45 +65,60 @@ export const Sidebar: React.FC<SidebarProps> = ({
   ];
 
   return (
-    <aside className="w-64 bg-[#0a0e1c]/95 border-r border-slate-800/80 flex flex-col h-screen select-none backdrop-blur-xl shrink-0 z-30">
-      {/* Brand Header with Official Logo */}
-      <div className="p-4 border-b border-slate-800/80 flex items-center justify-between">
-        <div className="flex items-center space-x-2">
-          <img
-            src="/aibotcall-logo-full.png"
-            alt="AiBotCall"
-            className="h-9 w-auto object-contain"
-          />
+    <aside className="w-64 bg-[#080c18] border-r border-slate-800/80 flex flex-col h-screen select-none backdrop-blur-xl shrink-0 z-30">
+      {/* Brand Header with Official 3D Emblem & Razor-Sharp Typography */}
+      <div className="p-4 border-b border-slate-800/80 bg-slate-950/40">
+        <div className="flex items-center space-x-3">
+          <div className="relative">
+            <img
+              src="/aibotcall-emblem.png"
+              alt="AiBotCall"
+              className="w-10 h-10 object-contain drop-shadow-[0_4px_16px_rgba(139,92,246,0.5)] shrink-0"
+            />
+            <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 rounded-full border-2 border-[#080c18]"></span>
+          </div>
+          <div className="flex flex-col">
+            <div className="flex items-center text-xl font-black tracking-tight leading-none">
+              <span className="text-violet-400">Ai</span>
+              <span className="text-white">Bot</span>
+              <span className="text-cyan-400">Call</span>
+            </div>
+            <span className="text-[10px] text-cyan-400/90 font-bold tracking-wider uppercase mt-1">
+              AI Voice Telephony
+            </span>
+          </div>
         </div>
       </div>
 
       {/* Quick Outbound Action Button & Calling Balance */}
-      <div className="px-4 pt-4 space-y-2">
+      <div className="px-4 pt-4 space-y-2.5">
         <button
           onClick={onQuickCall}
-          className="w-full flex items-center justify-center space-x-2 py-2.5 px-3 bg-gradient-brand hover:opacity-95 text-white rounded-xl text-xs font-bold shadow-md glow-brand-sm transition-all duration-200 active:scale-95 cursor-pointer"
+          className="w-full flex items-center justify-center space-x-2 py-2.5 px-3 bg-gradient-brand hover:brightness-110 text-white rounded-xl text-xs font-bold shadow-lg glow-brand-sm transition-all duration-200 active:scale-95 cursor-pointer"
         >
           <PhoneOutgoing className="w-4 h-4 text-cyan-200" />
           <span>New AI Voice Call</span>
         </button>
 
         {/* SaaS Calling Balance Pill */}
-        <button
+        <div
           onClick={() => {
             setActiveTab('profile');
             onSelectProfileSection?.('billing');
           }}
-          className="w-full flex items-center justify-between px-3 py-1.5 rounded-lg bg-violet-950/40 border border-violet-500/30 text-[11px] hover:bg-violet-950/60 transition-colors cursor-pointer"
-          title="Manage Wallet & Top-up Voice Credits"
+          className="w-full flex items-center justify-between px-3 py-2 rounded-xl bg-slate-900/90 border border-indigo-500/30 text-xs hover:border-cyan-400/50 hover:bg-slate-900 transition-all cursor-pointer shadow-sm group"
         >
-          <span className="text-slate-300 flex items-center space-x-1">
-            <Sparkles className="w-3 h-3 text-cyan-400" />
-            <span>Voice Balance:</span>
+          <div className="flex items-center space-x-2">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
+            </span>
+            <span className="text-slate-300 font-medium group-hover:text-white transition-colors">Balance:</span>
+          </div>
+          <span className="font-bold text-cyan-400 font-mono text-[11px] bg-cyan-500/10 px-2 py-0.5 rounded-full border border-cyan-500/20">
+            {user?.organization?.credits_balance_minutes !== undefined ? `${user.organization.credits_balance_minutes} Mins` : '30 Mins'}
           </span>
-          <span className="font-bold text-cyan-400 font-mono">
-            {user?.organization ? 'Active' : '30 Mins'}
-          </span>
-        </button>
+        </div>
       </div>
 
       {/* Menu Navigation */}
@@ -115,13 +130,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <button
               key={item.id}
               onClick={() => setActiveTab(item.id)}
-              className={`w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all duration-150 cursor-pointer ${
+              className={`w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-150 cursor-pointer ${
                 isActive
-                  ? 'bg-gradient-to-r from-violet-600/20 via-blue-600/20 to-cyan-500/15 text-cyan-300 border border-blue-500/30 shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
+                  ? 'bg-gradient-to-r from-violet-600/25 via-blue-600/20 to-transparent text-white border-l-4 border-violet-500 shadow-sm'
+                  : 'text-slate-400 hover:text-white hover:bg-slate-800/40'
               }`}
             >
-              <Icon className={`w-4 h-4 ${isActive ? 'text-cyan-400' : 'text-slate-400'}`} />
+              <Icon className={`w-4 h-4 transition-colors ${isActive ? 'text-cyan-400 drop-shadow-[0_0_8px_rgba(6,182,212,0.4)]' : 'text-slate-400'}`} />
               <span>{item.label}</span>
             </button>
           );
@@ -129,24 +144,23 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </nav>
 
       {/* User Info & Logout Footer */}
-      <div className="p-3 border-t border-slate-800/80 bg-slate-950/40">
+      <div className="p-3 border-t border-slate-800/80 bg-slate-950/60">
         <div
           onClick={() => {
             setActiveTab('profile');
             onSelectProfileSection?.('details');
           }}
-          className="flex items-center justify-between px-2 py-1.5 rounded-lg bg-slate-900/60 border border-slate-800/50 hover:border-indigo-500/40 hover:bg-slate-900 cursor-pointer transition-all group"
-          title="Open My Profile & Settings"
+          className="flex items-center justify-between px-2.5 py-2 rounded-xl bg-slate-900/80 border border-slate-800/60 hover:border-indigo-500/50 hover:bg-slate-900 cursor-pointer transition-all group"
         >
           <div className="flex items-center space-x-2.5 min-w-0">
-            <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-violet-500 to-cyan-400 text-slate-950 flex items-center justify-center font-bold text-xs uppercase group-hover:scale-105 transition-transform shadow-sm">
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-violet-600 via-indigo-600 to-cyan-400 text-white flex items-center justify-center font-bold text-xs uppercase group-hover:scale-105 transition-transform shadow-md shrink-0">
               {user?.name ? user.name[0] : 'A'}
             </div>
             <div className="truncate">
-              <p className="text-xs font-medium text-slate-200 truncate group-hover:text-cyan-400 transition-colors">
+              <p className="text-xs font-bold text-slate-100 truncate group-hover:text-cyan-400 transition-colors">
                 {user?.name || 'Administrator'}
               </p>
-              <p className="text-[10px] text-slate-400 truncate">{user?.organization?.name || 'AiBotCall'}</p>
+              <p className="text-[10px] text-cyan-400/80 truncate font-medium">{user?.organization?.name || 'AiBotCall'}</p>
             </div>
           </div>
           <button
@@ -154,8 +168,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               e.stopPropagation();
               onLogout();
             }}
-            title="Log Out"
-            className="p-1.5 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors cursor-pointer"
+            className="p-1.5 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors cursor-pointer ml-1"
           >
             <LogOut className="w-4 h-4" />
           </button>

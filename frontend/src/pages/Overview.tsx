@@ -101,37 +101,37 @@ export const Overview: React.FC<OverviewProps> = ({ onSelectCall, onNavigate }) 
       label: 'Total AI Calls',
       value: analytics?.total_calls ?? 0,
       icon: PhoneCall,
-      color: 'from-emerald-500/20 to-teal-500/10 text-emerald-400 border-emerald-500/30',
+      color: 'from-violet-500/20 to-purple-500/10 text-violet-400 border-violet-500/30',
     },
     {
       label: 'Answered & Engaged',
       value: analytics?.answered ?? 0,
       icon: CheckCircle2,
-      color: 'from-blue-500/20 to-cyan-500/10 text-blue-400 border-blue-500/30',
+      color: 'from-blue-500/20 to-indigo-500/10 text-blue-400 border-blue-500/30',
     },
     {
       label: 'Qualified Leads',
       value: analytics?.qualified ?? 0,
       icon: Award,
-      color: 'from-amber-500/20 to-yellow-500/10 text-amber-400 border-amber-500/30',
+      color: 'from-cyan-500/20 to-teal-500/10 text-cyan-400 border-cyan-500/30',
     },
     {
       label: 'Interested Customers',
       value: analytics?.interested ?? 0,
       icon: ThumbsUp,
-      color: 'from-teal-500/20 to-emerald-500/10 text-teal-400 border-teal-500/30',
+      color: 'from-purple-500/20 to-indigo-500/10 text-purple-400 border-purple-500/30',
     },
     {
       label: 'Callbacks Requested',
       value: analytics?.callback_requested ?? 0,
       icon: PhoneForwarded,
-      color: 'from-indigo-500/20 to-purple-500/10 text-indigo-400 border-indigo-500/30',
+      color: 'from-indigo-500/20 to-blue-500/10 text-indigo-400 border-indigo-500/30',
     },
     {
       label: 'Average Call Duration',
       value: `${analytics?.avg_duration_seconds ?? 0}s`,
       icon: Clock,
-      color: 'from-rose-500/20 to-pink-500/10 text-rose-400 border-rose-500/30',
+      color: 'from-cyan-500/20 to-sky-500/10 text-cyan-400 border-cyan-500/30',
     },
   ];
 
@@ -161,19 +161,19 @@ export const Overview: React.FC<OverviewProps> = ({ onSelectCall, onNavigate }) 
   return (
     <div className="p-8 space-y-8 max-w-7xl mx-auto">
       {/* 1-Click Fast Launch Card */}
-      <div className="p-6 rounded-3xl bg-gradient-to-r from-emerald-950/70 via-slate-900 to-teal-950/70 border border-emerald-500/40 glass-card shadow-2xl space-y-4">
+      <div className="p-6 rounded-3xl bg-gradient-to-r from-violet-950/40 via-slate-900 to-indigo-950/50 border border-indigo-500/30 glass-card shadow-2xl space-y-4">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div>
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 uppercase tracking-wider">
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-violet-500/20 text-violet-300 border border-violet-500/30 uppercase tracking-wider">
               Zero-Setup 1-Click AI Call
             </span>
             <h2 className="text-xl font-extrabold text-white mt-1.5 flex items-center space-x-2">
               <span>Test AI Voice Call On Your Mobile in 5 Seconds</span>
             </h2>
             <div className="mt-2 inline-flex items-center space-x-2 px-3 py-1 rounded-xl bg-slate-950/80 border border-slate-800 text-[11px] text-slate-300">
-              <span className="text-emerald-400">●</span>
+              <span className="text-cyan-400">●</span>
               <span>Active Caller ID: <b className="text-white font-mono">+91 80 4736 8290</b> (Virtual DID)</span>
-              <button onClick={() => onNavigate('numbers')} className="text-emerald-400 hover:text-emerald-300 font-semibold underline underline-offset-2 ml-1">
+              <button onClick={() => onNavigate('numbers')} className="text-cyan-400 hover:text-cyan-300 font-semibold underline underline-offset-2 ml-1 cursor-pointer">
                 Change / Buy Number →
               </button>
             </div>
@@ -185,25 +185,25 @@ export const Overview: React.FC<OverviewProps> = ({ onSelectCall, onNavigate }) 
           <div className="flex items-center space-x-2">
             <button
               onClick={() => onNavigate('numbers')}
-              className="px-3 py-1.5 rounded-xl bg-emerald-950/70 hover:bg-emerald-900/60 text-emerald-300 border border-emerald-500/40 text-xs font-bold transition-all"
+              className="px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-750 text-cyan-300 border border-cyan-500/30 text-xs font-bold transition-all cursor-pointer"
             >
               📞 My Numbers
             </button>
             <button
               onClick={() => onNavigate('agents')}
-              className="px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold transition-all"
+              className="px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold transition-all cursor-pointer"
             >
               🤖 Agent Templates
             </button>
             <button
               onClick={() => onNavigate('campaigns')}
-              className="px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold transition-all"
+              className="px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold transition-all cursor-pointer"
             >
               📢 Broadcast
             </button>
             <button
               onClick={() => onNavigate('integrations')}
-              className="px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold transition-all"
+              className="px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold transition-all cursor-pointer"
             >
               ⚡ API Connect
             </button>
@@ -218,7 +218,7 @@ export const Overview: React.FC<OverviewProps> = ({ onSelectCall, onNavigate }) 
               placeholder="Enter your 10-digit mobile number (e.g. 9876543210)"
               value={fastPhone}
               onChange={(e) => setFastPhone(e.target.value)}
-              className="w-full bg-slate-950/80 border border-slate-800 rounded-xl pl-12 pr-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-mono text-sm"
+              className="w-full bg-slate-950/80 border border-slate-800 rounded-xl pl-12 pr-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 font-mono text-sm"
               required
             />
           </div>
@@ -226,7 +226,7 @@ export const Overview: React.FC<OverviewProps> = ({ onSelectCall, onNavigate }) 
           <button
             type="submit"
             disabled={fastCalling}
-            className="w-full sm:w-auto py-2.5 px-6 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-extrabold text-xs shadow-lg shadow-emerald-500/30 transition-all active:scale-95 flex items-center justify-center space-x-1.5 shrink-0 disabled:opacity-50"
+            className="w-full sm:w-auto py-2.5 px-6 rounded-xl bg-gradient-brand hover:brightness-110 text-white font-extrabold text-xs shadow-lg glow-brand-sm transition-all active:scale-95 flex items-center justify-center space-x-1.5 shrink-0 disabled:opacity-50 cursor-pointer"
           >
             <PhoneCall className="w-4 h-4" />
             <span>{fastCalling ? 'Dialing Telecom...' : 'Call My Phone Now 📞'}</span>
@@ -234,8 +234,8 @@ export const Overview: React.FC<OverviewProps> = ({ onSelectCall, onNavigate }) 
         </form>
 
         {fastSuccess && (
-          <div className="p-3.5 rounded-xl bg-emerald-950/50 border border-emerald-500/50 text-emerald-300 text-xs flex items-center space-x-2 animate-fade-in">
-            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+          <div className="p-3.5 rounded-xl bg-cyan-950/50 border border-cyan-500/50 text-cyan-300 text-xs flex items-center space-x-2 animate-fade-in">
+            <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
             <span>{fastSuccess}</span>
           </div>
         )}
@@ -245,21 +245,21 @@ export const Overview: React.FC<OverviewProps> = ({ onSelectCall, onNavigate }) 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div
           onClick={() => onNavigate('agents')}
-          className="p-5 rounded-2xl bg-gradient-to-br from-emerald-950/40 to-slate-900/80 border border-emerald-500/30 hover:border-emerald-500/60 transition-all cursor-pointer group shadow-lg"
+          className="p-5 rounded-2xl bg-gradient-to-br from-violet-950/30 to-slate-900/80 border border-violet-500/30 hover:border-violet-500/60 transition-all cursor-pointer group shadow-lg"
         >
           <div className="flex items-center justify-between mb-3">
             <span className="text-2xl">🤖</span>
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 uppercase tracking-wider">
+            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-300 border border-violet-500/30 uppercase tracking-wider">
               Step 1: Pick Agent
             </span>
           </div>
-          <h4 className="text-sm font-bold text-white group-hover:text-emerald-300 transition-colors">
+          <h4 className="text-sm font-bold text-white group-hover:text-violet-300 transition-colors">
             1-Click Ready AI Voice Agents
           </h4>
           <p className="text-xs text-slate-400 mt-1">
             Choose from 6 pre-configured industry templates (Admissions, Real Estate, Clinics, B2B). Zero prompt writing required.
           </p>
-          <div className="mt-4 flex items-center space-x-1 text-xs font-semibold text-emerald-400">
+          <div className="mt-4 flex items-center space-x-1 text-xs font-semibold text-violet-400">
             <span>Explore Ready Agents</span>
             <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
           </div>
@@ -267,21 +267,21 @@ export const Overview: React.FC<OverviewProps> = ({ onSelectCall, onNavigate }) 
 
         <div
           onClick={() => onNavigate('campaigns')}
-          className="p-5 rounded-2xl bg-gradient-to-br from-teal-950/40 to-slate-900/80 border border-teal-500/30 hover:border-teal-500/60 transition-all cursor-pointer group shadow-lg"
+          className="p-5 rounded-2xl bg-gradient-to-br from-blue-950/30 to-slate-900/80 border border-blue-500/30 hover:border-blue-500/60 transition-all cursor-pointer group shadow-lg"
         >
           <div className="flex items-center justify-between mb-3">
             <span className="text-2xl">📢</span>
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-teal-500/20 text-teal-400 border border-teal-500/30 uppercase tracking-wider">
+            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 uppercase tracking-wider">
               Step 2: Auto-Outreach
             </span>
           </div>
-          <h4 className="text-sm font-bold text-white group-hover:text-teal-300 transition-colors">
+          <h4 className="text-sm font-bold text-white group-hover:text-blue-300 transition-colors">
             1-Click Outbound Voice Broadcast
           </h4>
           <p className="text-xs text-slate-400 mt-1">
             Launch a calling campaign with 1 click. 5 sample demo leads pre-loaded with natural speech-to-speech AI calling.
           </p>
-          <div className="mt-4 flex items-center space-x-1 text-xs font-semibold text-teal-400">
+          <div className="mt-4 flex items-center space-x-1 text-xs font-semibold text-blue-400">
             <span>Launch Broadcast</span>
             <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
           </div>
@@ -289,21 +289,21 @@ export const Overview: React.FC<OverviewProps> = ({ onSelectCall, onNavigate }) 
 
         <div
           onClick={() => onNavigate('integrations')}
-          className="p-5 rounded-2xl bg-gradient-to-br from-blue-950/40 to-slate-900/80 border border-blue-500/30 hover:border-blue-500/60 transition-all cursor-pointer group shadow-lg"
+          className="p-5 rounded-2xl bg-gradient-to-br from-cyan-950/30 to-slate-900/80 border border-cyan-500/30 hover:border-cyan-500/60 transition-all cursor-pointer group shadow-lg"
         >
           <div className="flex items-center justify-between mb-3">
             <span className="text-2xl">⚡</span>
-            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30 uppercase tracking-wider">
+            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 uppercase tracking-wider">
               Step 3: Instant Lead Call
             </span>
           </div>
-          <h4 className="text-sm font-bold text-white group-hover:text-blue-300 transition-colors">
+          <h4 className="text-sm font-bold text-white group-hover:text-cyan-300 transition-colors">
             Website Lead → 5s AI Callback
           </h4>
           <p className="text-xs text-slate-400 mt-1">
             Copy 1 line of script onto your website or WordPress. When a lead fills the form, AI rings their phone in 5 seconds.
           </p>
-          <div className="mt-4 flex items-center space-x-1 text-xs font-semibold text-blue-400">
+          <div className="mt-4 flex items-center space-x-1 text-xs font-semibold text-cyan-400">
             <span>Get Embed Code</span>
             <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
           </div>
