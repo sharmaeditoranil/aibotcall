@@ -18,7 +18,12 @@ export interface CallJobData {
   customVariables?: Record<string, any>;
 }
 
+let activeWorker: Worker | null = null;
+
 export function createCallWorker(): Worker {
+  if (activeWorker) return activeWorker;
+
+  logger.info('🚀 Initializing Call Worker (BullMQ queue: voice-calls)...');
   const worker = new Worker(
     'voice-calls',
     async (job: Job<CallJobData>) => {
@@ -185,11 +190,10 @@ export function createCallWorker(): Worker {
     logger.error({ jobId: job?.id, err: err.message }, 'Call worker job failed');
   });
 
+  activeWorker = worker;
   return worker;
 }
 
-// Auto-start worker when executed directly as entrypoint by process manager
-if (process.argv[1]?.includes('call-worker')) {
-  logger.info('🚀 Standalone Call Worker initialized and actively polling BullMQ queue...');
-  createCallWorker();
-}
+// Auto-initialize singleton worker so it starts whenever loaded
+createCallWorker();
+
