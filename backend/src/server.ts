@@ -121,7 +121,5 @@ async function start() {
   }
 }
 
-// Start if executed directly
-if (process.argv[1]?.endsWith('server.ts') || process.argv[1]?.endsWith('server.js')) {
-  start();
-}
+// Start server
+start();
