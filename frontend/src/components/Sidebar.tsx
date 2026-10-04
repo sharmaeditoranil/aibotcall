@@ -38,24 +38,29 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onLogout,
   onQuickCall,
 }) => {
+  const isSuperAdmin = user?.email === 'admin@aibotcall.com';
+
   const menuItems = [
     { id: 'overview', label: 'Overview', icon: LayoutDashboard },
-    { id: 'agents', label: 'AI Agents', icon: Bot },
-    { id: 'numbers', label: 'My Phone Numbers', icon: Phone },
-    { id: 'campaigns', label: 'Broadcast', icon: Radio },
+    { id: 'agents', label: 'AI Voice Agents', icon: Bot },
+    { id: 'campaigns', label: 'Broadcast Campaigns', icon: Radio },
     { id: 'leads', label: 'Contacts / Leads', icon: Users },
     { id: 'calls', label: 'Calls Log', icon: PhoneCall },
     { id: 'referrals', label: 'Refer & Earn (20%)', icon: Gift },
-    { id: 'integrations', label: 'API Connect', icon: Plug },
+    { id: 'billing', label: 'Billing & Wallet', icon: CreditCard },
+    { id: 'integrations', label: 'CRM & Webhooks', icon: Plug },
     { id: 'knowledge', label: 'Knowledge Base', icon: BookOpen },
-    { id: 'webhooks', label: 'Webhooks', icon: SendHorizontal },
-    { id: 'billing', label: 'Billing & Credits', icon: CreditCard },
-    { id: 'team', label: 'Team Members', icon: UserCheck },
-    { id: 'admin', label: 'Super Admin', icon: ShieldAlert },
+    { id: 'webhooks', label: 'Lead Webhooks', icon: SendHorizontal },
     { id: 'suppression', label: 'Suppression (DNC)', icon: ShieldBan },
-    { id: 'apikeys', label: 'API Keys', icon: KeyRound },
-    { id: 'tester', label: 'Webhook Tester', icon: FlaskConical },
-    { id: 'settings', label: 'Settings', icon: Settings },
+    { id: 'team', label: 'Team Members', icon: UserCheck },
+    ...(isSuperAdmin
+      ? [
+          { id: 'admin', label: 'Super Admin', icon: ShieldAlert },
+          { id: 'settings', label: 'Telephony & AI Settings', icon: Settings },
+          { id: 'apikeys', label: 'Platform API Keys', icon: KeyRound },
+          { id: 'tester', label: 'Webhook Tester', icon: FlaskConical },
+        ]
+      : []),
   ];
 
   return (

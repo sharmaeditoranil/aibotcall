@@ -17,7 +17,10 @@ import {
 } from 'lucide-react';
 import { api } from '../api/client';
 
-export const Integrations: React.FC = () => {
+export const Integrations: React.FC<{ user?: any }> = ({ user }) => {
+  const currentUser = user || (typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('aibotcall_user') || '{}') : {});
+  const isSuperAdmin = currentUser?.email === 'admin@aibotcall.com';
+
   const [integrationsData, setIntegrationsData] = useState<any>(null);
   const [snippetsData, setSnippetsData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -169,7 +172,7 @@ export const Integrations: React.FC = () => {
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* SECTION 1: Telephony Integration (Exotel) */}
+        {/* SECTION 1: Telephony Integration */}
         <div className="p-6 rounded-3xl bg-slate-900/60 border border-slate-800 glass-card space-y-5">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2.5">
@@ -177,90 +180,110 @@ export const Integrations: React.FC = () => {
                 <PhoneForwarded className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="text-sm font-bold text-white">Telephony Trunk (Exotel India)</h3>
-                <p className="text-[11px] text-slate-400">PSTN calling with low latency bidirectional audio streaming</p>
+                <h3 className="text-sm font-bold text-white">AiBotCall Cloud Telephony</h3>
+                <p className="text-[11px] text-slate-400">Enterprise PSTN calling with low latency audio streaming</p>
               </div>
             </div>
-            <span
-              className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${
-                integrationsData?.telephony?.is_custom_configured
-                  ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
-                  : 'bg-slate-800 text-slate-400 border-slate-700'
-              }`}
-            >
-              {integrationsData?.telephony?.is_custom_configured ? 'Custom Trunk Active' : 'Shared Trunk Active'}
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold border bg-emerald-500/20 text-emerald-400 border-emerald-500/30 flex items-center space-x-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span>100% Active & Ready</span>
             </span>
           </div>
 
-          <form onSubmit={handleSaveExotel} className="space-y-3.5">
-            <div>
-              <label className="block text-[11px] font-semibold text-slate-300 mb-1">
-                Virtual Number / Caller ID (DID)
-              </label>
-              <input
-                type="text"
-                placeholder="e.g. 08047359000 or +919876543210"
-                value={exotelForm.caller_id}
-                onChange={(e) => setExotelForm({ ...exotelForm, caller_id: e.target.value })}
-                required
-                className="w-full bg-slate-950/80 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
-              />
-              <span className="text-[10px] text-slate-500 mt-1 block">
-                The phone number that appears on the customer's phone during voice calls.
-              </span>
-            </div>
+          {!isSuperAdmin ? (
+            /* Standard User View: Zero Setup Needed */
+            <div className="space-y-3.5 text-xs">
+              <div className="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 flex items-center justify-between">
+                <span className="text-slate-400 font-medium">Virtual Caller ID</span>
+                <span className="font-mono text-emerald-400 font-bold">{integrationsData?.telephony?.caller_id || '09513886363'}</span>
+              </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 flex items-center justify-between">
+                <span className="text-slate-400 font-medium">Telephony Carrier Line</span>
+                <span className="text-white font-medium">AiBotCall High-Speed Indian Trunk</span>
+              </div>
+
+              <div className="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 flex items-center justify-between">
+                <span className="text-slate-400 font-medium">Outbound Calling</span>
+                <span className="text-emerald-400 font-medium">Enabled & Verified</span>
+              </div>
+
+              <div className="p-4 rounded-xl bg-blue-950/20 border border-blue-500/30 text-blue-300 text-[11px] flex items-start space-x-2.5">
+                <CheckCircle2 className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
+                <span>
+                  <b>Zero Technical Setup Required:</b> Your account is pre-configured with AiBotCall's cloud telecom lines. You do not need any Exotel account or API keys. Simply recharge your wallet and start making AI voice calls directly!
+                </span>
+              </div>
+            </div>
+          ) : (
+            /* Super Admin View: Form to configure Exotel credentials */
+            <form onSubmit={handleSaveExotel} className="space-y-3.5">
               <div>
-                <label className="block text-[11px] font-semibold text-slate-300 mb-1">Exotel Account SID</label>
+                <label className="block text-[11px] font-semibold text-slate-300 mb-1">
+                  Virtual Number / Caller ID (DID)
+                </label>
                 <input
                   type="text"
-                  placeholder="e.g. your_company_sid"
-                  value={exotelForm.account_sid}
-                  onChange={(e) => setExotelForm({ ...exotelForm, account_sid: e.target.value })}
+                  placeholder="e.g. 08047359000 or 09513886363"
+                  value={exotelForm.caller_id}
+                  onChange={(e) => setExotelForm({ ...exotelForm, caller_id: e.target.value })}
                   required
                   className="w-full bg-slate-950/80 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
                 />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[11px] font-semibold text-slate-300 mb-1">Exotel Account SID</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. your_company_sid"
+                    value={exotelForm.account_sid}
+                    onChange={(e) => setExotelForm({ ...exotelForm, account_sid: e.target.value })}
+                    required
+                    className="w-full bg-slate-950/80 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-semibold text-slate-300 mb-1">Exotel API Key</label>
+                  <input
+                    type="password"
+                    placeholder="Paste API Key"
+                    value={exotelForm.api_key}
+                    onChange={(e) => setExotelForm({ ...exotelForm, api_key: e.target.value })}
+                    required
+                    className="w-full bg-slate-950/80 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+                  />
+                </div>
               </div>
 
               <div>
-                <label className="block text-[11px] font-semibold text-slate-300 mb-1">Exotel API Key</label>
+                <label className="block text-[11px] font-semibold text-slate-300 mb-1">Exotel API Token</label>
                 <input
                   type="password"
-                  placeholder="Paste API Key"
-                  value={exotelForm.api_key}
-                  onChange={(e) => setExotelForm({ ...exotelForm, api_key: e.target.value })}
+                  placeholder="Paste API Token"
+                  value={exotelForm.api_token}
+                  onChange={(e) => setExotelForm({ ...exotelForm, api_token: e.target.value })}
                   required
                   className="w-full bg-slate-950/80 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
                 />
               </div>
-            </div>
 
-            <div>
-              <label className="block text-[11px] font-semibold text-slate-300 mb-1">Exotel API Token</label>
-              <input
-                type="password"
-                placeholder="Paste API Token"
-                value={exotelForm.api_token}
-                onChange={(e) => setExotelForm({ ...exotelForm, api_token: e.target.value })}
-                required
-                className="w-full bg-slate-950/80 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
-              />
-            </div>
-
-            <div className="pt-2 flex items-center justify-between">
-              <span className="text-[11px] text-slate-400">
-                Media Stream URL: <code className="text-blue-400">/exotel/media</code>
-              </span>
-              <button
-                type="submit"
-                disabled={savingExotel}
-                className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all shadow-md active:scale-95 disabled:opacity-50"
-              >
-                {savingExotel ? 'Saving...' : 'Connect Exotel API'}
-              </button>
-            </div>
-          </form>
+              <div className="pt-2 flex items-center justify-between">
+                <span className="text-[11px] text-slate-400">
+                  Media Stream: <code className="text-blue-400">/exotel/media</code>
+                </span>
+                <button
+                  type="submit"
+                  disabled={savingExotel}
+                  className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all shadow-md active:scale-95 disabled:opacity-50"
+                >
+                  {savingExotel ? 'Saving...' : 'Connect Exotel API'}
+                </button>
+              </div>
+            </form>
+          )}
         </div>
 
         {/* SECTION 2: AI Voice Engine Configuration */}

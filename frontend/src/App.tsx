@@ -220,7 +220,7 @@ export const App: React.FC = () => {
           )}
           {activeTab === 'calls' && <Calls onSelectCall={handleSelectCall} />}
           {activeTab === 'referrals' && <Referrals />}
-          {activeTab === 'integrations' && <Integrations />}
+          {activeTab === 'integrations' && <Integrations user={user} />}
           {activeTab === 'knowledge' && <KnowledgeBase />}
           {activeTab === 'webhooks' && <Webhooks />}
           {activeTab === 'suppression' && <Suppression />}
@@ -229,7 +229,7 @@ export const App: React.FC = () => {
           {activeTab === 'team' && <Team />}
           {activeTab === 'admin' && <SuperAdmin />}
           {activeTab === 'tester' && <Tester />}
-          {activeTab === 'settings' && <Settings />}
+          {activeTab === 'settings' && <Settings user={user} />}
         </main>
       </div>
 

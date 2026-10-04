@@ -18,7 +18,10 @@ import {
 } from 'lucide-react';
 import { api } from '../api/client';
 
-export const Settings: React.FC = () => {
+export const Settings: React.FC<{ user?: any }> = ({ user }) => {
+  const currentUser = user || (typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('aibotcall_user') || '{}') : {});
+  const isSuperAdmin = currentUser?.email === 'admin@aibotcall.com';
+
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
@@ -222,166 +225,230 @@ export const Settings: React.FC = () => {
 
       <form onSubmit={handleSaveAll} className="space-y-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* 1. Telephony Settings */}
-          <div className="p-6 rounded-2xl bg-[#0f172a]/70 border border-slate-800 glass-card space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2 text-emerald-400">
-                <Radio className="w-5 h-5" />
-                <h3 className="text-sm font-bold text-white">Exotel Telephony Configuration</h3>
-              </div>
-              <span className="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20 font-bold">
-                India Telephony
-              </span>
-            </div>
-            <p className="text-xs text-slate-400">Enter your Exotel Account SID, API Key and Caller ID to route real calls</p>
-
-            <div className="space-y-3 text-xs">
-              <div>
-                <label className="text-slate-300 font-semibold block mb-1">
-                  Exotel Virtual Caller ID (ExoPhone) *
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. 08047359000 or +919876543210"
-                  value={callerId}
-                  onChange={(e) => setCallerId(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-white font-mono placeholder-slate-500 focus:outline-none focus:border-emerald-500"
-                />
-              </div>
-
-              <div>
-                <label className="text-slate-300 font-semibold block mb-1">
-                  Exotel Account SID *
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. your_company_sid"
-                  value={accountSid}
-                  onChange={(e) => setAccountSid(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-white font-mono placeholder-slate-500 focus:outline-none focus:border-emerald-500"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="text-slate-300 font-semibold block mb-1">
-                    Exotel API Key *
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. 4a2f8b9c..."
-                    value={apiKey}
-                    onChange={(e) => setApiKey(e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-white font-mono placeholder-slate-500 focus:outline-none focus:border-emerald-500"
-                  />
+          {/* 1 & 2. Telephony & AI Engine Configuration (Only for Super Admin) */}
+          {isSuperAdmin ? (
+            <>
+              {/* 1. Telephony Settings */}
+              <div className="p-6 rounded-2xl bg-[#0f172a]/70 border border-slate-800 glass-card space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2 text-emerald-400">
+                    <Radio className="w-5 h-5" />
+                    <h3 className="text-sm font-bold text-white">Exotel Telephony Configuration</h3>
+                  </div>
+                  <span className="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20 font-bold">
+                    Super Admin Only
+                  </span>
                 </div>
+                <p className="text-xs text-slate-400">Enter your Exotel Account SID, API Key and Caller ID to route real calls</p>
 
-                <div>
-                  <label className="text-slate-300 font-semibold block mb-1">
-                    Exotel API Token *
-                  </label>
-                  <div className="relative">
+                <div className="space-y-3 text-xs">
+                  <div>
+                    <label className="text-slate-300 font-semibold block mb-1">
+                      Exotel Virtual Caller ID (ExoPhone) *
+                    </label>
                     <input
-                      type={showApiToken ? 'text' : 'password'}
-                      placeholder="••••••••••••"
-                      value={apiToken}
-                      onChange={(e) => setApiToken(e.target.value)}
-                      className="w-full pl-3.5 pr-10 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-white font-mono placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+                      type="text"
+                      placeholder="e.g. 08047359000 or 09513886363"
+                      value={callerId}
+                      onChange={(e) => setCallerId(e.target.value)}
+                      className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-white font-mono placeholder-slate-500 focus:outline-none focus:border-emerald-500"
                     />
-                    <button
-                      type="button"
-                      onClick={() => setShowApiToken(!showApiToken)}
-                      className="absolute right-3 top-3 text-slate-500 hover:text-white"
-                    >
-                      {showApiToken ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                    </button>
+                  </div>
+
+                  <div>
+                    <label className="text-slate-300 font-semibold block mb-1">
+                      Exotel Account SID *
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. aibotcall1"
+                      value={accountSid}
+                      onChange={(e) => setAccountSid(e.target.value)}
+                      className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-white font-mono placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-slate-300 font-semibold block mb-1">
+                        Exotel API Key *
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g. 4a2f8b9c..."
+                        value={apiKey}
+                        onChange={(e) => setApiKey(e.target.value)}
+                        className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-white font-mono placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="text-slate-300 font-semibold block mb-1">
+                        Exotel API Token *
+                      </label>
+                      <div className="relative">
+                        <input
+                          type={showApiToken ? 'text' : 'password'}
+                          placeholder="••••••••••••"
+                          value={apiToken}
+                          onChange={(e) => setApiToken(e.target.value)}
+                          className="w-full pl-3.5 pr-10 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-white font-mono placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowApiToken(!showApiToken)}
+                          className="absolute right-3 top-3 text-slate-500 hover:text-white"
+                        >
+                          {showApiToken ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <span className="text-slate-400 block mb-1">WebSocket Voice Media Gateway (Auto-Routed)</span>
+                    <input
+                      type="text"
+                      readOnly
+                      value={websocketUrl}
+                      className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-emerald-400 font-mono text-[11px]"
+                    />
                   </div>
                 </div>
               </div>
 
-              <div>
-                <span className="text-slate-400 block mb-1">WebSocket Voice Media Gateway (Auto-Routed)</span>
-                <input
-                  type="text"
-                  readOnly
-                  value={websocketUrl}
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-emerald-400 font-mono text-[11px]"
-                />
-              </div>
-            </div>
-          </div>
+              {/* 2. OpenAI Settings */}
+              <div className="p-6 rounded-2xl bg-[#0f172a]/70 border border-slate-800 glass-card space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2 text-teal-400">
+                    <Cpu className="w-5 h-5" />
+                    <h3 className="text-sm font-bold text-white">OpenAI Realtime Voice Engine</h3>
+                  </div>
+                  <span className="text-[10px] text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded border border-teal-500/20 font-bold">
+                    Super Admin Only
+                  </span>
+                </div>
+                <p className="text-xs text-slate-400">Configure speech-to-speech AI model for human-like conversational Hindi</p>
 
-          {/* 2. OpenAI Settings */}
-          <div className="p-6 rounded-2xl bg-[#0f172a]/70 border border-slate-800 glass-card space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2 text-teal-400">
-                <Cpu className="w-5 h-5" />
-                <h3 className="text-sm font-bold text-white">OpenAI Realtime Voice Engine</h3>
-              </div>
-              <span className="text-[10px] text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded border border-teal-500/20 font-bold">
-                Ultra-Low Latency
-              </span>
-            </div>
-            <p className="text-xs text-slate-400">Configure your speech-to-speech AI model for human-like conversational Hindi</p>
+                <div className="space-y-3 text-xs">
+                  <div>
+                    <label className="text-slate-300 font-semibold block mb-1">
+                      OpenAI API Key (sk-proj-...)
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={showOpenaiKey ? 'text' : 'password'}
+                        placeholder="sk-proj-..."
+                        value={openaiKey}
+                        onChange={(e) => setOpenaiKey(e.target.value)}
+                        className="w-full pl-3.5 pr-10 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-teal-300 font-mono placeholder-slate-500 focus:outline-none focus:border-teal-500"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowOpenaiKey(!showOpenaiKey)}
+                        className="absolute right-3 top-3 text-slate-500 hover:text-white"
+                      >
+                        {showOpenaiKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
 
-            <div className="space-y-3 text-xs">
-              <div>
-                <label className="text-slate-300 font-semibold block mb-1">
-                  OpenAI API Key (sk-proj-...)
-                </label>
-                <div className="relative">
-                  <input
-                    type={showOpenaiKey ? 'text' : 'password'}
-                    placeholder="sk-proj-..."
-                    value={openaiKey}
-                    onChange={(e) => setOpenaiKey(e.target.value)}
-                    className="w-full pl-3.5 pr-10 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-teal-300 font-mono placeholder-slate-500 focus:outline-none focus:border-teal-500"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowOpenaiKey(!showOpenaiKey)}
-                    className="absolute right-3 top-3 text-slate-500 hover:text-white"
-                  >
-                    {showOpenaiKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
+                  <div>
+                    <label className="text-slate-300 font-semibold block mb-1">
+                      Configured Realtime Model
+                    </label>
+                    <select
+                      value={realtimeModel}
+                      onChange={(e) => setRealtimeModel(e.target.value)}
+                      className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-white font-mono focus:outline-none focus:border-teal-500"
+                    >
+                      <option value="gpt-4o-realtime-preview">gpt-4o-realtime-preview (Recommended • Natural Cadence)</option>
+                      <option value="gpt-4o-mini-realtime-preview">gpt-4o-mini-realtime-preview (Ultra-Fast)</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <span className="text-slate-400 block mb-1">Telephony Native Codec</span>
+                    <input
+                      type="text"
+                      disabled
+                      value="G.711 mu-law (8kHz Native Telephony - Zero transcoding latency)"
+                      className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-slate-400 font-mono text-[11px]"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="text-slate-400 block mb-1">Voice Activity Detection (Barge-in)</span>
+                    <input
+                      type="text"
+                      disabled
+                      value="Server VAD enabled with instant interruption handling"
+                      className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-slate-400 font-mono text-[11px]"
+                    />
+                  </div>
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              {/* Standard User: Profile & Organization Information */}
+              <div className="p-6 rounded-2xl bg-[#0f172a]/70 border border-slate-800 glass-card space-y-4">
+                <div className="flex items-center space-x-2 text-emerald-400">
+                  <ShieldCheck className="w-5 h-5" />
+                  <h3 className="text-sm font-bold text-white">Account & Company Profile</h3>
+                </div>
+                <p className="text-xs text-slate-400">Your registered account details and workspace organization</p>
+                <div className="space-y-3 text-xs">
+                  <div className="p-3 bg-slate-950/60 rounded-xl border border-slate-800/80 flex justify-between items-center">
+                    <span className="text-slate-400">Account Name</span>
+                    <span className="text-white font-semibold">{currentUser?.name || 'Authorized Member'}</span>
+                  </div>
+                  <div className="p-3 bg-slate-950/60 rounded-xl border border-slate-800/80 flex justify-between items-center">
+                    <span className="text-slate-400">Email Address</span>
+                    <span className="text-white font-mono">{currentUser?.email || 'N/A'}</span>
+                  </div>
+                  <div className="p-3 bg-slate-950/60 rounded-xl border border-slate-800/80 flex justify-between items-center">
+                    <span className="text-slate-400">Organization</span>
+                    <span className="text-emerald-400 font-semibold">{currentUser?.organization?.name || 'AiBotCall Workspace'}</span>
+                  </div>
+                  <div className="p-3 bg-slate-950/60 rounded-xl border border-slate-800/80 flex justify-between items-center">
+                    <span className="text-slate-400">Subscription Tier</span>
+                    <span className="px-2.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold text-[10px]">
+                      {currentUser?.organization?.plan || 'Active Workspace'}
+                    </span>
+                  </div>
                 </div>
               </div>
 
-              <div>
-                <label className="text-slate-300 font-semibold block mb-1">
-                  Configured Realtime Model
-                </label>
-                <select
-                  value={realtimeModel}
-                  onChange={(e) => setRealtimeModel(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-white font-mono focus:outline-none focus:border-teal-500"
-                >
-                  <option value="gpt-4o-realtime-preview">gpt-4o-realtime-preview (Recommended • Natural Cadence)</option>
-                  <option value="gpt-4o-mini-realtime-preview">gpt-4o-mini-realtime-preview (Ultra-Fast)</option>
-                </select>
+              {/* Standard User: Managed Cloud Telephony Status */}
+              <div className="p-6 rounded-2xl bg-[#0f172a]/70 border border-slate-800 glass-card space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2 text-blue-400">
+                    <Radio className="w-5 h-5" />
+                    <h3 className="text-sm font-bold text-white">Cloud Telephony Status</h3>
+                  </div>
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center space-x-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span>Active & Ready</span>
+                  </span>
+                </div>
+                <p className="text-xs text-slate-400">Your account is connected to enterprise cloud telecom lines</p>
+                <div className="space-y-3 text-xs">
+                  <div className="p-3 bg-slate-950/60 rounded-xl border border-slate-800/80 flex justify-between items-center">
+                    <span className="text-slate-400">Dedicated Caller ID</span>
+                    <span className="text-emerald-400 font-mono font-bold">{callerId || '09513886363'}</span>
+                  </div>
+                  <div className="p-3 bg-slate-950/60 rounded-xl border border-slate-800/80 flex justify-between items-center">
+                    <span className="text-slate-400">AI Voice Model</span>
+                    <span className="text-white font-medium">gpt-4o Realtime Voice (Hindi & English)</span>
+                  </div>
+                  <div className="p-3.5 rounded-xl bg-blue-950/20 border border-blue-500/30 text-blue-300 text-[11px]">
+                    ✅ <b>Zero Setup Required:</b> You do not need any Exotel or OpenAI API keys. Your calls will dial directly through our cloud telephony lines.
+                  </div>
+                </div>
               </div>
-
-              <div>
-                <span className="text-slate-400 block mb-1">Telephony Native Codec</span>
-                <input
-                  type="text"
-                  disabled
-                  value="G.711 mu-law (8kHz Native Telephony - Zero transcoding latency)"
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-slate-400 font-mono text-[11px]"
-                />
-              </div>
-
-              <div>
-                <span className="text-slate-400 block mb-1">Voice Activity Detection (Barge-in)</span>
-                <input
-                  type="text"
-                  disabled
-                  value="Server VAD enabled with instant interruption handling"
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-slate-400 font-mono text-[11px]"
-                />
-              </div>
-            </div>
-          </div>
+            </>
+          )}
 
           {/* 3. WhatsApp CRM Webhook */}
           <div className="p-6 rounded-2xl bg-[#0f172a]/70 border border-slate-800 glass-card space-y-4">
