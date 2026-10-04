@@ -11,7 +11,6 @@ import {
   KeyRound,
   FlaskConical,
   Settings,
-  CreditCard,
   UserCheck,
   LogOut,
   PhoneOutgoing,
@@ -19,7 +18,7 @@ import {
   Plug,
   ShieldAlert,
   Phone,
-  Gift,
+  UserCircle,
 } from 'lucide-react';
 import { User } from '../types';
 
@@ -29,6 +28,7 @@ interface SidebarProps {
   user: User | null;
   onLogout: () => void;
   onQuickCall: () => void;
+  onSelectProfileSection?: (section: 'details' | 'billing' | 'referrals') => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -37,18 +37,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
   user,
   onLogout,
   onQuickCall,
+  onSelectProfileSection,
 }) => {
   const isSuperAdmin = user?.email === 'admin@aibotcall.com';
 
   const menuItems = [
     { id: 'overview', label: 'Overview', icon: LayoutDashboard },
+    { id: 'profile', label: 'My Profile & Account', icon: UserCircle },
     { id: 'agents', label: 'AI Voice Agents', icon: Bot },
     { id: 'numbers', label: 'My Numbers & DIDs', icon: Phone },
     { id: 'campaigns', label: 'Broadcast Campaigns', icon: Radio },
     { id: 'leads', label: 'Contacts / Leads', icon: Users },
     { id: 'calls', label: 'Calls Log', icon: PhoneCall },
-    { id: 'referrals', label: 'Refer & Earn (20%)', icon: Gift },
-    { id: 'billing', label: 'Billing & Wallet', icon: CreditCard },
     { id: 'integrations', label: 'CRM & Webhooks', icon: Plug },
     { id: 'knowledge', label: 'Knowledge Base', icon: BookOpen },
     { id: 'webhooks', label: 'Lead Webhooks', icon: SendHorizontal },
@@ -89,7 +89,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <div className="px-4 pt-4 space-y-2">
         <button
           onClick={onQuickCall}
-          className="w-full flex items-center justify-center space-x-2 py-2.5 px-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl text-xs font-semibold shadow-md shadow-emerald-900/30 transition-all duration-200 active:scale-95"
+          className="w-full flex items-center justify-center space-x-2 py-2.5 px-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl text-xs font-semibold shadow-md shadow-emerald-900/30 transition-all duration-200 active:scale-95 cursor-pointer"
         >
           <PhoneOutgoing className="w-4 h-4" />
           <span>New AI Voice Call</span>
@@ -97,8 +97,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         {/* SaaS Calling Balance Pill */}
         <button
-          onClick={() => setActiveTab('billing')}
-          className="w-full flex items-center justify-between px-3 py-1.5 rounded-lg bg-emerald-950/40 border border-emerald-500/30 text-[11px] hover:bg-emerald-950/60 transition-colors"
+          onClick={() => {
+            setActiveTab('profile');
+            onSelectProfileSection?.('billing');
+          }}
+          className="w-full flex items-center justify-between px-3 py-1.5 rounded-lg bg-emerald-950/40 border border-emerald-500/30 text-[11px] hover:bg-emerald-950/60 transition-colors cursor-pointer"
+          title="Manage Wallet & Top-up Voice Credits"
         >
           <span className="text-slate-300 flex items-center space-x-1">
             <Sparkles className="w-3 h-3 text-emerald-400" />
@@ -119,7 +123,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <button
               key={item.id}
               onClick={() => setActiveTab(item.id)}
-              className={`w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all duration-150 ${
+              className={`w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all duration-150 cursor-pointer ${
                 isActive
                   ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shadow-sm shadow-emerald-500/10'
                   : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
@@ -134,20 +138,32 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {/* User Info & Logout Footer */}
       <div className="p-3 border-t border-slate-800/80 bg-slate-950/40">
-        <div className="flex items-center justify-between px-2 py-1.5 rounded-lg bg-slate-900/60 border border-slate-800/50">
+        <div
+          onClick={() => {
+            setActiveTab('profile');
+            onSelectProfileSection?.('details');
+          }}
+          className="flex items-center justify-between px-2 py-1.5 rounded-lg bg-slate-900/60 border border-slate-800/50 hover:border-emerald-500/40 hover:bg-slate-900 cursor-pointer transition-all group"
+          title="Open My Profile & Settings"
+        >
           <div className="flex items-center space-x-2.5 min-w-0">
-            <div className="w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center font-bold text-xs uppercase">
+            <div className="w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center font-bold text-xs uppercase group-hover:scale-105 transition-transform">
               {user?.name ? user.name[0] : 'A'}
             </div>
             <div className="truncate">
-              <p className="text-xs font-medium text-slate-200 truncate">{user?.name || 'Administrator'}</p>
+              <p className="text-xs font-medium text-slate-200 truncate group-hover:text-emerald-400 transition-colors">
+                {user?.name || 'Administrator'}
+              </p>
               <p className="text-[10px] text-slate-400 truncate">{user?.organization?.name || 'AiBotCall'}</p>
             </div>
           </div>
           <button
-            onClick={onLogout}
+            onClick={(e) => {
+              e.stopPropagation();
+              onLogout();
+            }}
             title="Log Out"
-            className="p-1.5 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+            className="p-1.5 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors cursor-pointer"
           >
             <LogOut className="w-4 h-4" />
           </button>

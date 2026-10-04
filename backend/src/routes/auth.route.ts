@@ -258,4 +258,112 @@ If customer asks not to be called, invoke do_not_call.`,
       },
     };
   });
+
+  /**
+   * PUT /api/v1/auth/profile
+   * Update current user profile and company info
+   */
+  fastify.put('/api/v1/auth/profile', { preHandler: [authenticate] }, async (request, reply) => {
+    if (!request.user) return reply.status(401).send({ error: 'Unauthorized' });
+
+    const ProfileSchema = z.object({
+      name: z.string().min(1, 'Name is required').optional(),
+      company_name: z.string().min(1).optional(),
+      billing_email: z.string().email().optional(),
+    });
+
+    const parseResult = ProfileSchema.safeParse(request.body);
+    if (!parseResult.success) {
+      return reply.status(400).send({
+        error: 'Validation failed',
+        details: parseResult.error.flatten(),
+      });
+    }
+
+    const { name, company_name, billing_email } = parseResult.data;
+
+    // Update user name
+    if (name) {
+      await prisma.user.update({
+        where: { id: request.user.id },
+        data: { name },
+      });
+    }
+
+    // Update organization details if user is OWNER or ADMIN
+    if (request.user.role === 'OWNER' || request.user.role === 'ADMIN') {
+      const orgUpdates: any = {};
+      if (company_name) orgUpdates.name = company_name;
+      if (billing_email) orgUpdates.billing_email = billing_email;
+
+      if (Object.keys(orgUpdates).length > 0) {
+        await prisma.organization.update({
+          where: { id: request.user.organizationId },
+          data: orgUpdates,
+        });
+      }
+    }
+
+    const updatedUser = await prisma.user.findUnique({
+      where: { id: request.user.id },
+      include: { organization: true },
+    });
+
+    return {
+      success: true,
+      message: 'Profile updated successfully',
+      user: {
+        id: updatedUser?.id,
+        email: updatedUser?.email,
+        name: updatedUser?.name,
+        role: updatedUser?.role,
+        organization: updatedUser?.organization,
+      },
+    };
+  });
+
+  /**
+   * PUT /api/v1/auth/password
+   * Change user password securely
+   */
+  fastify.put('/api/v1/auth/password', { preHandler: [authenticate] }, async (request, reply) => {
+    if (!request.user) return reply.status(401).send({ error: 'Unauthorized' });
+
+    const PasswordSchema = z.object({
+      current_password: z.string().min(1, 'Current password is required'),
+      new_password: z.string().min(6, 'New password must be at least 6 characters'),
+    });
+
+    const parseResult = PasswordSchema.safeParse(request.body);
+    if (!parseResult.success) {
+      return reply.status(400).send({
+        error: 'Validation failed',
+        details: parseResult.error.flatten(),
+      });
+    }
+
+    const { current_password, new_password } = parseResult.data;
+
+    const user = await prisma.user.findUnique({
+      where: { id: request.user.id },
+    });
+
+    if (!user) return reply.status(404).send({ error: 'User not found' });
+
+    const isMatch = await bcrypt.compare(current_password, user.password_hash);
+    if (!isMatch) {
+      return reply.status(400).send({ error: 'Current password is incorrect' });
+    }
+
+    const newHash = await bcrypt.hash(new_password, 10);
+    await prisma.user.update({
+      where: { id: request.user.id },
+      data: { password_hash: newHash },
+    });
+
+    return {
+      success: true,
+      message: 'Password changed successfully',
+    };
+  });
 }

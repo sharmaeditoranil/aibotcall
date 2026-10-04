@@ -26,6 +26,7 @@ import { TermsPage } from './pages/TermsPage';
 import { PrivacyPolicyPage } from './pages/PrivacyPolicyPage';
 import { RefundPolicyPage } from './pages/RefundPolicyPage';
 import { ContactUsPage } from './pages/ContactUsPage';
+import { Profile } from './pages/Profile';
 import { CallDetailModal } from './components/CallDetailModal';
 import { QuickCallModal } from './components/QuickCallModal';
 import { User, Call, WebhookDelivery } from './types';
@@ -35,6 +36,7 @@ export const App: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(localStorage.getItem('aibotcall_token'));
   const [activeTab, setActiveTab] = useState<string>('overview');
+  const [profileSection, setProfileSection] = useState<'details' | 'billing' | 'referrals'>('details');
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const getInitialAuthView = (): 'landing' | 'pricing' | 'login' | 'register' | 'terms' | 'privacy' | 'refund' | 'contact' => {
@@ -179,6 +181,8 @@ export const App: React.FC = () => {
     switch (activeTab) {
       case 'overview':
         return { title: 'Operational Analytics & Overview', subtitle: 'Live metrics, active call funnel and daily statistics' };
+      case 'profile':
+        return { title: 'My Profile & Account Settings', subtitle: 'Personal details, password security, voice wallet billing & referral commissions' };
       case 'agents':
         return { title: 'AI Voice Agents', subtitle: 'Interactive conversational agents, voice configuration & prompts' };
       case 'numbers':
@@ -223,6 +227,7 @@ export const App: React.FC = () => {
         user={user}
         onLogout={handleLogout}
         onQuickCall={() => setIsQuickCallOpen(true)}
+        onSelectProfileSection={setProfileSection}
       />
 
       {/* Main Workspace Area */}
@@ -242,6 +247,14 @@ export const App: React.FC = () => {
               onNavigate={(tab) => setActiveTab(tab)}
             />
           )}
+          {activeTab === 'profile' && (
+            <Profile
+              user={user}
+              onUpdateUser={(updated) => setUser(updated)}
+              initialSection={profileSection}
+              onSectionChange={(sec) => setProfileSection(sec)}
+            />
+          )}
           {activeTab === 'agents' && <Agents />}
           {activeTab === 'numbers' && <PhoneNumbers />}
           {activeTab === 'campaigns' && <Campaigns />}
@@ -253,13 +266,27 @@ export const App: React.FC = () => {
             />
           )}
           {activeTab === 'calls' && <Calls onSelectCall={handleSelectCall} />}
-          {activeTab === 'referrals' && <Referrals />}
+          {activeTab === 'referrals' && (
+            <Profile
+              user={user}
+              onUpdateUser={(updated) => setUser(updated)}
+              initialSection="referrals"
+              onSectionChange={(sec) => setProfileSection(sec)}
+            />
+          )}
           {activeTab === 'integrations' && <Integrations user={user} />}
           {activeTab === 'knowledge' && <KnowledgeBase />}
           {activeTab === 'webhooks' && <Webhooks />}
           {activeTab === 'suppression' && <Suppression />}
           {activeTab === 'apikeys' && <ApiKeys />}
-          {activeTab === 'billing' && <Billing />}
+          {activeTab === 'billing' && (
+            <Profile
+              user={user}
+              onUpdateUser={(updated) => setUser(updated)}
+              initialSection="billing"
+              onSectionChange={(sec) => setProfileSection(sec)}
+            />
+          )}
           {activeTab === 'team' && <Team />}
           {activeTab === 'admin' && <SuperAdmin />}
           {activeTab === 'tester' && <Tester />}

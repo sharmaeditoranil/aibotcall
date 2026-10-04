@@ -7,6 +7,10 @@ export interface User {
     id: string;
     name: string;
     slug: string;
+    plan?: string;
+    credits_balance_minutes?: number;
+    billing_email?: string;
+    referral_code?: string;
   };
 }
 
