@@ -290,7 +290,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           </div>
 
           {/* Primary H1 */}
-          <h1 className="text-4xl sm:text-6xl font-black text-white tracking-tight leading-[1.12]">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.14]">
             AI Voice Agent for <br />
             <span className="text-gradient-brand">
               Inbound & Outbound Calls
@@ -323,22 +323,22 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           </div>
 
           {/* Interactive Audio Preview Widget */}
-          <div className="mt-8 max-w-xl mx-auto p-4 rounded-2xl bg-[#131d35]/90 border border-cyan-500/30 glass-card shadow-2xl shadow-indigo-950/40 flex items-center justify-between hover:border-cyan-400/60 transition-all">
-            <div className="flex items-center space-x-3">
+          <div className="mt-8 max-w-xl mx-auto p-4 rounded-2xl bg-[#131d35]/90 border border-cyan-500/30 glass-card shadow-2xl shadow-indigo-950/40 flex items-center justify-between hover:border-cyan-400/60 transition-all gap-2">
+            <div className="flex items-center space-x-3 min-w-0">
               <button
                 onClick={togglePlayAudio}
-                className="w-12 h-12 rounded-full bg-gradient-brand text-white flex items-center justify-center shadow-lg glow-brand-sm hover:scale-105 transition-transform cursor-pointer"
+                className="w-12 h-12 rounded-full bg-gradient-brand text-white flex items-center justify-center shadow-lg glow-brand-sm hover:scale-105 transition-transform cursor-pointer shrink-0"
                 aria-label="Play audio demo"
               >
                 {isPlayingDemo ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 ml-0.5" />}
               </button>
-              <div className="text-left">
-                <p className="text-xs font-bold text-white">Agent Ritu (Admissions & Sales Counselor)</p>
-                <p className="text-[11px] text-cyan-400">Click to listen: Natural Hindi/Hinglish Voice Sample</p>
+              <div className="text-left min-w-0">
+                <p className="text-xs font-bold text-white truncate">Agent Ritu (Admissions Counselor)</p>
+                <p className="text-[10.5px] sm:text-[11px] text-cyan-400 truncate">Natural Hindi/Hinglish Voice</p>
               </div>
             </div>
 
-            <div className="flex items-center space-x-1.5 h-8 px-4">
+            <div className="hidden xs:flex items-center space-x-1 sm:space-x-1.5 h-8 px-2 sm:px-4 shrink-0">
               {[14, 28, 18, 32, 22, 12, 26, 30, 16, 20, 24, 18].map((h, idx) => (
                 <div
                   key={idx}
@@ -348,18 +348,18 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               ))}
             </div>
 
-            <span className="text-[11px] font-mono text-cyan-300 font-semibold">{isPlayingDemo ? 'Playing...' : '0:14'}</span>
+            <span className="text-[11px] font-mono text-cyan-300 font-semibold shrink-0">{isPlayingDemo ? 'Playing...' : '0:14'}</span>
           </div>
         </div>
 
         {/* Hero Visual Dashboard Showcase */}
         <div className="mt-14 max-w-6xl mx-auto relative">
           <div className="rounded-3xl border border-indigo-500/40 shadow-2xl shadow-indigo-950/60 overflow-hidden bg-slate-900 group relative shimmer-card">
-            <div className="absolute top-4 left-6 z-20 flex items-center space-x-2">
-              <span className="w-3 h-3 rounded-full bg-red-500/80" />
-              <span className="w-3 h-3 rounded-full bg-amber-500/80" />
-              <span className="w-3 h-3 rounded-full bg-emerald-500/80" />
-              <span className="ml-3 text-xs font-mono text-slate-400">voice.aibotflow.in — AI Voice Calling Engine</span>
+            <div className="absolute top-4 left-4 sm:left-6 z-20 flex items-center space-x-2">
+              <span className="w-3 h-3 rounded-full bg-red-500/80 shrink-0" />
+              <span className="w-3 h-3 rounded-full bg-amber-500/80 shrink-0" />
+              <span className="w-3 h-3 rounded-full bg-emerald-500/80 shrink-0" />
+              <span className="ml-2 sm:ml-3 text-[10px] sm:text-xs font-mono text-slate-400 truncate max-w-[190px] xs:max-w-none">voice.aibotflow.in — AI Voice Calling Engine</span>
             </div>
             <img
               src="/assets/dashboard_mockup.jpg"

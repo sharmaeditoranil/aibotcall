@@ -191,26 +191,26 @@ export const PublicHeader: React.FC<PublicHeaderProps> = ({
             onNavigateHome();
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
-          className="cursor-pointer flex items-center space-x-3 group select-none shrink-0"
+          className="cursor-pointer flex items-center space-x-2.5 sm:space-x-3 group select-none shrink-0"
         >
           <div className="relative">
             <img
               src="/aibotcall-emblem.png"
               alt="AiBotCall"
-              className="h-10 w-10 sm:h-11 sm:w-11 object-contain logo-glow group-hover:scale-105 transition-transform duration-300"
+              className="h-9 w-9 sm:h-11 sm:w-11 object-contain logo-glow group-hover:scale-105 transition-transform duration-300"
             />
-            <span className="absolute -bottom-0.5 -right-0.5 flex h-2.5 w-2.5">
+            <span className="absolute -bottom-0.5 -right-0.5 flex h-2 w-2 sm:h-2.5 sm:w-2.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400 border border-[#0d1527]"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 sm:h-2.5 sm:w-2.5 bg-emerald-400 border border-[#0d1527]"></span>
             </span>
           </div>
           <div className="flex flex-col">
-            <div className="flex items-center text-[19px] sm:text-[21px] font-black tracking-tight leading-none">
+            <div className="flex items-center text-[18px] sm:text-[21px] font-black tracking-tight leading-none">
               <span className="text-cyan-400 group-hover:brightness-125 transition-all">Ai</span>
               <span className="text-white">Bot</span>
               <span className="text-violet-400 group-hover:brightness-125 transition-all">Call</span>
             </div>
-            <span className="text-[9px] text-cyan-400/90 font-bold tracking-widest uppercase mt-0.5 hidden xs:inline-block">
+            <span className="text-[8.5px] sm:text-[9px] text-cyan-400/90 font-bold tracking-widest uppercase mt-0.5 hidden xs:inline-block">
               AI Voice Telephony
             </span>
           </div>
@@ -425,30 +425,33 @@ export const PublicHeader: React.FC<PublicHeaderProps> = ({
         </nav>
 
         {/* Action Buttons Right */}
-        <div className="hidden sm:flex items-center space-x-2.5">
+        <div className="flex items-center space-x-2 sm:space-x-2.5">
+          {/* Sign In (Desktop & Tablet) */}
           <button
             onClick={onNavigateLogin}
-            className="px-4 py-2 rounded-xl text-xs font-bold text-slate-200 hover:text-white hover:bg-slate-800/60 transition-all cursor-pointer"
+            className="hidden sm:inline-flex px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs font-bold text-slate-200 hover:text-white hover:bg-slate-800/60 transition-all cursor-pointer whitespace-nowrap shrink-0"
           >
             Sign In
           </button>
+
+          {/* 30 Free Mins (Visible on mobile & desktop with generous padding) */}
           <button
             onClick={onNavigateRegister}
-            className="px-4.5 py-2.5 rounded-xl bg-gradient-brand hover:brightness-110 text-white text-xs font-black shadow-lg glow-brand-sm transition-all duration-200 active:scale-95 cursor-pointer flex items-center space-x-1.5"
+            className="px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-xl bg-gradient-brand hover:brightness-110 text-white text-[11px] sm:text-xs font-black shadow-lg glow-brand-sm transition-all duration-200 active:scale-95 cursor-pointer flex items-center space-x-1.5 whitespace-nowrap shrink-0"
           >
             <span>30 Free Mins</span>
-            <ArrowRight className="w-3.5 h-3.5" />
+            <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+          </button>
+
+          {/* Mobile Hamburger Toggle */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="lg:hidden p-2 sm:p-2.5 rounded-xl bg-slate-800/90 text-slate-300 hover:text-white hover:bg-slate-700 transition-colors cursor-pointer border border-slate-700/60 shrink-0 ml-1"
+            aria-label="Toggle mobile menu"
+          >
+            {mobileMenuOpen ? <X className="w-5 h-5 text-cyan-400" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
-
-        {/* Mobile Hamburger Toggle */}
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="lg:hidden p-2 rounded-xl bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 transition-colors"
-          aria-label="Toggle mobile menu"
-        >
-          {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </button>
       </div>
 
       {/* Mobile Drawer */}
