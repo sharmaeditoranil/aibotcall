@@ -490,41 +490,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         </div>
       </section>
 
-      {/* Razorpay Verified Merchant & Security Compliance Strip */}
-      <section className="py-8 px-6 border-t border-slate-800/80 bg-slate-950/80">
-        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-6 text-xs text-slate-400">
-          <div className="flex items-center space-x-3">
-            <div className="p-2 rounded-xl bg-blue-500/10 border border-blue-500/30 text-blue-400 font-bold">
-              <CreditCard className="w-4 h-4" />
-            </div>
-            <div>
-              <span className="font-bold text-white block">Razorpay Verified Merchant</span>
-              <span className="text-[11px] text-slate-500">Secure Indian Cards, UPI, NetBanking & Wallets</span>
-            </div>
-          </div>
-
-          <div className="flex items-center space-x-3">
-            <div className="p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-bold">
-              <ShieldCheck className="w-4 h-4" />
-            </div>
-            <div>
-              <span className="font-bold text-white block">TRAI & TCCCPR Compliant</span>
-              <span className="text-[11px] text-slate-500">Built-in DNC Suppression & Verified Caller ID</span>
-            </div>
-          </div>
-
-          <div className="flex items-center space-x-3">
-            <div className="p-2 rounded-xl bg-purple-500/10 border border-purple-500/30 text-purple-400 font-bold">
-              <Lock className="w-4 h-4" />
-            </div>
-            <div>
-              <span className="font-bold text-white block">256-Bit Bank-Grade Encryption</span>
-              <span className="text-[11px] text-slate-500">TLS 1.3 Audio Streams & Encrypted Transcripts</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Unified Public Footer */}
       <PublicFooter
         onNavigateHome={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
