@@ -1,0 +1,23 @@
+{
+  "name": "aibotcall-platform",
+  "version": "1.0.0",
+  "description": "AiBotCall - Production-Ready AI Voice Calling & Broadcast Platform",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "install:all": "npm install --prefix backend && npm install --prefix frontend",
+    "build:backend": "npm run build --prefix backend",
+    "build:frontend": "npm run build --prefix frontend",
+    "build": "npm run build:backend && npm run build:frontend",
+    "dev:backend": "npm run dev --prefix backend",
+    "dev:frontend": "npm run dev --prefix frontend",
+    "dev": "npm run dev:backend",
+    "start": "npm run start --prefix backend",
+    "worker": "npm run worker --prefix backend",
+    "db:generate": "npm run prisma:generate --prefix backend",
+    "db:migrate": "npm run prisma:migrate --prefix backend",
+    "db:deploy": "npm run prisma:deploy --prefix backend",
+    "db:seed": "npm run prisma:seed --prefix backend",
+    "test": "node scripts/test-platform.js"
+  }
+}

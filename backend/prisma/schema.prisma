@@ -1,0 +1,493 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  OWNER
+  ADMIN
+  AGENT
+  VIEWER
+}
+
+enum PlanTier {
+  FREE_TRIAL
+  PAY_AS_YOU_GO
+  STARTER
+  GROWTH
+  ENTERPRISE
+}
+
+enum CallStatus {
+  queued
+  initiated
+  ringing
+  in_progress
+  completed
+  busy
+  no_answer
+  failed
+  cancelled
+}
+
+enum CampaignStatus {
+  draft
+  scheduled
+  running
+  paused
+  completed
+  stopped
+}
+
+enum ContactStatus {
+  pending
+  queued
+  dialing
+  answered
+  completed
+  busy
+  no_answer
+  failed
+  opted_out
+}
+
+enum DeliveryStatus {
+  pending
+  delivered
+  failed
+  retrying
+}
+
+model Organization {
+  id                          String                @id @default(uuid())
+  name                        String
+  slug                        String                @unique
+  plan                        PlanTier              @default(FREE_TRIAL)
+  credits_balance_minutes     Float                 @default(30.0)
+  billing_email               String?
+  custom_telephony_enabled    Boolean               @default(false)
+  exotel_api_key              String?
+  exotel_api_token            String?
+  exotel_account_sid          String?
+  exotel_caller_id            String?
+  max_concurrency             Int                   @default(2)
+  referral_code               String?               @unique
+  referred_by_id              String?
+  referral_wallet_balance     Float                 @default(0.0)
+  total_referral_earned       Float                 @default(0.0)
+  total_referral_withdrawn    Float                 @default(0.0)
+  created_at                  DateTime              @default(now())
+  updated_at                  DateTime              @updatedAt
+
+  users                       User[]
+  agents                      VoiceAgent[]
+  leads                       Lead[]
+  calls                       Call[]
+  campaigns                   Campaign[]
+  knowledge_base              KnowledgeBase[]
+  webhook_endpoints           WebhookEndpoint[]
+  webhook_deliveries          WebhookDelivery[]
+  suppression_list            SuppressionList[]
+  api_keys                    ApiKey[]
+  audit_logs                  AuditLog[]
+  billing_transactions        BillingTransaction[]
+  invites                     OrganizationInvite[]
+  referral_earnings_given     ReferralEarning[]     @relation("ReferredOrg")
+  referral_earnings_received  ReferralEarning[]     @relation("ReferrerOrg")
+  withdrawal_requests         WithdrawalRequest[]
+
+  @@map("organizations")
+}
+
+model User {
+  id              String        @id @default(uuid())
+  organization_id String
+  organization    Organization  @relation(fields: [organization_id], references: [id], onDelete: Cascade)
+  email           String        @unique
+  password_hash   String
+  name            String
+  role            Role          @default(ADMIN)
+  created_at      DateTime      @default(now())
+  updated_at      DateTime      @updatedAt
+
+  @@index([organization_id])
+  @@map("users")
+}
+
+model OrganizationInvite {
+  id              String        @id @default(uuid())
+  organization_id String
+  organization    Organization  @relation(fields: [organization_id], references: [id], onDelete: Cascade)
+  email           String
+  role            Role          @default(AGENT)
+  token           String        @unique
+  status          String        @default("pending") // pending, accepted, expired
+  expires_at      DateTime
+  created_at      DateTime      @default(now())
+
+  @@index([organization_id])
+  @@map("organization_invites")
+}
+
+model BillingTransaction {
+  id                String        @id @default(uuid())
+  organization_id   String
+  organization      Organization  @relation(fields: [organization_id], references: [id], onDelete: Cascade)
+  amount            Float
+  currency          String        @default("INR")
+  credits_minutes   Float
+  description       String
+  type              String        // CREDIT_TOPUP, SUBSCRIPTION, TRIAL_GRANT, CALL_USAGE
+  gateway           String?       // RAZORPAY, STRIPE, MANUAL
+  gateway_order_id  String?
+  status            String        @default("completed")
+  created_at        DateTime      @default(now())
+
+  @@index([organization_id])
+  @@map("billing_transactions")
+}
+
+model VoiceAgent {
+  id                          String        @id @default(uuid())
+  organization_id             String
+  organization                Organization  @relation(fields: [organization_id], references: [id], onDelete: Cascade)
+  name                        String
+  company_name                String
+  agent_role                  String
+  language                    String        @default("hi-IN")
+  voice                       String        @default("alloy")
+  welcome_message             String
+  system_prompt               String
+  objective                   String
+  qualification_questions     Json          @default("[]")
+  max_call_duration_seconds   Int           @default(300)
+  end_call_rules              Json          @default("[]")
+  recording_enabled           Boolean       @default(true)
+  ai_disclosure_enabled       Boolean       @default(true)
+  ai_disclosure_text          String?
+  recording_disclosure_enabled Boolean      @default(false)
+  recording_disclosure_text   String?
+  crm_webhook_url             String?
+  is_active                   Boolean       @default(true)
+  created_at                  DateTime      @default(now())
+  updated_at                  DateTime      @updatedAt
+
+  calls                       Call[]
+  campaigns                   Campaign[]
+  knowledge_items             KnowledgeBase[]
+
+  @@index([organization_id])
+  @@map("voice_agents")
+}
+
+model KnowledgeBase {
+  id              String        @id @default(uuid())
+  organization_id String
+  organization    Organization  @relation(fields: [organization_id], references: [id], onDelete: Cascade)
+  agent_id        String?
+  agent           VoiceAgent?   @relation(fields: [agent_id], references: [id], onDelete: SetNull)
+  title           String
+  category        String        // Company, Courses, Pricing, FAQs, Policies, Offers, Timings
+  content         String
+  is_active       Boolean       @default(true)
+  created_at      DateTime      @default(now())
+  updated_at      DateTime      @updatedAt
+
+  @@index([organization_id])
+  @@index([agent_id])
+  @@map("knowledge_base")
+}
+
+model Lead {
+  id                  String        @id @default(uuid())
+  organization_id     String
+  organization        Organization  @relation(fields: [organization_id], references: [id], onDelete: Cascade)
+  external_lead_id    String?
+  name                String
+  phone               String
+  email               String?
+  city                String?
+  service             String?
+  source              String?
+  message             String?
+  consent             Boolean       @default(true)
+  consent_source      String?       @default("website_enquiry_form")
+  consent_timestamp   DateTime?     @default(now())
+  custom_fields       Json?         @default("{}")
+  status              String        @default("new")
+  created_at          DateTime      @default(now())
+  updated_at          DateTime      @updatedAt
+
+  calls               Call[]
+
+  @@index([organization_id])
+  @@index([phone])
+  @@index([external_lead_id])
+  @@map("leads")
+}
+
+model Call {
+  id                      String        @id @default(uuid())
+  organization_id         String
+  organization            Organization  @relation(fields: [organization_id], references: [id], onDelete: Cascade)
+  internal_call_id        String        @unique
+  provider                String        @default("exotel")
+  provider_call_id        String?
+  stream_id               String?
+  direction               String        @default("outbound")
+  lead_id                 String?
+  lead                    Lead?         @relation(fields: [lead_id], references: [id], onDelete: SetNull)
+  agent_id                String
+  agent                   VoiceAgent    @relation(fields: [agent_id], references: [id], onDelete: Restrict)
+  campaign_id             String?
+  campaign                Campaign?     @relation(fields: [campaign_id], references: [id], onDelete: SetNull)
+  status                  CallStatus    @default(queued)
+  customer_phone          String
+  started_at              DateTime?
+  answered_at             DateTime?
+  ended_at                DateTime?
+  duration_seconds        Int           @default(0)
+  cost_minutes            Float         @default(0.0)
+  recording_url           String?
+  summary                 String?
+  qualification_status    String?
+  qualification_data      Json?         @default("{}")
+  callback_requested      Boolean       @default(false)
+  callback_preferred_time String?
+  callback_note           String?
+  next_action             String?
+  important_points        Json?         @default("[]")
+  tags                    Json?         @default("[]")
+  provider_error          String?
+  technical_meta          Json?         @default("{}")
+  created_at              DateTime      @default(now())
+  updated_at              DateTime      @updatedAt
+
+  events                  CallEvent[]
+  transcripts             Transcript[]
+
+  @@index([organization_id])
+  @@index([internal_call_id])
+  @@index([provider_call_id])
+  @@index([customer_phone])
+  @@index([status])
+  @@index([created_at])
+  @@map("calls")
+}
+
+model CallEvent {
+  id              String        @id @default(uuid())
+  call_id         String
+  call            Call          @relation(fields: [call_id], references: [id], onDelete: Cascade)
+  event_type      String
+  data            Json?         @default("{}")
+  created_at      DateTime      @default(now())
+
+  @@index([call_id])
+  @@map("call_events")
+}
+
+model Transcript {
+  id                  String        @id @default(uuid())
+  call_id             String
+  call                Call          @relation(fields: [call_id], references: [id], onDelete: Cascade)
+  speaker             String        // assistant or customer
+  text                String
+  start_time_offset_ms Int?
+  created_at          DateTime      @default(now())
+
+  @@index([call_id])
+  @@map("transcripts")
+}
+
+model Campaign {
+  id                  String            @id @default(uuid())
+  organization_id     String
+  organization        Organization      @relation(fields: [organization_id], references: [id], onDelete: Cascade)
+  name                String
+  agent_id            String
+  agent               VoiceAgent        @relation(fields: [agent_id], references: [id], onDelete: Restrict)
+  status              CampaignStatus    @default(draft)
+  scheduled_at        DateTime?
+  total_contacts      Int               @default(0)
+  queued_count        Int               @default(0)
+  dialed_count        Int               @default(0)
+  answered_count      Int               @default(0)
+  completed_count     Int               @default(0)
+  busy_count          Int               @default(0)
+  failed_count        Int               @default(0)
+  opt_out_count       Int               @default(0)
+  concurrency_limit   Int               @default(5)
+  retry_on_busy       Boolean           @default(true)
+  retry_on_no_answer  Boolean           @default(false)
+  max_retries         Int               @default(2)
+  retry_delay_minutes Int               @default(15)
+  created_at          DateTime          @default(now())
+  updated_at          DateTime          @updatedAt
+
+  contacts            CampaignContact[]
+  calls               Call[]
+
+  @@index([organization_id])
+  @@map("campaigns")
+}
+
+model CampaignContact {
+  id                  String        @id @default(uuid())
+  campaign_id         String
+  campaign            Campaign      @relation(fields: [campaign_id], references: [id], onDelete: Cascade)
+  name                String
+  phone               String
+  email               String?
+  city                String?
+  custom_variables    Json?         @default("{}")
+  lead_id             String?
+  status              ContactStatus @default(pending)
+  call_id             String?
+  attempts            Int           @default(0)
+  last_attempt_at     DateTime?
+  next_retry_at       DateTime?
+  created_at          DateTime      @default(now())
+  updated_at          DateTime      @updatedAt
+
+  @@index([campaign_id])
+  @@index([phone])
+  @@index([status])
+  @@map("campaign_contacts")
+}
+
+model WebhookEndpoint {
+  id              String        @id @default(uuid())
+  organization_id String
+  organization    Organization  @relation(fields: [organization_id], references: [id], onDelete: Cascade)
+  name            String
+  url             String
+  secret          String        // Encrypted at rest
+  events          Json          @default("[\"voice.call.completed\"]")
+  is_active       Boolean       @default(true)
+  created_at      DateTime      @default(now())
+  updated_at      DateTime      @updatedAt
+
+  @@index([organization_id])
+  @@map("webhook_endpoints")
+}
+
+model WebhookDelivery {
+  id              String          @id @default(uuid())
+  organization_id String
+  organization    Organization    @relation(fields: [organization_id], references: [id], onDelete: Cascade)
+  call_id         String?
+  endpoint_url    String
+  event           String
+  event_id        String          @unique
+  payload         Json
+  status          DeliveryStatus  @default(pending)
+  http_status     Int?
+  attempt_count   Int             @default(0)
+  max_attempts    Int             @default(5)
+  last_attempt_at DateTime?
+  next_retry_at   DateTime?
+  last_error      String?
+  created_at      DateTime        @default(now())
+  updated_at      DateTime        @updatedAt
+
+  @@index([organization_id])
+  @@index([event_id])
+  @@index([status])
+  @@map("webhook_deliveries")
+}
+
+model SuppressionList {
+  id              String        @id @default(uuid())
+  organization_id String
+  organization    Organization  @relation(fields: [organization_id], references: [id], onDelete: Cascade)
+  phone           String
+  reason          String
+  source          String        // ai_voice_call, manual_admin, crm_sync
+  call_id         String?
+  created_at      DateTime      @default(now())
+
+  @@unique([organization_id, phone])
+  @@index([organization_id])
+  @@index([phone])
+  @@map("suppression_list")
+}
+
+model ApiKey {
+  id              String        @id @default(uuid())
+  organization_id String
+  organization    Organization  @relation(fields: [organization_id], references: [id], onDelete: Cascade)
+  name            String
+  key_prefix      String
+  key_hash        String        @unique
+  scopes          Json          @default("[\"voice:lead\", \"voice:call\", \"call:read\"]")
+  last_used_at    DateTime?
+  status          String        @default("active")
+  created_at      DateTime      @default(now())
+  updated_at      DateTime      @updatedAt
+
+  @@index([organization_id])
+  @@index([key_hash])
+  @@map("api_keys")
+}
+
+model AuditLog {
+  id              String        @id @default(uuid())
+  organization_id String
+  organization    Organization  @relation(fields: [organization_id], references: [id], onDelete: Cascade)
+  user_id         String?
+  action          String
+  resource_type   String
+  resource_id     String?
+  details         Json?         @default("{}")
+  ip_address      String?
+  created_at      DateTime      @default(now())
+
+  @@index([organization_id])
+  @@map("audit_logs")
+}
+
+model ReferralEarning {
+  id                  String        @id @default(uuid())
+  referrer_id         String
+  referrer            Organization  @relation("ReferrerOrg", fields: [referrer_id], references: [id], onDelete: Cascade)
+  referred_id         String
+  referred            Organization  @relation("ReferredOrg", fields: [referred_id], references: [id], onDelete: Cascade)
+  transaction_id      String?
+  order_amount        Float
+  commission_percent  Float         @default(20.0)
+  commission_amount   Float
+  description         String
+  status              String        @default("credited")
+  created_at          DateTime      @default(now())
+
+  @@index([referrer_id])
+  @@index([referred_id])
+  @@map("referral_earnings")
+}
+
+model WithdrawalRequest {
+  id                  String        @id @default(uuid())
+  organization_id     String
+  organization        Organization  @relation(fields: [organization_id], references: [id], onDelete: Cascade)
+  amount              Float
+  payout_method       String        // UPI, BANK_TRANSFER
+  upi_id              String?
+  bank_account_number String?
+  bank_ifsc           String?
+  bank_holder_name    String?
+  status              String        @default("pending") // pending, approved, paid, rejected
+  admin_notes         String?
+  processed_at        DateTime?
+  created_at          DateTime      @default(now())
+  updated_at          DateTime      @updatedAt
+
+  @@index([organization_id])
+  @@index([status])
+  @@map("withdrawal_requests")
+}
+

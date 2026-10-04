@@ -1,0 +1,134 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: aibotcall_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: voice_db
+      POSTGRES_USER: voice_user
+      POSTGRES_PASSWORD: voice_secure_pass_123
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U voice_user -d voice_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - aibotcall_net
+    # Port NOT exposed publicly for security
+
+  redis:
+    image: redis:7-alpine
+    container_name: aibotcall_redis
+    restart: always
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - aibotcall_net
+    # Port NOT exposed publicly for security
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: aibotcall_backend
+    restart: always
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      HOST: 0.0.0.0
+      DATABASE_URL: "postgresql://voice_user:voice_secure_pass_123@postgres:5432/voice_db?schema=public"
+      REDIS_URL: "redis://redis:6379"
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      OPENAI_REALTIME_MODEL: ${OPENAI_REALTIME_MODEL:-gpt-4o-realtime-preview}
+      EXOTEL_API_KEY: ${EXOTEL_API_KEY}
+      EXOTEL_API_TOKEN: ${EXOTEL_API_TOKEN}
+      EXOTEL_ACCOUNT_SID: ${EXOTEL_ACCOUNT_SID}
+      EXOTEL_CALLER_ID: ${EXOTEL_CALLER_ID}
+      EXOTEL_BASE_URL: ${EXOTEL_BASE_URL:-https://api.exotel.com}
+      EXOTEL_STREAM_URL: ${EXOTEL_STREAM_URL:-wss://voice.yourdomain.com/exotel/media}
+      PUBLIC_WEBHOOK_BASE_URL: ${PUBLIC_WEBHOOK_BASE_URL:-https://api.yourdomain.com}
+      CRM_WEBHOOK_URL: ${CRM_WEBHOOK_URL}
+      CRM_WEBHOOK_SECRET: ${CRM_WEBHOOK_SECRET}
+      INCOMING_WEBHOOK_SECRET: ${INCOMING_WEBHOOK_SECRET}
+      CALL_CONCURRENCY: ${CALL_CONCURRENCY:-5}
+      DEFAULT_MAX_CALL_DURATION: ${DEFAULT_MAX_CALL_DURATION:-300}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      JWT_SECRET: ${JWT_SECRET}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - aibotcall_net
+    ports:
+      - "4000:4000"
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: aibotcall_worker
+    restart: always
+    command: ["node", "dist/workers/index.js"]
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: "postgresql://voice_user:voice_secure_pass_123@postgres:5432/voice_db?schema=public"
+      REDIS_URL: "redis://redis:6379"
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      EXOTEL_API_KEY: ${EXOTEL_API_KEY}
+      EXOTEL_API_TOKEN: ${EXOTEL_API_TOKEN}
+      EXOTEL_ACCOUNT_SID: ${EXOTEL_ACCOUNT_SID}
+      EXOTEL_CALLER_ID: ${EXOTEL_CALLER_ID}
+      EXOTEL_BASE_URL: ${EXOTEL_BASE_URL:-https://api.exotel.com}
+      EXOTEL_STREAM_URL: ${EXOTEL_STREAM_URL:-wss://voice.yourdomain.com/exotel/media}
+      PUBLIC_WEBHOOK_BASE_URL: ${PUBLIC_WEBHOOK_BASE_URL:-https://api.yourdomain.com}
+      CRM_WEBHOOK_URL: ${CRM_WEBHOOK_URL}
+      CRM_WEBHOOK_SECRET: ${CRM_WEBHOOK_SECRET}
+      CALL_CONCURRENCY: ${CALL_CONCURRENCY:-5}
+      DEFAULT_MAX_CALL_DURATION: ${DEFAULT_MAX_CALL_DURATION:-300}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      JWT_SECRET: ${JWT_SECRET}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      app:
+        condition: service_started
+    networks:
+      - aibotcall_net
+
+  nginx:
+    image: nginx:alpine
+    container_name: aibotcall_nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/voice-platform.conf:/etc/nginx/conf.d/default.conf:ro
+      - certbot_etc:/etc/letsencrypt
+    depends_on:
+      - app
+    networks:
+      - aibotcall_net
+
+volumes:
+  postgres_data:
+  redis_data:
+  certbot_etc:
+
+networks:
+  aibotcall_net:
+    driver: bridge
