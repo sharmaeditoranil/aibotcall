@@ -214,10 +214,10 @@ export const ContactUsPage: React.FC<ContactUsProps> = ({
                     onChange={(e) => setSolution(e.target.value)}
                     className="w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-xl text-xs text-white focus:outline-none focus:border-indigo-500 transition-colors cursor-pointer"
                   >
-                    <option value="growth">Growth Plan (₹7,999/mo) — 1,000 Voice Mins (Most Popular)</option>
-                    <option value="starter">Starter Plan (₹2,999/mo) — 300 Voice Mins</option>
-                    <option value="enterprise">Enterprise Scale (₹19,999/mo) — 3,500 Voice Mins</option>
-                    <option value="payg">Pay-As-You-Go Custom Top-Up Pack</option>
+                    <option value="growth">Growth Plan (₹2,499/mo) — 600 Voice Mins (Most Popular)</option>
+                    <option value="starter">Starter Plan (₹999/mo) — 200 Voice Mins</option>
+                    <option value="enterprise">Enterprise Scale (₹5,999/mo) — 1,500 Voice Mins</option>
+                    <option value="payg">Pay-As-You-Go (Flat ₹4.87/min, Zero Rentals)</option>
                     <option value="whatsapp_crm">WhatsApp Business API & CRM Suite</option>
                     <option value="reseller">Affiliate & Partner Program (20% Lifetime)</option>
                   </select>

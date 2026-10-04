@@ -27,6 +27,8 @@ interface PricingPageProps {
   onBackToHome: () => void;
   onGoToAbout?: () => void;
   onGoToBlog?: () => void;
+  onGoToDocs?: () => void;
+  onNavigateDocs?: () => void;
   onGoToContact?: () => void;
   onGoToRegister?: () => void;
   onNavigatePolicy?: (policy: 'terms' | 'privacy' | 'refund') => void;
@@ -38,6 +40,8 @@ export const PricingPage: React.FC<PricingPageProps> = ({
   onBackToHome,
   onGoToAbout,
   onGoToBlog,
+  onGoToDocs,
+  onNavigateDocs,
   onGoToContact,
   onGoToRegister,
   onNavigatePolicy,
@@ -47,49 +51,60 @@ export const PricingPage: React.FC<PricingPageProps> = ({
   const [paygMinutes, setPaygMinutes] = useState<number>(500);
   const [expandedFaq, setExpandedFaq] = useState<number | null>(0);
 
-  const paygCost = Math.round(paygMinutes * 2.49);
+  const CALLING_RATE_PER_MIN = 4.87;
+  const paygCost = Math.round(paygMinutes * CALLING_RATE_PER_MIN);
 
   const paygPacks = [
     {
-      id: 'pkg_payg_200',
-      name: '200 Voice Minutes',
-      price: '₹498',
-      perMin: '₹2.49/min',
-      minutes: 200,
+      id: 'pkg_payg_100',
+      name: '100 Voice Minutes',
+      price: '₹487',
+      perMin: '₹4.87/min',
+      minutes: 100,
       validity: 'Lifetime Validity',
       popular: false,
-      desc: 'Ideal for small outreach or quick testing.',
+      desc: 'Ideal for quick testing or small local pilot campaigns.',
+    },
+    {
+      id: 'pkg_payg_250',
+      name: '250 Voice Minutes',
+      price: '₹1,218',
+      perMin: '₹4.87/min',
+      minutes: 250,
+      validity: 'Lifetime Validity',
+      popular: false,
+      desc: 'Great for weekly customer follow-ups and feedback calls.',
     },
     {
       id: 'pkg_payg_500',
       name: '500 Voice Minutes',
-      price: '₹1,245',
-      perMin: '₹2.49/min',
+      price: '₹2,435',
+      perMin: '₹4.87/min',
       minutes: 500,
       validity: 'Lifetime Validity',
       popular: true,
       best: true,
-      desc: 'Most popular for real estate & lead qualifications.',
+      desc: 'Most popular for real estate, clinics & lead qualification.',
     },
     {
       id: 'pkg_payg_1000',
       name: '1,000 Voice Minutes',
-      price: '₹2,490',
-      perMin: '₹2.49/min',
+      price: '₹4,870',
+      perMin: '₹4.87/min',
       minutes: 1000,
       validity: 'Lifetime Validity',
       popular: false,
-      desc: 'Best for weekly customer feedback & surveys.',
+      desc: 'Best for active sales teams and event invitations.',
     },
     {
       id: 'pkg_payg_2500',
       name: '2,500 Voice Minutes',
-      price: '₹6,225',
-      perMin: '₹2.49/min',
+      price: '₹12,175',
+      perMin: '₹4.87/min',
       minutes: 2500,
       validity: 'Lifetime Validity',
       popular: false,
-      desc: 'For high-volume monthly sales campaigns.',
+      desc: 'For high-volume monthly outbound sales & debt collection.',
     },
   ];
 
@@ -119,65 +134,65 @@ export const PricingPage: React.FC<PricingPageProps> = ({
     {
       id: 'STARTER',
       name: 'Starter Plan',
-      monthlyPrice: '₹2,999',
-      yearlyPrice: '₹2,399',
+      monthlyPrice: '₹999',
+      yearlyPrice: '₹799',
       period: '/month',
-      minutes: '300 Minutes Included',
-      extraRate: '₹4.99/extra minute',
+      minutes: '200 Minutes Included',
+      extraRate: '₹4.87/extra minute',
       concurrency: '5 Concurrent Lines',
       agents: '3 AI Voice Agents',
-      desc: 'Ideal for coaching academies, clinics, local service agencies, and consultants.',
+      desc: 'Ideal for coaching academies, clinics, local service agencies, and solo founders.',
       features: [
-        '300 Calling minutes included each month',
-        '3 AI Voice Agents (Hindi / English)',
+        '200 Calling minutes included each month',
+        '3 AI Voice Agents (Hindi / English / Hinglish)',
         '5 Concurrent telephony lines',
         'CSV Broadcast Campaigns',
         'Deal CRM & WhatsApp CRM sync',
         'DNC Suppression list protection',
         'Standard Exotel telephony trunk',
       ],
-      buttonText: 'Get Started',
+      buttonText: 'Get Started (₹999/mo)',
       popular: false,
       color: 'blue',
     },
     {
       id: 'GROWTH',
       name: 'Growth Plan',
-      monthlyPrice: '₹7,999',
-      yearlyPrice: '₹6,399',
+      monthlyPrice: '₹2,499',
+      yearlyPrice: '₹1,999',
       period: '/month',
-      minutes: '1,000 Minutes Included',
-      extraRate: '₹4.16/extra minute',
+      minutes: '600 Minutes Included',
+      extraRate: '₹4.87/extra minute',
       concurrency: '10 Concurrent Lines',
       agents: '10 AI Voice Agents',
-      desc: 'For high-growth institutions, real estate agencies, and e-commerce companies.',
+      desc: 'For high-growth businesses, real estate brokers, and active sales outreach.',
       features: [
-        '1,000 Calling minutes included each month',
+        '600 Calling minutes included each month',
         '10 AI Voice Agents with custom voices',
         '10 Concurrent telephony lines',
         'Unlimited CSV Broadcast Campaigns',
         'Custom template variables {{name}}, {{city}}',
         'Multi-user team workspace permissions',
         'Priority low-latency telephony trunk',
-        'Instant Razorpay minute top-up discount',
+        'Instant Razorpay minute top-up at flat ₹4.87/min',
       ],
-      buttonText: 'Start Growth Plan',
+      buttonText: 'Start Growth Plan (₹2,499/mo)',
       popular: true,
       color: 'emerald',
     },
     {
       id: 'ENTERPRISE',
       name: 'Enterprise Scale',
-      monthlyPrice: '₹19,999',
-      yearlyPrice: '₹15,999',
+      monthlyPrice: '₹5,999',
+      yearlyPrice: '₹4,799',
       period: '/month',
-      minutes: '3,500 Minutes Included',
-      extraRate: '₹2.99/extra minute',
+      minutes: '1,500 Minutes Included',
+      extraRate: '₹4.87/extra minute',
       concurrency: '30 Concurrent Lines',
       agents: 'Unlimited AI Agents',
       desc: 'For high-volume contact centers, pan-India ed-tech firms, and enterprises.',
       features: [
-        '3,500 Calling minutes included each month',
+        '1,500 Calling minutes included each month',
         'Unlimited AI Voice Agents',
         '30 Concurrent telephony lines',
         'Dedicated Virtual Caller ID (ExoPhone)',
@@ -186,7 +201,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
         'Dedicated 24/7 Account Engineer',
         'Custom SLA & 99.9% Uptime Guarantee',
       ],
-      buttonText: 'Contact Enterprise',
+      buttonText: 'Get Enterprise (₹5,999/mo)',
       popular: false,
       color: 'purple',
     },
@@ -195,15 +210,15 @@ export const PricingPage: React.FC<PricingPageProps> = ({
   const faqs = [
     {
       q: 'How does the Pay As You Go (PAYG) model work?',
-      a: 'With Pay As You Go, there are zero monthly rentals or recurring subscription fees. You only recharge voice minutes whenever you need them at a flat rate of ₹2.49/minute. Unspent minutes carry forward forever and never expire.',
+      a: 'With Pay As You Go, there are zero monthly rentals or recurring subscription fees. You only recharge voice minutes whenever you need them at a flat rate of ₹4.87/minute. Unspent minutes carry forward forever and never expire.',
     },
     {
       q: 'Are there any hidden charges or platform fees in Pay As You Go?',
-      a: 'Zero hidden fees. There are no setup fees, no per-agent rental costs, and no monthly platform subscriptions. You only pay for the real connected seconds of conversations delivered by your AI agent.',
+      a: 'Zero hidden fees. There are no setup fees, no per-agent rental costs, and no monthly platform subscriptions. You only pay for the real connected seconds of conversations delivered by your AI agent at flat ₹4.87/minute.',
     },
     {
       q: 'How does talk-time minute calculation work?',
-      a: 'We only deduct credits for real answered seconds of the conversation. If a customer is busy, does not pick up, or disconnects immediately, 0 talk-time is deducted. Seconds are calculated accurately with per-second billing.',
+      a: 'We only deduct credits for real answered seconds of the conversation. If a customer is busy, does not pick up, or disconnects immediately, 0 talk-time is deducted. Seconds are calculated accurately with strict per-second billing (₹0.081/second).',
     },
     {
       q: 'Do calling minutes expire at the end of the month?',
@@ -235,6 +250,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
         onNavigateHome={onBackToHome}
         onNavigateAbout={onGoToAbout || onBackToHome}
         onNavigateBlog={onGoToBlog || onBackToHome}
+        onNavigateDocs={onGoToDocs || onNavigateDocs}
         onNavigatePricing={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         onNavigateContact={onGoToContact || onBackToHome}
         onNavigateLogin={onGoToLogin}
@@ -245,13 +261,13 @@ export const PricingPage: React.FC<PricingPageProps> = ({
       <section className="pt-16 pb-8 px-6 text-center max-w-4xl mx-auto relative">
         <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold mb-6">
           <Sparkles className="w-4 h-4" />
-          <span>Flexible Pay As You Go & Monthly Plans for Indian Businesses</span>
+          <span>Flexible Pay As You Go & Reduced Subscription Plans for Indian Businesses</span>
         </div>
 
         <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight leading-tight">
           Transparent Voice AI Pricing <br className="hidden sm:inline" />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400">
-            No Rental Fees. Flat ₹2.49/Min.
+            No Rental Fees. Flat ₹4.87/Min.
           </span>
         </h1>
         <p className="mt-4 text-sm text-slate-400 max-w-2xl mx-auto">
@@ -310,10 +326,10 @@ export const PricingPage: React.FC<PricingPageProps> = ({
                     <span>Pure Pay As You Go Model</span>
                   </div>
                   <h2 className="text-3xl font-extrabold text-white tracking-tight">
-                    Flat ₹2.49 / Minute with Zero Commitments
+                    Flat ₹4.87 / Minute with Zero Commitments
                   </h2>
                   <p className="text-xs text-slate-400 mt-2 leading-relaxed">
-                    No monthly rentals, no platform fees, and no contracts. Only pay when your AI voice agent speaks with real customers. Unused balance carries forward forever.
+                    No monthly rentals, no platform fees, and no contracts. Only pay when your AI voice agent speaks with real customers at a flat ₹4.87/minute. Unused balance carries forward forever.
                   </p>
                 </div>
 
@@ -333,7 +349,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
                     type="range"
                     min={100}
                     max={5000}
-                    step={100}
+                    step={50}
                     value={paygMinutes}
                     onChange={(e) => setPaygMinutes(Number(e.target.value))}
                     className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500"
@@ -341,7 +357,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
 
                   {/* Preset Pills */}
                   <div className="flex flex-wrap gap-2 pt-2">
-                    {[200, 500, 1000, 2500].map((mins) => (
+                    {[100, 250, 500, 1000, 2500].map((mins) => (
                       <button
                         key={mins}
                         onClick={() => setPaygMinutes(mins)}
@@ -351,7 +367,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
                             : 'bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800'
                         }`}
                       >
-                        {mins.toLocaleString('en-IN')} Mins (₹{Math.round(mins * 2.49).toLocaleString('en-IN')})
+                        {mins.toLocaleString('en-IN')} Mins (₹{Math.round(mins * CALLING_RATE_PER_MIN).toLocaleString('en-IN')})
                       </button>
                     ))}
                   </div>
@@ -365,7 +381,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
                   </div>
                   <div className="flex items-start space-x-2">
                     <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                    <span><b>Per-Second Billing:</b> No charges for unanswered calls</span>
+                    <span><b>Flat ₹4.87 / Min:</b> Strict per-second pulse (₹0.081/sec)</span>
                   </div>
                   <div className="flex items-start space-x-2">
                     <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
@@ -398,7 +414,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
                       ₹{paygCost.toLocaleString('en-IN')}
                     </div>
                     <p className="text-xs text-slate-400 mt-1">
-                      for <b>{paygMinutes.toLocaleString('en-IN')} calling minutes</b> (Flat ₹2.49/min)
+                      for <b>{paygMinutes.toLocaleString('en-IN')} calling minutes</b> (Flat ₹4.87/min)
                     </p>
                     <p className="text-[11px] text-emerald-400 font-semibold mt-1">
                       + 30 Free Welcome Minutes on Signup!
@@ -665,6 +681,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
         onNavigateHome={onBackToHome}
         onNavigateAbout={onGoToAbout || onBackToHome}
         onNavigateBlog={onGoToBlog || onBackToHome}
+        onNavigateDocs={onGoToDocs || onNavigateDocs}
         onNavigatePricing={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         onNavigateContact={onGoToContact || onBackToHome}
         onNavigateLogin={onGoToLogin}

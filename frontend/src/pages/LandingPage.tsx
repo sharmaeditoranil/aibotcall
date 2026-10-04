@@ -32,6 +32,7 @@ interface LandingPageProps {
   onOpenAbout?: () => void;
   onOpenContact?: () => void;
   onOpenBlog?: () => void;
+  onOpenDocs?: () => void;
 }
 
 export const LandingPage: React.FC<LandingPageProps> = ({
@@ -41,6 +42,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   onOpenAbout,
   onOpenContact,
   onOpenBlog,
+  onOpenDocs,
 }) => {
   const [isPlayingDemo, setIsPlayingDemo] = useState(false);
 
@@ -131,30 +133,30 @@ export const LandingPage: React.FC<LandingPageProps> = ({
     {
       id: 'STARTER',
       name: 'Starter',
-      price: '₹2,999',
+      price: '₹999',
       period: '/month',
-      minutes: '300 Minutes Included (₹4.99/extra min)',
+      minutes: '200 Minutes Included (Flat ₹4.87/extra min)',
       desc: 'Ideal for local coaching academies, clinics, and service agencies.',
       features: [
-        '300 Voice Minutes Included',
+        '200 Voice Minutes Included',
         '3 AI Voice Agents',
         '5 Concurrent Lines',
         'CRM Outgoing Webhook Sync',
         'Basic Voice Broadcast',
         'DNC Suppression Registry',
       ],
-      buttonText: 'Get Started',
+      buttonText: 'Get Started (₹999/mo)',
       popular: false,
     },
     {
       id: 'GROWTH',
       name: 'Growth',
-      price: '₹7,999',
+      price: '₹2,499',
       period: '/month',
-      minutes: '1,000 Minutes Included (₹4.16/extra min)',
+      minutes: '600 Minutes Included (Flat ₹4.87/extra min)',
       desc: 'For high-growth institutions, real estate firms, and e-commerce.',
       features: [
-        '1,000 Voice Minutes Included',
+        '600 Voice Minutes Included',
         '10 AI Voice Agents',
         '10 Concurrent Lines',
         'Unlimited Broadcast Campaigns',
@@ -162,18 +164,18 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         'Multi-User Team Workspace',
         'Priority Exotel Telecom Trunk',
       ],
-      buttonText: 'Start Growth Plan',
+      buttonText: 'Start Growth (₹2,499/mo)',
       popular: true,
     },
     {
       id: 'ENTERPRISE',
       name: 'Enterprise Scale',
-      price: '₹19,999',
+      price: '₹5,999',
       period: '/month',
-      minutes: '3,500 Minutes Included (₹2.99/extra min)',
+      minutes: '1,500 Minutes Included (Flat ₹4.87/extra min)',
       desc: 'High-volume call centers and multi-branch educational academies.',
       features: [
-        '3,500 Voice Minutes Included',
+        '1,500 Voice Minutes Included',
         'Unlimited AI Agents',
         '30 Concurrent Lines',
         'Dedicated Virtual Caller IDs (ExoPhones)',
@@ -181,7 +183,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         'Dedicated Account Engineer',
         'Custom LLM Fine-Tuning',
       ],
-      buttonText: 'Contact Enterprise',
+      buttonText: 'Get Enterprise (₹5,999/mo)',
       popular: false,
     },
   ];
@@ -194,6 +196,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         onNavigateHome={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         onNavigateAbout={() => (onOpenAbout ? onOpenAbout() : onOpenPolicy?.('about'))}
         onNavigateBlog={() => (onOpenBlog ? onOpenBlog() : onOpenPolicy?.('blog'))}
+        onNavigateDocs={onOpenDocs}
         onNavigatePricing={onOpenPricing}
         onNavigateContact={() => (onOpenContact ? onOpenContact() : onOpenPolicy?.('contact'))}
         onNavigateLogin={() => onOpenAuth('login')}
@@ -500,6 +503,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         onNavigateHome={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         onNavigateAbout={() => (onOpenAbout ? onOpenAbout() : onOpenPolicy?.('about'))}
         onNavigateBlog={() => (onOpenBlog ? onOpenBlog() : onOpenPolicy?.('blog'))}
+        onNavigateDocs={onOpenDocs}
         onNavigatePricing={onOpenPricing}
         onNavigateContact={() => (onOpenContact ? onOpenContact() : onOpenPolicy?.('contact'))}
         onNavigateLogin={() => onOpenAuth('login')}

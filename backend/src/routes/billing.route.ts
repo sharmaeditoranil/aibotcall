@@ -9,14 +9,16 @@ import { z } from 'zod';
 import { creditReferralCommission } from './referrals.route.js';
 
 const PACKAGES: Record<string, { minutes: number; price: number; name: string }> = {
-  pkg_payg_200: { minutes: 200, price: 498, name: 'Pay As You Go: 200 Voice Minutes (₹498)' },
-  pkg_payg_500: { minutes: 500, price: 1245, name: 'Pay As You Go: 500 Voice Minutes (₹1,245)' },
-  pkg_payg_1000: { minutes: 1000, price: 2490, name: 'Pay As You Go: 1,000 Voice Minutes (₹2,490)' },
-  pkg_payg_2500: { minutes: 2500, price: 6225, name: 'Pay As You Go: 2,500 Voice Minutes (₹6,225)' },
-  pkg_starter_200: { minutes: 200, price: 999, name: '200 Voice Minutes Pack' },
-  pkg_growth_600: { minutes: 600, price: 2499, name: '600 Voice Minutes Pack' },
-  pkg_scale_1500: { minutes: 1500, price: 4999, name: '1,500 Voice Minutes Pack' },
-  pkg_enterprise_5000: { minutes: 5000, price: 14999, name: '5,000 Voice Minutes Enterprise Pack' },
+  pkg_payg_100: { minutes: 100, price: 487, name: 'Pay As You Go: 100 Voice Minutes (₹487)' },
+  pkg_payg_250: { minutes: 250, price: 1218, name: 'Pay As You Go: 250 Voice Minutes (₹1,218)' },
+  pkg_payg_500: { minutes: 500, price: 2435, name: 'Pay As You Go: 500 Voice Minutes (₹2,435)' },
+  pkg_payg_1000: { minutes: 1000, price: 4870, name: 'Pay As You Go: 1,000 Voice Minutes (₹4,870)' },
+  pkg_payg_2500: { minutes: 2500, price: 12175, name: 'Pay As You Go: 2,500 Voice Minutes (₹12,175)' },
+  pkg_payg_200: { minutes: 200, price: 974, name: 'Pay As You Go: 200 Voice Minutes (₹974)' },
+  pkg_starter_200: { minutes: 200, price: 999, name: 'Starter: 200 Voice Minutes Pack (₹999)' },
+  pkg_growth_600: { minutes: 600, price: 2499, name: 'Growth: 600 Voice Minutes Pack (₹2,499)' },
+  pkg_scale_1500: { minutes: 1500, price: 5999, name: 'Enterprise: 1,500 Voice Minutes Pack (₹5,999)' },
+  pkg_enterprise_5000: { minutes: 5000, price: 19999, name: '5,000 Voice Minutes Enterprise Pack (₹19,999)' },
 };
 
 const TopupSchema = z.object({

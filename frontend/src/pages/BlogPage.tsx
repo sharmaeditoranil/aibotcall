@@ -28,6 +28,8 @@ interface BlogPageProps {
   onGoToPricing: () => void;
   onGoToRegister: () => void;
   onGoToLogin: () => void;
+  onGoToDocs?: () => void;
+  onNavigateDocs?: () => void;
   onNavigatePolicy?: (policy: 'terms' | 'privacy' | 'refund') => void;
 }
 
@@ -53,6 +55,8 @@ export const BlogPage: React.FC<BlogPageProps> = ({
   onGoToPricing,
   onGoToRegister,
   onGoToLogin,
+  onGoToDocs,
+  onNavigateDocs,
   onNavigatePolicy,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -212,6 +216,7 @@ export const BlogPage: React.FC<BlogPageProps> = ({
         onNavigateHome={onBackToHome}
         onNavigateAbout={onGoToAbout}
         onNavigateBlog={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        onNavigateDocs={onGoToDocs || onNavigateDocs}
         onNavigatePricing={onGoToPricing}
         onNavigateContact={onGoToContact}
         onNavigateLogin={onGoToLogin}
@@ -536,6 +541,7 @@ export const BlogPage: React.FC<BlogPageProps> = ({
         onNavigateHome={onBackToHome}
         onNavigateAbout={onGoToAbout}
         onNavigateBlog={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        onNavigateDocs={onGoToDocs || onNavigateDocs}
         onNavigatePricing={onGoToPricing}
         onNavigateContact={onGoToContact}
         onNavigateLogin={onGoToLogin}

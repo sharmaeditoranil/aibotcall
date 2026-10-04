@@ -32,6 +32,8 @@ interface AboutPageProps {
   onGoToRegister?: () => void;
   onGoToLogin?: () => void;
   onGoToBlog?: () => void;
+  onGoToDocs?: () => void;
+  onNavigateDocs?: () => void;
   onNavigatePolicy?: (policy: 'terms' | 'privacy' | 'refund') => void;
 }
 
@@ -42,6 +44,8 @@ export const AboutPage: React.FC<AboutPageProps> = ({
   onGoToRegister,
   onGoToLogin,
   onGoToBlog,
+  onGoToDocs,
+  onNavigateDocs,
   onNavigatePolicy,
 }) => {
   return (
@@ -52,6 +56,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
         onNavigateHome={onBackToHome}
         onNavigateAbout={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         onNavigateBlog={onGoToBlog || onBackToHome}
+        onNavigateDocs={onGoToDocs || onNavigateDocs}
         onNavigatePricing={onGoToPricing || onBackToHome}
         onNavigateContact={onGoToContact}
         onNavigateLogin={onGoToLogin || onBackToHome}
@@ -330,6 +335,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
         onNavigateHome={onBackToHome}
         onNavigateAbout={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         onNavigateBlog={onGoToBlog || onBackToHome}
+        onNavigateDocs={onGoToDocs || onNavigateDocs}
         onNavigatePricing={onGoToPricing || onBackToHome}
         onNavigateContact={onGoToContact}
         onNavigateLogin={onGoToLogin || onBackToHome}

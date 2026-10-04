@@ -170,11 +170,11 @@ export const Billing: React.FC = () => {
       id: 'PAY_AS_YOU_GO',
       name: 'Pay As You Go',
       price: '₹0',
-      period: '/month (Flat ₹2.49/min)',
+      period: '/month (Flat ₹4.87/min)',
       popular: true,
       features: [
         'Zero monthly commitment / rental fees',
-        'Flat ₹2.49 / minute (Strict per-second billing)',
+        'Flat ₹4.87 / minute (Strict per-second billing)',
         'Lifetime credit balance validity',
         '5 Concurrent telephony lines included',
         'All 6 Industry AI Voice Agents included',
@@ -191,24 +191,24 @@ export const Billing: React.FC = () => {
     {
       id: 'STARTER',
       name: 'Starter Plan',
-      price: '₹2,999',
+      price: '₹999',
       period: '/month',
-      features: ['300 Voice Minutes Included', '3 Voice Agents', '5 Concurrent Lines', 'Full CRM Webhook Sync', 'Basic Voice Broadcast'],
+      features: ['200 Voice Minutes Included', '3 Voice Agents', '5 Concurrent Lines', 'Full CRM Webhook Sync', 'Basic Voice Broadcast'],
     },
     {
       id: 'GROWTH',
       name: 'Growth Plan',
-      price: '₹7,999',
+      price: '₹2,499',
       period: '/month',
       popular: true,
-      features: ['1,000 Voice Minutes Included', '10 Voice Agents', '10 Concurrent Lines', 'Unlimited Broadcast Campaigns', 'Multi-Language Adaptation (Hindi/Hinglish)', 'Priority Telephony Trunk'],
+      features: ['600 Voice Minutes Included', '10 Voice Agents', '10 Concurrent Lines', 'Unlimited Broadcast Campaigns', 'Multi-Language Adaptation (Hindi/Hinglish)', 'Priority Telephony Trunk'],
     },
     {
       id: 'ENTERPRISE',
       name: 'Enterprise Scale',
-      price: '₹19,999',
+      price: '₹5,999',
       period: '/month',
-      features: ['3,500 Voice Minutes Included', 'Unlimited Voice Agents', '30 Concurrent Lines', 'Custom Virtual Caller IDs', 'Dedicated Account Manager', 'Custom Knowledge Base Ingestion'],
+      features: ['1,500 Voice Minutes Included', 'Unlimited Voice Agents', '30 Concurrent Lines', 'Custom Virtual Caller IDs', 'Dedicated Account Manager', 'Custom Knowledge Base Ingestion'],
     },
   ];
 
@@ -329,7 +329,7 @@ export const Billing: React.FC = () => {
             }`}
           >
             <Zap className="w-3.5 h-3.5" />
-            <span>Pay As You Go Packs (Flat ₹2.49/min)</span>
+            <span>Pay As You Go Packs (Flat ₹4.87/min)</span>
           </button>
           <button
             onClick={() => setTopupCategory('bulk')}
@@ -346,16 +346,16 @@ export const Billing: React.FC = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
           {(topupCategory === 'payg'
             ? [
-                { id: 'pkg_payg_200', name: '200 Voice Minutes', price: '₹498', perMin: '₹2.49/min', popular: false, validity: 'Never Expires' },
-                { id: 'pkg_payg_500', name: '500 Voice Minutes', price: '₹1,245', perMin: '₹2.49/min', popular: true, validity: 'Never Expires' },
-                { id: 'pkg_payg_1000', name: '1,000 Voice Minutes', price: '₹2,490', perMin: '₹2.49/min', popular: false, validity: 'Never Expires' },
-                { id: 'pkg_payg_2500', name: '2,500 Voice Minutes', price: '₹6,225', perMin: '₹2.49/min', popular: false, validity: 'Never Expires' },
+                { id: 'pkg_payg_100', name: '100 Voice Minutes', price: '₹487', perMin: '₹4.87/min', popular: false, validity: 'Never Expires' },
+                { id: 'pkg_payg_250', name: '250 Voice Minutes', price: '₹1,218', perMin: '₹4.87/min', popular: false, validity: 'Never Expires' },
+                { id: 'pkg_payg_500', name: '500 Voice Minutes', price: '₹2,435', perMin: '₹4.87/min', popular: true, validity: 'Never Expires' },
+                { id: 'pkg_payg_1000', name: '1,000 Voice Minutes', price: '₹4,870', perMin: '₹4.87/min', popular: false, validity: 'Never Expires' },
               ]
             : [
-                { id: 'pkg_starter_200', name: '200 Minutes', price: '₹999', perMin: '₹4.99/min', popular: false, validity: 'Never Expires' },
-                { id: 'pkg_growth_600', name: '600 Minutes', price: '₹2,499', perMin: '₹4.16/min', popular: true, validity: 'Never Expires' },
-                { id: 'pkg_scale_1500', name: '1,500 Minutes', price: '₹4,999', perMin: '₹3.33/min', popular: false, validity: 'Never Expires' },
-                { id: 'pkg_enterprise_5000', name: '5,000 Minutes', price: '₹14,999', perMin: '₹2.99/min', popular: false, validity: 'Never Expires' },
+                { id: 'pkg_payg_2500', name: '2,500 Minutes', price: '₹12,175', perMin: '₹4.87/min', popular: false, validity: 'Never Expires' },
+                { id: 'pkg_growth_600', name: '600 Minutes Pack', price: '₹2,499', perMin: 'Included Bundle', popular: true, validity: 'Never Expires' },
+                { id: 'pkg_scale_1500', name: '1,500 Minutes Pack', price: '₹5,999', perMin: 'Included Bundle', popular: false, validity: 'Never Expires' },
+                { id: 'pkg_enterprise_5000', name: '5,000 Minutes Scale', price: '₹19,999', perMin: '₹3.99/min', popular: false, validity: 'Never Expires' },
               ]
           ).map((pkg) => (
             <div

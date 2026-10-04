@@ -28,6 +28,7 @@ import { RefundPolicyPage } from './pages/RefundPolicyPage';
 import { ContactUsPage } from './pages/ContactUsPage';
 import { AboutPage } from './pages/AboutPage';
 import { BlogPage } from './pages/BlogPage';
+import { DocsPage } from './pages/DocsPage';
 import { Profile } from './pages/Profile';
 import { CallDetailModal } from './components/CallDetailModal';
 import { QuickCallModal } from './components/QuickCallModal';
@@ -41,8 +42,9 @@ export const App: React.FC = () => {
   const [profileSection, setProfileSection] = useState<'details' | 'billing' | 'referrals'>('details');
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const getInitialAuthView = (): 'landing' | 'pricing' | 'login' | 'register' | 'terms' | 'privacy' | 'refund' | 'contact' | 'about' | 'blog' => {
+  const getInitialAuthView = (): 'landing' | 'pricing' | 'login' | 'register' | 'terms' | 'privacy' | 'refund' | 'contact' | 'about' | 'blog' | 'docs' => {
     const path = window.location.pathname.toLowerCase();
+    if (path.includes('docs') || path.includes('documentation') || path.includes('guide')) return 'docs';
     if (path.includes('blog')) return 'blog';
     if (path.includes('about')) return 'about';
     if (path.includes('terms')) return 'terms';
@@ -55,7 +57,7 @@ export const App: React.FC = () => {
     return 'landing';
   };
 
-  const [authView, setAuthView] = useState<'landing' | 'pricing' | 'login' | 'register' | 'terms' | 'privacy' | 'refund' | 'contact' | 'about' | 'blog'>(getInitialAuthView);
+  const [authView, setAuthView] = useState<'landing' | 'pricing' | 'login' | 'register' | 'terms' | 'privacy' | 'refund' | 'contact' | 'about' | 'blog' | 'docs'>(getInitialAuthView);
   const [selectedPlan, setSelectedPlan] = useState<string>('FREE_TRIAL');
 
   // Modals
@@ -123,6 +125,8 @@ export const App: React.FC = () => {
       onBackToHome: () => setAuthView('landing'),
       onGoToAbout: () => setAuthView('about'),
       onGoToBlog: () => setAuthView('blog'),
+      onGoToDocs: () => setAuthView('docs'),
+      onNavigateDocs: () => setAuthView('docs'),
       onGoToPricing: () => setAuthView('pricing'),
       onGoToContact: () => setAuthView('contact'),
       onGoToLogin: () => setAuthView('login'),
@@ -145,8 +149,13 @@ export const App: React.FC = () => {
           onOpenAbout={() => setAuthView('about')}
           onOpenContact={() => setAuthView('contact')}
           onOpenBlog={() => setAuthView('blog')}
+          onOpenDocs={() => setAuthView('docs')}
         />
       );
+    }
+
+    if (authView === 'docs') {
+      return <DocsPage {...sharedPublicNav} onNavigateDocs={() => window.scrollTo({ top: 0, behavior: 'smooth' })} />;
     }
 
     if (authView === 'about') {

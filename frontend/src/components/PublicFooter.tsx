@@ -5,6 +5,7 @@ export interface PublicFooterProps {
   onNavigateHome: () => void;
   onNavigateAbout: () => void;
   onNavigateBlog: () => void;
+  onNavigateDocs?: () => void;
   onNavigatePricing: () => void;
   onNavigateContact: () => void;
   onNavigateLogin: () => void;
@@ -16,6 +17,7 @@ export const PublicFooter: React.FC<PublicFooterProps> = ({
   onNavigateHome,
   onNavigateAbout,
   onNavigateBlog,
+  onNavigateDocs,
   onNavigatePricing,
   onNavigateContact,
   onNavigateLogin,
@@ -150,6 +152,15 @@ export const PublicFooter: React.FC<PublicFooterProps> = ({
                 >
                   <span>Blog & AI Playbooks</span>
                   <span className="text-[9px] px-1 py-0.2 rounded bg-violet-500/20 text-violet-300 font-mono font-bold">NEW</span>
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={onNavigateDocs || onNavigateBlog}
+                  className="hover:text-cyan-400 transition-colors cursor-pointer text-left flex items-center space-x-1.5"
+                >
+                  <span>Developer Docs & Guides</span>
+                  <span className="text-[9px] px-1 py-0.2 rounded bg-cyan-500/20 text-cyan-300 font-mono font-bold">DOCS</span>
                 </button>
               </li>
               <li>
