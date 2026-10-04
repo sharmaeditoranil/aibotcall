@@ -74,9 +74,11 @@ export const QuickCallModal: React.FC<QuickCallModalProps> = ({
       onSuccess();
       onClose();
     } catch (err: any) {
-      // In local preview without Exotel connected, trigger success notification
-      onSuccess();
-      onClose();
+      const errorMsg =
+        err.response?.data?.error ||
+        err.message ||
+        'Failed to queue outbound call. Please check your credit balance or network connection.';
+      setError(errorMsg);
     } finally {
       setLoading(false);
     }

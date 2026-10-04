@@ -187,3 +187,9 @@ export function createCallWorker(): Worker {
 
   return worker;
 }
+
+// Auto-start worker when executed directly as entrypoint by process manager
+if (process.argv[1]?.includes('call-worker')) {
+  logger.info('🚀 Standalone Call Worker initialized and actively polling BullMQ queue...');
+  createCallWorker();
+}

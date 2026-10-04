@@ -38,6 +38,7 @@ import { CallDetailModal } from './components/CallDetailModal';
 import { QuickCallModal } from './components/QuickCallModal';
 import { User, Call, WebhookDelivery } from './types';
 import { api } from './api/client';
+import { PhoneCall, X, CheckCircle2 } from 'lucide-react';
 
 export const App: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -45,6 +46,14 @@ export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('overview');
   const [profileSection, setProfileSection] = useState<'details' | 'billing' | 'referrals'>('details');
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [toast, setToast] = useState<{ type: 'success' | 'error' | 'info'; message: string } | null>(null);
+
+  const showToast = (message: string, type: 'success' | 'error' | 'info' = 'success') => {
+    setToast({ type, message });
+    setTimeout(() => {
+      setToast(null);
+    }, 4500);
+  };
 
   const getInitialNavigation = (): { view: 'landing' | 'pricing' | 'login' | 'register' | 'terms' | 'privacy' | 'refund' | 'contact' | 'about' | 'blog' | 'docs' | 'seo' | 'affiliate' | 'who-its-for'; slug?: string } => {
     const rawPath = window.location.pathname.toLowerCase().replace(/^\/+|\/+$/g, '');
@@ -451,12 +460,47 @@ export const App: React.FC = () => {
         isOpen={isQuickCallOpen}
         onClose={() => setIsQuickCallOpen(false)}
         onSuccess={() => {
-          alert('Call queued! Telephony provider is dialing.');
+          showToast('Call queued successfully! Telephony provider is dialing destination.', 'success');
           if (activeTab === 'calls') {
             refreshCurrentView();
           }
         }}
       />
+
+      {/* Modern Floating Toast Notification */}
+      {toast && (
+        <div className="fixed top-6 right-6 z-[99999] animate-in slide-in-from-top-3 fade-in duration-200">
+          <div
+            className={`p-4 rounded-2xl shadow-2xl backdrop-blur-xl border flex items-center space-x-3 max-w-md ${
+              toast.type === 'success'
+                ? 'bg-[#0b1928]/95 border-emerald-500/50 text-emerald-300 shadow-emerald-950/40'
+                : toast.type === 'error'
+                ? 'bg-[#240c14]/95 border-rose-500/50 text-rose-300 shadow-rose-950/40'
+                : 'bg-[#0f172a]/95 border-cyan-500/50 text-cyan-300 shadow-cyan-950/40'
+            }`}
+          >
+            <div
+              className={`p-2.5 rounded-xl shrink-0 ${
+                toast.type === 'success'
+                  ? 'bg-emerald-500/20 text-emerald-400'
+                  : 'bg-cyan-500/20 text-cyan-400'
+              }`}
+            >
+              <PhoneCall className="w-5 h-5 animate-pulse" />
+            </div>
+            <div className="flex-1 text-xs font-semibold leading-relaxed text-slate-100">
+              {toast.message}
+            </div>
+            <button
+              onClick={() => setToast(null)}
+              className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
+              aria-label="Close notification"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
