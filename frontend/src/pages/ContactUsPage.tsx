@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { PublicHeader } from '../components/PublicHeader';
+import { PublicFooter } from '../components/PublicFooter';
 import {
   ArrowLeft,
   Mail,
@@ -17,9 +19,21 @@ interface ContactUsProps {
   onBackToHome: () => void;
   onGoToAbout?: () => void;
   onGoToBlog?: () => void;
+  onGoToPricing?: () => void;
+  onGoToLogin?: () => void;
+  onGoToRegister?: () => void;
+  onNavigatePolicy?: (policy: 'terms' | 'privacy' | 'refund') => void;
 }
 
-export const ContactUsPage: React.FC<ContactUsProps> = ({ onBackToHome, onGoToAbout, onGoToBlog }) => {
+export const ContactUsPage: React.FC<ContactUsProps> = ({
+  onBackToHome,
+  onGoToAbout,
+  onGoToBlog,
+  onGoToPricing,
+  onGoToLogin,
+  onGoToRegister,
+  onNavigatePolicy,
+}) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -38,50 +52,17 @@ export const ContactUsPage: React.FC<ContactUsProps> = ({ onBackToHome, onGoToAb
 
   return (
     <div className="min-h-screen bg-[#070a13] text-slate-100 font-sans selection:bg-indigo-600 selection:text-white">
-      {/* Top Navbar with Official Brand Logo */}
-      <header className="sticky top-0 z-50 bg-[#070a13]/90 backdrop-blur-xl border-b border-slate-800/80 px-6 py-3.5">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-6">
-            <button
-              onClick={onBackToHome}
-              className="flex items-center space-x-2 text-xs font-semibold text-slate-300 hover:text-white transition-colors cursor-pointer"
-            >
-              <ArrowLeft className="w-4 h-4 text-cyan-400" />
-              <span>Home</span>
-            </button>
-
-            <div onClick={onBackToHome} className="cursor-pointer flex items-center">
-              <img
-                src="/aibotcall-logo-full.png"
-                alt="AiBotCall"
-                className="h-9 sm:h-10 w-auto object-contain hover:opacity-95 transition-opacity"
-              />
-            </div>
-          </div>
-
-          <div className="flex items-center space-x-3">
-            {onGoToAbout && (
-              <button
-                onClick={onGoToAbout}
-                className="text-xs font-semibold text-slate-300 hover:text-cyan-400 transition-colors cursor-pointer"
-              >
-                About Us
-              </button>
-            )}
-            {onGoToBlog && (
-              <button
-                onClick={onGoToBlog}
-                className="text-xs font-semibold text-slate-300 hover:text-cyan-400 transition-colors cursor-pointer"
-              >
-                Blog
-              </button>
-            )}
-            <span className="text-xs font-bold text-cyan-400 uppercase tracking-widest border-l border-slate-800 pl-3">
-              Direct Support & Sales
-            </span>
-          </div>
-        </div>
-      </header>
+      {/* Unified Public Header */}
+      <PublicHeader
+        activePage="contact"
+        onNavigateHome={onBackToHome}
+        onNavigateAbout={onGoToAbout || onBackToHome}
+        onNavigateBlog={onGoToBlog || onBackToHome}
+        onNavigatePricing={onGoToPricing || onBackToHome}
+        onNavigateContact={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        onNavigateLogin={onGoToLogin || onBackToHome}
+        onNavigateRegister={onGoToRegister || onBackToHome}
+      />
 
       {/* Main Content */}
       <main className="max-w-6xl mx-auto px-6 py-12 space-y-12">
@@ -336,11 +317,17 @@ export const ContactUsPage: React.FC<ContactUsProps> = ({ onBackToHome, onGoToAb
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="mt-16 border-t border-slate-800/80 bg-slate-950/80 py-8 px-6 text-center text-xs text-slate-500 space-y-2">
-        <p>© {new Date().getFullYear()} AiBotCall / Ai Botflow · All rights reserved.</p>
-        <p className="text-[11px] text-slate-600">Priority Hotline: +91 99398 00780 · support@aibotflow.in</p>
-      </footer>
+      {/* Unified Public Footer */}
+      <PublicFooter
+        onNavigateHome={onBackToHome}
+        onNavigateAbout={onGoToAbout || onBackToHome}
+        onNavigateBlog={onGoToBlog || onBackToHome}
+        onNavigatePricing={onGoToPricing || onBackToHome}
+        onNavigateContact={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        onNavigateLogin={onGoToLogin || onBackToHome}
+        onNavigateRegister={onGoToRegister || onBackToHome}
+        onNavigatePolicy={onNavigatePolicy || ((p) => onBackToHome())}
+      />
     </div>
   );
 };

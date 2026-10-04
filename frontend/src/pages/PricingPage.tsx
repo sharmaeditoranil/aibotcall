@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { PublicHeader } from '../components/PublicHeader';
+import { PublicFooter } from '../components/PublicFooter';
 import {
   PhoneCall,
   CheckCircle2,
@@ -23,12 +25,22 @@ interface PricingPageProps {
   onSelectPlan: (planId: string) => void;
   onGoToLogin: () => void;
   onBackToHome: () => void;
+  onGoToAbout?: () => void;
+  onGoToBlog?: () => void;
+  onGoToContact?: () => void;
+  onGoToRegister?: () => void;
+  onNavigatePolicy?: (policy: 'terms' | 'privacy' | 'refund') => void;
 }
 
 export const PricingPage: React.FC<PricingPageProps> = ({
   onSelectPlan,
   onGoToLogin,
   onBackToHome,
+  onGoToAbout,
+  onGoToBlog,
+  onGoToContact,
+  onGoToRegister,
+  onNavigatePolicy,
 }) => {
   const [pricingModel, setPricingModel] = useState<'payg' | 'subscription'>('payg');
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
@@ -216,50 +228,18 @@ export const PricingPage: React.FC<PricingPageProps> = ({
   ];
 
   return (
-    <div className="min-h-screen bg-[#080c14] text-slate-100 font-sans selection:bg-emerald-500 selection:text-slate-950">
-      {/* Header Navigation */}
-      <header className="sticky top-0 z-50 bg-[#070a13]/90 backdrop-blur-xl border-b border-slate-800/80">
-        <div className="max-w-7xl mx-auto px-6 h-18 flex items-center justify-between">
-          <div
-            onClick={onBackToHome}
-            className="flex items-center cursor-pointer group"
-          >
-            <img
-              src="/aibotcall-logo-full.png"
-              alt="AiBotCall"
-              className="h-9 sm:h-11 w-auto object-contain hover:opacity-95 transition-opacity drop-shadow-md"
-            />
-          </div>
-
-          <nav className="hidden md:flex items-center space-x-8 text-xs font-semibold text-slate-300">
-            <button onClick={onBackToHome} className="hover:text-cyan-400 transition-colors">
-              Home
-            </button>
-            <button onClick={onBackToHome} className="hover:text-cyan-400 transition-colors">
-              Features
-            </button>
-            <span className="text-cyan-400 font-bold border-b-2 border-cyan-400 pb-0.5">
-              Pricing & Plans
-            </span>
-          </nav>
-
-          <div className="flex items-center space-x-3">
-            <button
-              onClick={onGoToLogin}
-              className="text-xs font-bold text-slate-300 hover:text-white px-3 py-2 transition-colors cursor-pointer"
-            >
-              Sign In
-            </button>
-            <button
-              onClick={() => onSelectPlan('PAY_AS_YOU_GO')}
-              className="py-2.5 px-4 rounded-xl bg-gradient-brand hover:brightness-110 text-white text-xs font-bold shadow-md glow-brand-sm transition-all active:scale-95 flex items-center space-x-1.5 cursor-pointer"
-            >
-              <span>Start Pay As You Go</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-[#070a13] text-slate-100 font-sans selection:bg-indigo-600 selection:text-white">
+      {/* Unified Public Header */}
+      <PublicHeader
+        activePage="pricing"
+        onNavigateHome={onBackToHome}
+        onNavigateAbout={onGoToAbout || onBackToHome}
+        onNavigateBlog={onGoToBlog || onBackToHome}
+        onNavigatePricing={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        onNavigateContact={onGoToContact || onBackToHome}
+        onNavigateLogin={onGoToLogin}
+        onNavigateRegister={onGoToRegister || (() => onSelectPlan('FREE_TRIAL'))}
+      />
 
       {/* Hero Title */}
       <section className="pt-16 pb-8 px-6 text-center max-w-4xl mx-auto relative">
@@ -652,7 +632,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
 
       {/* Bottom CTA Banner */}
       <section className="pb-24 px-6 max-w-5xl mx-auto">
-        <div className="p-10 rounded-3xl bg-gradient-to-r from-emerald-950 via-slate-900 to-teal-950 border border-emerald-500/40 text-center relative overflow-hidden shadow-2xl">
+        <div className="p-10 rounded-3xl bg-gradient-to-r from-violet-950/60 via-slate-900 to-cyan-950/60 border border-violet-500/40 text-center relative overflow-hidden shadow-2xl">
           <div className="relative z-10 space-y-4">
             <h2 className="text-3xl font-black text-white tracking-tight">
               Start Dialing Leads Automatically in 60 Seconds
@@ -663,22 +643,34 @@ export const PricingPage: React.FC<PricingPageProps> = ({
             <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
               <button
                 onClick={() => onSelectPlan('PAY_AS_YOU_GO')}
-                className="py-3 px-6 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 font-bold text-xs shadow-xl shadow-emerald-500/30 hover:scale-105 active:scale-95 transition-all inline-flex items-center space-x-2"
+                className="py-3 px-6 rounded-xl bg-gradient-brand hover:brightness-110 text-white font-bold text-xs shadow-xl glow-brand-sm hover:scale-105 active:scale-95 transition-all inline-flex items-center space-x-2 cursor-pointer"
               >
-                <Zap className="w-4 h-4" />
-                <span>Start Pay As You Go (₹0 Fee)</span>
+                <Zap className="w-4 h-4 text-cyan-300" />
+                <span>Start Pay As You Go (₹0 Platform Fee)</span>
               </button>
               <button
                 onClick={() => onSelectPlan('FREE_TRIAL')}
-                className="py-3 px-6 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs border border-slate-700 transition-all inline-flex items-center space-x-2"
+                className="py-3 px-6 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs border border-slate-700 transition-all inline-flex items-center space-x-2 cursor-pointer"
               >
                 <span>Claim 30 Free Minutes</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-4 h-4 text-violet-400" />
               </button>
             </div>
           </div>
         </div>
       </section>
+
+      {/* Unified Public Footer */}
+      <PublicFooter
+        onNavigateHome={onBackToHome}
+        onNavigateAbout={onGoToAbout || onBackToHome}
+        onNavigateBlog={onGoToBlog || onBackToHome}
+        onNavigatePricing={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        onNavigateContact={onGoToContact || onBackToHome}
+        onNavigateLogin={onGoToLogin}
+        onNavigateRegister={onGoToRegister || (() => onSelectPlan('FREE_TRIAL'))}
+        onNavigatePolicy={onNavigatePolicy || ((p) => onBackToHome())}
+      />
     </div>
   );
 };

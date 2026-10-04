@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { PublicHeader } from '../components/PublicHeader';
+import { PublicFooter } from '../components/PublicFooter';
 import {
   PhoneCall,
   Bot,
@@ -186,62 +188,17 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
   return (
     <div className="min-h-screen bg-[#080c14] text-slate-100 font-sans selection:bg-emerald-500 selection:text-white">
-      {/* Navigation Bar */}
-      <header className="sticky top-0 z-50 bg-[#070a13]/90 backdrop-blur-xl border-b border-slate-800/80 px-6 py-3.5">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="cursor-pointer flex items-center group"
-          >
-            <img
-              src="/aibotcall-logo-full.png"
-              alt="AiBotCall"
-              className="h-9 sm:h-11 w-auto object-contain hover:opacity-95 transition-opacity drop-shadow-md"
-            />
-          </div>
-
-          <div className="flex items-center space-x-2 sm:space-x-3">
-            <button
-              onClick={() => (onOpenAbout ? onOpenAbout() : onOpenPolicy?.('about'))}
-              className="py-2 px-2.5 sm:px-3 rounded-xl text-xs font-semibold text-slate-300 hover:text-cyan-400 transition-colors cursor-pointer"
-            >
-              About Us
-            </button>
-            <button
-              onClick={() => (onOpenBlog ? onOpenBlog() : onOpenPolicy?.('blog'))}
-              className="py-2 px-2.5 sm:px-3 rounded-xl text-xs font-semibold text-slate-300 hover:text-cyan-400 transition-colors cursor-pointer flex items-center space-x-1"
-            >
-              <span>Blog</span>
-              <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-violet-500/20 text-violet-300 border border-violet-500/30 font-bold uppercase tracking-wider">Playbooks</span>
-            </button>
-            <button
-              onClick={onOpenPricing}
-              className="py-2 px-2.5 sm:px-3 rounded-xl text-xs font-semibold text-slate-300 hover:text-cyan-400 transition-colors cursor-pointer"
-            >
-              Pricing
-            </button>
-            <button
-              onClick={() => (onOpenContact ? onOpenContact() : onOpenPolicy?.('contact'))}
-              className="hidden sm:inline-block py-2 px-3 rounded-xl text-xs font-semibold text-slate-300 hover:text-cyan-400 transition-colors cursor-pointer"
-            >
-              Contact
-            </button>
-            <button
-              onClick={() => onOpenAuth('login')}
-              className="py-2 px-3 sm:px-4 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors cursor-pointer"
-            >
-              Sign In
-            </button>
-            <button
-              onClick={() => onOpenAuth('register')}
-              className="py-2 px-3 sm:px-4 rounded-xl text-xs font-bold text-white bg-gradient-brand hover:brightness-110 shadow-md glow-brand-sm transition-all active:scale-95 cursor-pointer"
-            >
-              <span className="hidden sm:inline">Start Free Trial (30 Mins)</span>
-              <span className="sm:hidden">Try Free</span>
-            </button>
-          </div>
-        </div>
-      </header>
+      {/* Unified Public Navigation Bar */}
+      <PublicHeader
+        activePage="home"
+        onNavigateHome={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        onNavigateAbout={() => (onOpenAbout ? onOpenAbout() : onOpenPolicy?.('about'))}
+        onNavigateBlog={() => (onOpenBlog ? onOpenBlog() : onOpenPolicy?.('blog'))}
+        onNavigatePricing={onOpenPricing}
+        onNavigateContact={() => (onOpenContact ? onOpenContact() : onOpenPolicy?.('contact'))}
+        onNavigateLogin={() => onOpenAuth('login')}
+        onNavigateRegister={() => onOpenAuth('register')}
+      />
 
       {/* Hero Section */}
       <section className="relative pt-16 pb-20 px-6 overflow-hidden">
@@ -568,123 +525,17 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         </div>
       </section>
 
-      {/* Footer with Compliance Links */}
-      <footer className="py-14 px-6 border-t border-slate-800/80 bg-slate-950 text-slate-400 text-xs">
-        <div className="max-w-7xl mx-auto space-y-10">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="space-y-3">
-              <div className="flex items-center space-x-2">
-                <img
-                  src="/aibotcall-logo-full.png"
-                  alt="AiBotCall"
-                  className="h-9 w-auto object-contain"
-                />
-              </div>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Autonomous two-way AI conversational phone calling platform for admissions, sales qualification, and broadcast campaigns.
-              </p>
-              <p className="text-[11px] text-slate-500">
-                Operated by AiBotCall Technologies Pvt. Ltd. · Founded by Anil Sharma
-              </p>
-            </div>
-
-            <div>
-              <h4 className="font-bold text-white uppercase tracking-wider text-xs mb-3">Product</h4>
-              <ul className="space-y-2 text-xs">
-                <li>
-                  <button onClick={onOpenPricing} className="hover:text-cyan-400 cursor-pointer">
-                    Pricing & Calling Plans
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => onOpenAuth('register')} className="hover:text-cyan-400 cursor-pointer">
-                    Free Trial (30 Mins)
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => onOpenAuth('login')} className="hover:text-cyan-400 cursor-pointer">
-                    Dashboard Login
-                  </button>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-bold text-white uppercase tracking-wider text-xs mb-3">
-                Company & Legal
-              </h4>
-              <ul className="space-y-2 text-xs">
-                <li>
-                  <button
-                    onClick={() => (onOpenAbout ? onOpenAbout() : onOpenPolicy?.('about'))}
-                    className="hover:text-cyan-400 cursor-pointer text-cyan-400 font-semibold"
-                  >
-                    About Us & Leadership
-                  </button>
-                </li>
-                <li>
-                  <button
-                    onClick={() => (onOpenBlog ? onOpenBlog() : onOpenPolicy?.('blog'))}
-                    className="hover:text-cyan-400 cursor-pointer text-violet-300 font-semibold flex items-center space-x-1.5"
-                  >
-                    <span>Blog & AI Playbooks</span>
-                    <span className="text-[9px] px-1 py-0.2 rounded bg-violet-500/20 text-violet-300 font-mono">NEW</span>
-                  </button>
-                </li>
-                <li>
-                  <button
-                    onClick={() => onOpenPolicy?.('terms')}
-                    className="hover:text-cyan-400 cursor-pointer"
-                  >
-                    Terms & Conditions
-                  </button>
-                </li>
-                <li>
-                  <button
-                    onClick={() => onOpenPolicy?.('privacy')}
-                    className="hover:text-cyan-400 cursor-pointer"
-                  >
-                    Privacy Policy
-                  </button>
-                </li>
-                <li>
-                  <button
-                    onClick={() => onOpenPolicy?.('refund')}
-                    className="hover:text-cyan-400 cursor-pointer"
-                  >
-                    Refund & Cancellation Policy
-                  </button>
-                </li>
-                <li>
-                  <button
-                    onClick={() => (onOpenContact ? onOpenContact() : onOpenPolicy?.('contact'))}
-                    className="hover:text-cyan-400 cursor-pointer"
-                  >
-                    Contact Us & Grievance Redressal
-                  </button>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-bold text-white uppercase tracking-wider text-xs mb-3">Contact Support</h4>
-              <ul className="space-y-1.5 text-xs text-slate-400">
-                <li className="text-white font-medium">VIP Hotline / WhatsApp: +91 99398 00780</li>
-                <li>Email: support@aibotflow.in</li>
-                <li>Billing: billing@aibotflow.in</li>
-                <li className="pt-2 text-[11px] text-slate-500">
-                  Gopalganj, Bihar 841428, India
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="pt-8 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-500">
-            <p>© {new Date().getFullYear()} AiBotCall / Ai Botflow · Founded by Anil Sharma. All rights reserved.</p>
-            <p>Certified Razorpay Payment Gateway & Telecom Integration</p>
-          </div>
-        </div>
-      </footer>
+      {/* Unified Public Footer */}
+      <PublicFooter
+        onNavigateHome={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        onNavigateAbout={() => (onOpenAbout ? onOpenAbout() : onOpenPolicy?.('about'))}
+        onNavigateBlog={() => (onOpenBlog ? onOpenBlog() : onOpenPolicy?.('blog'))}
+        onNavigatePricing={onOpenPricing}
+        onNavigateContact={() => (onOpenContact ? onOpenContact() : onOpenPolicy?.('contact'))}
+        onNavigateLogin={() => onOpenAuth('login')}
+        onNavigateRegister={() => onOpenAuth('register')}
+        onNavigatePolicy={(policy) => onOpenPolicy?.(policy)}
+      />
     </div>
   );
 };

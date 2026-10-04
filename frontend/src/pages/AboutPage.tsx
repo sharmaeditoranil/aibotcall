@@ -1,4 +1,6 @@
 import React from 'react';
+import { PublicHeader } from '../components/PublicHeader';
+import { PublicFooter } from '../components/PublicFooter';
 import {
   ArrowLeft,
   PhoneCall,
@@ -30,6 +32,7 @@ interface AboutPageProps {
   onGoToRegister?: () => void;
   onGoToLogin?: () => void;
   onGoToBlog?: () => void;
+  onNavigatePolicy?: (policy: 'terms' | 'privacy' | 'refund') => void;
 }
 
 export const AboutPage: React.FC<AboutPageProps> = ({
@@ -39,74 +42,21 @@ export const AboutPage: React.FC<AboutPageProps> = ({
   onGoToRegister,
   onGoToLogin,
   onGoToBlog,
+  onNavigatePolicy,
 }) => {
   return (
     <div className="min-h-screen bg-[#070a13] text-slate-100 font-sans selection:bg-indigo-600 selection:text-white">
-      {/* Top Navbar with Official Brand Logo */}
-      <header className="sticky top-0 z-50 bg-[#070a13]/90 backdrop-blur-xl border-b border-slate-800/80 px-6 py-3.5">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-6">
-            <button
-              onClick={onBackToHome}
-              className="flex items-center space-x-2 text-xs font-semibold text-slate-300 hover:text-white transition-colors cursor-pointer"
-            >
-              <ArrowLeft className="w-4 h-4 text-cyan-400" />
-              <span>Home</span>
-            </button>
-
-            {/* Official Horizontal Widescreen Logo */}
-            <div onClick={onBackToHome} className="cursor-pointer flex items-center">
-              <img
-                src="/aibotcall-logo-full.png"
-                alt="AiBotCall Official Brand Logo"
-                className="h-9 sm:h-10 w-auto object-contain hover:opacity-95 transition-opacity"
-              />
-            </div>
-          </div>
-
-          <nav className="hidden md:flex items-center space-x-1">
-            <button
-              onClick={onGoToPricing}
-              className="py-2 px-3 rounded-xl text-xs font-semibold text-slate-300 hover:text-cyan-400 transition-colors cursor-pointer"
-            >
-              Pricing & Plans
-            </button>
-            {onGoToBlog && (
-              <button
-                onClick={onGoToBlog}
-                className="py-2 px-3 rounded-xl text-xs font-semibold text-slate-300 hover:text-cyan-400 transition-colors cursor-pointer"
-              >
-                Blog & Playbooks
-              </button>
-            )}
-            <button
-              onClick={onGoToContact}
-              className="py-2 px-3 rounded-xl text-xs font-semibold text-slate-300 hover:text-cyan-400 transition-colors cursor-pointer"
-            >
-              Contact Us
-            </button>
-          </nav>
-
-          <div className="flex items-center space-x-2.5">
-            {onGoToLogin && (
-              <button
-                onClick={onGoToLogin}
-                className="py-2 px-3 sm:px-4 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors cursor-pointer"
-              >
-                Sign In
-              </button>
-            )}
-            {onGoToRegister && (
-              <button
-                onClick={onGoToRegister}
-                className="py-2 px-3.5 sm:px-4 rounded-xl text-xs font-bold text-white bg-gradient-brand hover:opacity-90 shadow-lg glow-brand-sm transition-all active:scale-95 cursor-pointer"
-              >
-                Start Free Trial (30 Mins)
-              </button>
-            )}
-          </div>
-        </div>
-      </header>
+      {/* Unified Public Header */}
+      <PublicHeader
+        activePage="about"
+        onNavigateHome={onBackToHome}
+        onNavigateAbout={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        onNavigateBlog={onGoToBlog || onBackToHome}
+        onNavigatePricing={onGoToPricing || onBackToHome}
+        onNavigateContact={onGoToContact}
+        onNavigateLogin={onGoToLogin || onBackToHome}
+        onNavigateRegister={onGoToRegister || onBackToHome}
+      />
 
       {/* Hero Section */}
       <main className="max-w-6xl mx-auto px-6 py-14 space-y-20">
@@ -163,52 +113,76 @@ export const AboutPage: React.FC<AboutPageProps> = ({
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            {/* Founder Card with Exact Photo */}
+            {/* Founder Card with Full Frame Cinematic Photo */}
             <div className="lg:col-span-5 space-y-4">
-              <div className="p-1 rounded-3xl bg-gradient-to-tr from-violet-600 via-indigo-600 to-cyan-400 shadow-2xl glow-brand-lg">
-                <div className="bg-[#090d18] rounded-[22px] p-6 text-center space-y-4">
-                  {/* Real Photo of Anil Sharma */}
-                  <div className="w-48 h-48 mx-auto rounded-2xl overflow-hidden p-1 bg-gradient-to-tr from-violet-500 to-cyan-400 shadow-xl">
+              <div className="p-[1.5px] rounded-3xl bg-gradient-to-tr from-violet-600 via-indigo-600 to-cyan-400 shadow-2xl glow-brand-lg overflow-hidden">
+                <div className="bg-[#090d18] rounded-[23px] overflow-hidden flex flex-col h-full">
+                  {/* Full Frame Cinematic Photo Container */}
+                  <div className="relative w-full aspect-square sm:aspect-[4/4.2] overflow-hidden bg-slate-950 group">
                     <img
                       src="/assets/anil_sharma.jpg"
                       alt="Anil Sharma - Founder of AiBotCall & Quick Art Photography Academy"
-                      className="w-full h-full object-cover rounded-[14px] aspect-square"
+                      className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out"
                     />
+                    
+                    {/* Cinematic Bottom Gradient Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#090d18] via-[#090d18]/25 to-transparent pointer-events-none" />
+
+                    {/* Floating Status Badge */}
+                    <div className="absolute top-3.5 left-3.5 flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-slate-950/80 backdrop-blur-md border border-cyan-400/40 text-cyan-300 text-[11px] font-bold shadow-xl">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                      <span>Founder & Technologist</span>
+                    </div>
+
+                    {/* Floating Experience Badge */}
+                    <div className="absolute top-3.5 right-3.5 flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-violet-950/80 backdrop-blur-md border border-violet-400/40 text-violet-200 text-[11px] font-bold shadow-xl">
+                      <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+                      <span>10+ Yrs Exp</span>
+                    </div>
                   </div>
 
-                  <div>
-                    <h3 className="text-xl font-extrabold text-white">Anil Sharma</h3>
-                    <p className="text-xs font-semibold text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-cyan-400">
-                      Founder & Creative Technologist
-                    </p>
-                    <p className="text-xs text-slate-300 mt-1.5 flex items-center justify-center space-x-1.5">
-                      <GraduationCap className="w-4 h-4 text-cyan-400" />
-                      <span>Founder, <strong>Quick Art Photography Academy</strong></span>
-                    </p>
-                  </div>
+                  {/* Founder Details Below Photo */}
+                  <div className="p-5 sm:p-6 space-y-3.5 text-center bg-gradient-to-b from-[#090d18] to-[#070b14] border-t border-slate-800/60">
+                    <div className="space-y-1">
+                      <h3 className="text-2xl font-black text-white tracking-tight flex items-center justify-center space-x-2">
+                        <span>Anil Sharma</span>
+                        <span className="inline-flex p-0.5 rounded-full bg-cyan-500/20 text-cyan-400 border border-cyan-500/30" title="Verified Founder">
+                          <CheckCircle2 className="w-4 h-4" />
+                        </span>
+                      </h3>
+                      <p className="text-xs font-semibold text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-blue-400 to-cyan-400">
+                        Founder & Creative Technologist
+                      </p>
+                      <p className="text-xs text-slate-300 pt-0.5 flex items-center justify-center space-x-1.5">
+                        <GraduationCap className="w-4 h-4 text-cyan-400 shrink-0" />
+                        <span>Founder, <strong>Quick Art Photography Academy</strong></span>
+                      </p>
+                    </div>
 
-                  <div className="pt-2 flex flex-wrap items-center justify-center gap-2">
-                    <a
-                      href="https://quickartphotography.in/master-class/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-3.5 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 flex items-center space-x-1.5 transition-colors"
-                    >
-                      <Video className="w-3.5 h-3.5 text-cyan-400" />
-                      <span>Masterclass Profile</span>
-                      <ExternalLink className="w-3 h-3 text-slate-400" />
-                    </a>
+                    {/* Action Links */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2">
+                      <a
+                        href="https://quickartphotography.in/master-class/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="py-2.5 px-3 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700/80 flex items-center justify-center space-x-1.5 transition-all hover:border-cyan-500/50 hover:shadow-lg hover:shadow-cyan-500/10 cursor-pointer"
+                      >
+                        <Video className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                        <span className="truncate">Masterclass Profile</span>
+                        <ExternalLink className="w-3 h-3 text-slate-400 shrink-0" />
+                      </a>
 
-                    <a
-                      href="https://www.youtube.com/@AiBotFlow"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-3.5 py-2 rounded-xl bg-red-950/40 hover:bg-red-900/40 text-red-300 text-xs font-medium border border-red-500/30 flex items-center space-x-1.5 transition-colors"
-                    >
-                      <Youtube className="w-3.5 h-3.5 text-red-400" />
-                      <span>YouTube Channel</span>
-                      <ExternalLink className="w-3 h-3 text-red-400" />
-                    </a>
+                      <a
+                        href="https://www.youtube.com/@AiBotFlow"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="py-2.5 px-3 rounded-xl bg-red-950/40 hover:bg-red-900/50 text-red-200 text-xs font-semibold border border-red-500/30 flex items-center justify-center space-x-1.5 transition-all hover:border-red-400/60 hover:shadow-lg hover:shadow-red-500/10 cursor-pointer"
+                      >
+                        <Youtube className="w-3.5 h-3.5 text-red-400 shrink-0" />
+                        <span className="truncate">YouTube Channel</span>
+                        <ExternalLink className="w-3 h-3 text-red-400 shrink-0" />
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -351,39 +325,17 @@ export const AboutPage: React.FC<AboutPageProps> = ({
         </section>
       </main>
 
-      {/* Footer with Logo */}
-      <footer className="mt-16 border-t border-slate-800/80 bg-slate-950/80 py-10 px-6 text-xs text-slate-500">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center space-x-3">
-            <img
-              src="/aibotcall-logo-full.png"
-              alt="AiBotCall"
-              className="h-8 w-auto object-contain"
-            />
-            <span className="text-[11px] text-slate-500 border-l border-slate-800 pl-3">
-              Founded by Anil Sharma
-            </span>
-          </div>
-
-          <div className="flex items-center space-x-4">
-            <button onClick={onGoToPricing} className="hover:text-cyan-400 transition-colors">
-              Pricing
-            </button>
-            {onGoToBlog && (
-              <button onClick={onGoToBlog} className="hover:text-cyan-400 transition-colors">
-                Blog
-              </button>
-            )}
-            <button onClick={onGoToContact} className="hover:text-cyan-400 transition-colors">
-              Contact
-            </button>
-          </div>
-
-          <p className="text-[11px] text-slate-600">
-            © {new Date().getFullYear()} AiBotCall / Ai Botflow · All rights reserved.
-          </p>
-        </div>
-      </footer>
+      {/* Unified Public Footer */}
+      <PublicFooter
+        onNavigateHome={onBackToHome}
+        onNavigateAbout={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        onNavigateBlog={onGoToBlog || onBackToHome}
+        onNavigatePricing={onGoToPricing || onBackToHome}
+        onNavigateContact={onGoToContact}
+        onNavigateLogin={onGoToLogin || onBackToHome}
+        onNavigateRegister={onGoToRegister || onBackToHome}
+        onNavigatePolicy={onNavigatePolicy || ((p) => onBackToHome())}
+      />
     </div>
   );
 };

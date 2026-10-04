@@ -68,22 +68,22 @@ export const Sidebar: React.FC<SidebarProps> = ({
     <aside className="w-64 bg-[#080c18] border-r border-slate-800/80 flex flex-col h-screen select-none backdrop-blur-xl shrink-0 z-30">
       {/* Brand Header with Official 3D Emblem & Razor-Sharp Typography */}
       <div className="p-4 border-b border-slate-800/80 bg-slate-950/40">
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-2.5">
           <div className="relative">
             <img
               src="/aibotcall-emblem.png"
               alt="AiBotCall"
-              className="w-10 h-10 object-contain drop-shadow-[0_4px_16px_rgba(139,92,246,0.5)] shrink-0"
+              className="w-8 h-8 object-contain drop-shadow-[0_2px_12px_rgba(139,92,246,0.45)] shrink-0"
             />
-            <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-500 rounded-full border-2 border-[#080c18]"></span>
+            <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-[#080c18]"></span>
           </div>
           <div className="flex flex-col">
-            <div className="flex items-center text-xl font-black tracking-tight leading-none">
+            <div className="flex items-center text-lg font-black tracking-tight leading-none">
               <span className="text-violet-400">Ai</span>
               <span className="text-white">Bot</span>
               <span className="text-cyan-400">Call</span>
             </div>
-            <span className="text-[10px] text-cyan-400/90 font-bold tracking-wider uppercase mt-1">
+            <span className="text-[9px] text-cyan-400/90 font-bold tracking-wider uppercase mt-1">
               AI Voice Telephony
             </span>
           </div>

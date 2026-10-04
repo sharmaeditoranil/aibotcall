@@ -132,7 +132,7 @@ export const Register: React.FC<RegisterProps> = ({
             <img
               src="/aibotcall-logo-full.png"
               alt="AiBotCall"
-              className="h-11 sm:h-12 w-auto object-contain drop-shadow-lg"
+              className="h-8 sm:h-9 w-auto object-contain drop-shadow-md hover:scale-105 transition-transform"
             />
           </div>
           <h1 className="text-2xl font-black text-white tracking-tight">

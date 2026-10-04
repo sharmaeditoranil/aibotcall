@@ -119,6 +119,20 @@ export const App: React.FC = () => {
 
   // If user is not authenticated
   if (!token || !user) {
+    const sharedPublicNav = {
+      onBackToHome: () => setAuthView('landing'),
+      onGoToAbout: () => setAuthView('about'),
+      onGoToBlog: () => setAuthView('blog'),
+      onGoToPricing: () => setAuthView('pricing'),
+      onGoToContact: () => setAuthView('contact'),
+      onGoToLogin: () => setAuthView('login'),
+      onGoToRegister: () => {
+        setSelectedPlan('FREE_TRIAL');
+        setAuthView('register');
+      },
+      onNavigatePolicy: (policy: 'terms' | 'privacy' | 'refund') => setAuthView(policy),
+    };
+
     if (authView === 'landing') {
       return (
         <LandingPage
@@ -136,68 +150,37 @@ export const App: React.FC = () => {
     }
 
     if (authView === 'about') {
-      return (
-        <AboutPage
-          onBackToHome={() => setAuthView('landing')}
-          onGoToContact={() => setAuthView('contact')}
-          onGoToPricing={() => setAuthView('pricing')}
-          onGoToBlog={() => setAuthView('blog')}
-          onGoToRegister={() => {
-            setSelectedPlan('GROWTH');
-            setAuthView('register');
-          }}
-          onGoToLogin={() => setAuthView('login')}
-        />
-      );
+      return <AboutPage {...sharedPublicNav} />;
     }
 
     if (authView === 'blog') {
-      return (
-        <BlogPage
-          onBackToHome={() => setAuthView('landing')}
-          onGoToAbout={() => setAuthView('about')}
-          onGoToContact={() => setAuthView('contact')}
-          onGoToPricing={() => setAuthView('pricing')}
-          onGoToRegister={() => {
-            setSelectedPlan('GROWTH');
-            setAuthView('register');
-          }}
-          onGoToLogin={() => setAuthView('login')}
-        />
-      );
+      return <BlogPage {...sharedPublicNav} />;
     }
 
     if (authView === 'terms') {
-      return <TermsPage onBackToHome={() => setAuthView('landing')} />;
+      return <TermsPage {...sharedPublicNav} />;
     }
 
     if (authView === 'privacy') {
-      return <PrivacyPolicyPage onBackToHome={() => setAuthView('landing')} />;
+      return <PrivacyPolicyPage {...sharedPublicNav} />;
     }
 
     if (authView === 'refund') {
-      return <RefundPolicyPage onBackToHome={() => setAuthView('landing')} />;
+      return <RefundPolicyPage {...sharedPublicNav} />;
     }
 
     if (authView === 'contact') {
-      return (
-        <ContactUsPage
-          onBackToHome={() => setAuthView('landing')}
-          onGoToAbout={() => setAuthView('about')}
-          onGoToBlog={() => setAuthView('blog')}
-        />
-      );
+      return <ContactUsPage {...sharedPublicNav} />;
     }
 
     if (authView === 'pricing') {
       return (
         <PricingPage
+          {...sharedPublicNav}
           onSelectPlan={(plan) => {
             setSelectedPlan(plan);
             setAuthView('register');
           }}
-          onGoToLogin={() => setAuthView('login')}
-          onBackToHome={() => setAuthView('landing')}
         />
       );
     }

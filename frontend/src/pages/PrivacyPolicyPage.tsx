@@ -1,28 +1,42 @@
 import React from 'react';
+import { PublicHeader } from '../components/PublicHeader';
+import { PublicFooter } from '../components/PublicFooter';
 import { Shield, ArrowLeft, Lock, CheckCircle2 } from 'lucide-react';
 
 interface PolicyProps {
   onBackToHome: () => void;
+  onGoToAbout?: () => void;
+  onGoToBlog?: () => void;
+  onGoToPricing?: () => void;
+  onGoToContact?: () => void;
+  onGoToLogin?: () => void;
+  onGoToRegister?: () => void;
+  onNavigatePolicy?: (policy: 'terms' | 'privacy' | 'refund') => void;
 }
 
-export const PrivacyPolicyPage: React.FC<PolicyProps> = ({ onBackToHome }) => {
+export const PrivacyPolicyPage: React.FC<PolicyProps> = ({
+  onBackToHome,
+  onGoToAbout,
+  onGoToBlog,
+  onGoToPricing,
+  onGoToContact,
+  onGoToLogin,
+  onGoToRegister,
+  onNavigatePolicy,
+}) => {
   return (
-    <div className="min-h-screen bg-[#080c14] text-slate-100 font-sans selection:bg-emerald-500 selection:text-white">
-      {/* Top Navbar */}
-      <header className="sticky top-0 z-50 bg-[#080c14]/90 backdrop-blur-xl border-b border-slate-800/80 px-6 py-4">
-        <div className="max-w-5xl mx-auto flex items-center justify-between">
-          <button
-            onClick={onBackToHome}
-            className="flex items-center space-x-2 text-xs font-semibold text-slate-300 hover:text-white transition-colors cursor-pointer"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Back to Home</span>
-          </button>
-          <span className="text-xs font-bold text-emerald-400 uppercase tracking-widest">
-            Data Privacy & Security
-          </span>
-        </div>
-      </header>
+    <div className="min-h-screen bg-[#070a13] text-slate-100 font-sans selection:bg-indigo-600 selection:text-white">
+      {/* Unified Public Header */}
+      <PublicHeader
+        activePage="privacy"
+        onNavigateHome={onBackToHome}
+        onNavigateAbout={onGoToAbout || onBackToHome}
+        onNavigateBlog={onGoToBlog || onBackToHome}
+        onNavigatePricing={onGoToPricing || onBackToHome}
+        onNavigateContact={onGoToContact || onBackToHome}
+        onNavigateLogin={onGoToLogin || onBackToHome}
+        onNavigateRegister={onGoToRegister || onBackToHome}
+      />
 
       {/* Main Content */}
       <main className="max-w-4xl mx-auto px-6 py-12 space-y-8">
@@ -110,16 +124,19 @@ export const PrivacyPolicyPage: React.FC<PolicyProps> = ({ onBackToHome }) => {
           </div>
         </section>
 
-        <div className="pt-8 border-t border-slate-800 flex justify-between items-center text-xs text-slate-500">
-          <span>© {new Date().getFullYear()} AiBotCall / Ai Botflow · Founded by Anil Sharma</span>
-          <button
-            onClick={onBackToHome}
-            className="text-emerald-400 hover:text-emerald-300 font-semibold cursor-pointer"
-          >
-            ← Back to Home
-          </button>
-        </div>
       </main>
+
+      {/* Unified Public Footer */}
+      <PublicFooter
+        onNavigateHome={onBackToHome}
+        onNavigateAbout={onGoToAbout || onBackToHome}
+        onNavigateBlog={onGoToBlog || onBackToHome}
+        onNavigatePricing={onGoToPricing || onBackToHome}
+        onNavigateContact={onGoToContact || onBackToHome}
+        onNavigateLogin={onGoToLogin || onBackToHome}
+        onNavigateRegister={onGoToRegister || onBackToHome}
+        onNavigatePolicy={onNavigatePolicy || ((p) => onBackToHome())}
+      />
     </div>
   );
 };

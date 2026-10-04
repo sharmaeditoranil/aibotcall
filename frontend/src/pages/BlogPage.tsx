@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { PublicHeader } from '../components/PublicHeader';
+import { PublicFooter } from '../components/PublicFooter';
 import {
   ArrowLeft,
   Sparkles,
@@ -26,6 +28,7 @@ interface BlogPageProps {
   onGoToPricing: () => void;
   onGoToRegister: () => void;
   onGoToLogin: () => void;
+  onNavigatePolicy?: (policy: 'terms' | 'privacy' | 'refund') => void;
 }
 
 interface Article {
@@ -50,6 +53,7 @@ export const BlogPage: React.FC<BlogPageProps> = ({
   onGoToPricing,
   onGoToRegister,
   onGoToLogin,
+  onNavigatePolicy,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -202,65 +206,17 @@ export const BlogPage: React.FC<BlogPageProps> = ({
 
   return (
     <div className="min-h-screen bg-[#070a13] text-slate-100 font-sans selection:bg-indigo-600 selection:text-white">
-      {/* Top Navbar with Official Brand Logo */}
-      <header className="sticky top-0 z-50 bg-[#070a13]/90 backdrop-blur-xl border-b border-slate-800/80 px-6 py-3.5">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-6">
-            <button
-              onClick={onBackToHome}
-              className="flex items-center space-x-2 text-xs font-semibold text-slate-300 hover:text-white transition-colors cursor-pointer"
-            >
-              <ArrowLeft className="w-4 h-4 text-cyan-400" />
-              <span>Home</span>
-            </button>
-
-            {/* Official Logo Widescreen */}
-            <div onClick={onBackToHome} className="cursor-pointer flex items-center">
-              <img
-                src="/aibotcall-logo-full.png"
-                alt="AiBotCall Official Brand Logo"
-                className="h-9 sm:h-10 w-auto object-contain hover:opacity-95 transition-opacity"
-              />
-            </div>
-          </div>
-
-          <nav className="hidden md:flex items-center space-x-1">
-            <button
-              onClick={onGoToAbout}
-              className="py-2 px-3 rounded-xl text-xs font-semibold text-slate-300 hover:text-cyan-400 transition-colors cursor-pointer"
-            >
-              About Us
-            </button>
-            <button
-              onClick={onGoToPricing}
-              className="py-2 px-3 rounded-xl text-xs font-semibold text-slate-300 hover:text-cyan-400 transition-colors cursor-pointer"
-            >
-              Pricing & Plans
-            </button>
-            <button
-              onClick={onGoToContact}
-              className="py-2 px-3 rounded-xl text-xs font-semibold text-slate-300 hover:text-cyan-400 transition-colors cursor-pointer"
-            >
-              Contact Us
-            </button>
-          </nav>
-
-          <div className="flex items-center space-x-2.5">
-            <button
-              onClick={onGoToLogin}
-              className="py-2 px-3 sm:px-4 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors cursor-pointer"
-            >
-              Sign In
-            </button>
-            <button
-              onClick={onGoToRegister}
-              className="py-2 px-3.5 sm:px-4 rounded-xl text-xs font-bold text-white bg-gradient-brand hover:opacity-90 shadow-lg glow-brand-sm transition-all active:scale-95 cursor-pointer"
-            >
-              Start Free Trial (30 Mins)
-            </button>
-          </div>
-        </div>
-      </header>
+      {/* Unified Public Header */}
+      <PublicHeader
+        activePage="blog"
+        onNavigateHome={onBackToHome}
+        onNavigateAbout={onGoToAbout}
+        onNavigateBlog={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        onNavigatePricing={onGoToPricing}
+        onNavigateContact={onGoToContact}
+        onNavigateLogin={onGoToLogin}
+        onNavigateRegister={onGoToRegister}
+      />
 
       {/* Hero Section */}
       <main className="max-w-7xl mx-auto px-6 py-12 space-y-12">
@@ -575,37 +531,17 @@ export const BlogPage: React.FC<BlogPageProps> = ({
         </div>
       )}
 
-      {/* Footer */}
-      <footer className="mt-16 border-t border-slate-800/80 bg-slate-950/80 py-10 px-6 text-xs text-slate-500">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center space-x-3">
-            <img
-              src="/aibotcall-logo-full.png"
-              alt="AiBotCall"
-              className="h-8 w-auto object-contain"
-            />
-            <span className="text-[11px] text-slate-500 border-l border-slate-800 pl-3">
-              Founded by Anil Sharma
-            </span>
-          </div>
-
-          <div className="flex items-center space-x-4">
-            <button onClick={onGoToAbout} className="hover:text-cyan-400 transition-colors">
-              About Us
-            </button>
-            <button onClick={onGoToPricing} className="hover:text-cyan-400 transition-colors">
-              Pricing
-            </button>
-            <button onClick={onGoToContact} className="hover:text-cyan-400 transition-colors">
-              Contact
-            </button>
-          </div>
-
-          <p className="text-[11px] text-slate-600">
-            © {new Date().getFullYear()} AiBotCall / Ai Botflow · All rights reserved.
-          </p>
-        </div>
-      </footer>
+      {/* Unified Public Footer */}
+      <PublicFooter
+        onNavigateHome={onBackToHome}
+        onNavigateAbout={onGoToAbout}
+        onNavigateBlog={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        onNavigatePricing={onGoToPricing}
+        onNavigateContact={onGoToContact}
+        onNavigateLogin={onGoToLogin}
+        onNavigateRegister={onGoToRegister}
+        onNavigatePolicy={onNavigatePolicy || ((p) => onBackToHome())}
+      />
     </div>
   );
 };
