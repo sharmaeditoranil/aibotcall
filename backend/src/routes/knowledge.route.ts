@@ -64,6 +64,37 @@ export async function knowledgeRoute(fastify: FastifyInstance) {
   });
 
   /**
+   * POST /api/v1/knowledge-base/bulk
+   * 1-Click Import Multi-Industry Knowledge Packs
+   */
+  fastify.post('/api/v1/knowledge-base/bulk', async (request, reply) => {
+    const orgId = request.user?.organizationId;
+    if (!orgId) return reply.status(401).send({ error: 'Unauthorized' });
+
+    const body = request.body as { items: Array<{ title: string; category: string; content: string; agent_id?: string | null }> };
+    if (!body || !Array.isArray(body.items) || body.items.length === 0) {
+      return reply.status(400).send({ error: 'Invalid payload: items array required' });
+    }
+
+    const created = await prisma.$transaction(
+      body.items.map((item) =>
+        prisma.knowledgeBase.create({
+          data: {
+            organization_id: orgId,
+            title: item.title,
+            category: item.category,
+            content: item.content,
+            agent_id: item.agent_id || null,
+            is_active: true,
+          },
+        })
+      )
+    );
+
+    return reply.status(201).send({ success: true, count: created.length, items: created });
+  });
+
+  /**
    * PUT /api/v1/knowledge-base/:id
    */
   fastify.put('/api/v1/knowledge-base/:id', async (request, reply) => {

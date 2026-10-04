@@ -23,12 +23,18 @@ export const QuickCallModal: React.FC<QuickCallModalProps> = ({
 
   useEffect(() => {
     if (isOpen) {
+      const savedDefault = localStorage.getItem('aibotcall_default_agent_id');
       api
         .get('/api/v1/agents')
         .then((res) => {
-          setAgents(res.data.agents || []);
-          if (res.data.agents?.length > 0 && !agentId) {
-            setAgentId(res.data.agents[0].id);
+          const list = res.data.agents || [];
+          setAgents(list);
+          if (list.length > 0) {
+            if (savedDefault && list.some((a: any) => a.id === savedDefault)) {
+              setAgentId(savedDefault);
+            } else if (!agentId) {
+              setAgentId(list[0].id);
+            }
           }
         })
         .catch(() => {
