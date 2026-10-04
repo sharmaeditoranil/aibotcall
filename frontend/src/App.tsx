@@ -22,6 +22,10 @@ import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { PricingPage } from './pages/PricingPage';
 import { LandingPage } from './pages/LandingPage';
+import { TermsPage } from './pages/TermsPage';
+import { PrivacyPolicyPage } from './pages/PrivacyPolicyPage';
+import { RefundPolicyPage } from './pages/RefundPolicyPage';
+import { ContactUsPage } from './pages/ContactUsPage';
 import { CallDetailModal } from './components/CallDetailModal';
 import { QuickCallModal } from './components/QuickCallModal';
 import { User, Call, WebhookDelivery } from './types';
@@ -32,7 +36,20 @@ export const App: React.FC = () => {
   const [token, setToken] = useState<string | null>(localStorage.getItem('aibotcall_token'));
   const [activeTab, setActiveTab] = useState<string>('overview');
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [authView, setAuthView] = useState<'landing' | 'pricing' | 'login' | 'register'>('landing');
+
+  const getInitialAuthView = (): 'landing' | 'pricing' | 'login' | 'register' | 'terms' | 'privacy' | 'refund' | 'contact' => {
+    const path = window.location.pathname.toLowerCase();
+    if (path.includes('terms')) return 'terms';
+    if (path.includes('privacy')) return 'privacy';
+    if (path.includes('refund') || path.includes('cancellation')) return 'refund';
+    if (path.includes('contact')) return 'contact';
+    if (path.includes('pricing')) return 'pricing';
+    if (path.includes('login')) return 'login';
+    if (path.includes('register')) return 'register';
+    return 'landing';
+  };
+
+  const [authView, setAuthView] = useState<'landing' | 'pricing' | 'login' | 'register' | 'terms' | 'privacy' | 'refund' | 'contact'>(getInitialAuthView);
   const [selectedPlan, setSelectedPlan] = useState<string>('FREE_TRIAL');
 
   // Modals
@@ -104,8 +121,25 @@ export const App: React.FC = () => {
             setAuthView(mode);
           }}
           onOpenPricing={() => setAuthView('pricing')}
+          onOpenPolicy={(policy) => setAuthView(policy)}
         />
       );
+    }
+
+    if (authView === 'terms') {
+      return <TermsPage onBackToHome={() => setAuthView('landing')} />;
+    }
+
+    if (authView === 'privacy') {
+      return <PrivacyPolicyPage onBackToHome={() => setAuthView('landing')} />;
+    }
+
+    if (authView === 'refund') {
+      return <RefundPolicyPage onBackToHome={() => setAuthView('landing')} />;
+    }
+
+    if (authView === 'contact') {
+      return <ContactUsPage onBackToHome={() => setAuthView('landing')} />;
     }
 
     if (authView === 'pricing') {

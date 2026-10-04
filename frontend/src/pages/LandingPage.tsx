@@ -15,15 +15,59 @@ import {
   Clock,
   Send,
   Lock,
+  ExternalLink,
+  CreditCard,
+  Building,
+  Volume2,
+  Check,
+  Star,
 } from 'lucide-react';
 
 interface LandingPageProps {
   onOpenAuth: (mode: 'login' | 'register', plan?: string) => void;
   onOpenPricing: () => void;
+  onOpenPolicy?: (policy: 'terms' | 'privacy' | 'refund' | 'contact') => void;
 }
 
-export const LandingPage: React.FC<LandingPageProps> = ({ onOpenAuth, onOpenPricing }) => {
+export const LandingPage: React.FC<LandingPageProps> = ({
+  onOpenAuth,
+  onOpenPricing,
+  onOpenPolicy,
+}) => {
   const [isPlayingDemo, setIsPlayingDemo] = useState(false);
+
+  // Play audio sample demo in browser
+  const togglePlayAudio = () => {
+    if (typeof window === 'undefined') return;
+    if (!('speechSynthesis' in window)) {
+      setIsPlayingDemo(!isPlayingDemo);
+      return;
+    }
+
+    if (isPlayingDemo) {
+      window.speechSynthesis.cancel();
+      setIsPlayingDemo(false);
+    } else {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(
+        "Namaste Aarav ji! Main Skills Academy se Ritu bol rahi hoon. Aapne professional video editing course ke liye enquiry ki thi. Kya aap online live batch seekhna chahte hain ya classroom batch?"
+      );
+      utterance.pitch = 1.05;
+      utterance.rate = 0.98;
+
+      const voices = window.speechSynthesis.getVoices();
+      const hiVoice = voices.find(
+        (v) => v.lang.includes('hi') || v.lang.includes('IN') || v.lang.includes('en-IN')
+      );
+      if (hiVoice) utterance.voice = hiVoice;
+
+      utterance.onend = () => setIsPlayingDemo(false);
+      utterance.onerror = () => setIsPlayingDemo(false);
+
+      setIsPlayingDemo(true);
+      window.speechSynthesis.speak(utterance);
+    }
+  };
 
   const features = [
     {
@@ -34,7 +78,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenAuth, onOpenPric
     {
       icon: Bot,
       title: 'Natural Hindi, Hinglish & English',
-      desc: 'Speaks with human-like conversational warmth, pauses, and empathy. Seamlessly understands customer language switching without awkward IVR robotic delays.',
+      desc: 'Speaks with human-like conversational warmth, pauses, and empathy. Seamlessly understands customer language switching without robotic delays.',
     },
     {
       icon: Radio,
@@ -66,7 +110,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenAuth, onOpenPric
       period: 'instant start',
       minutes: '30 Voice Minutes Included',
       desc: 'Perfect for evaluating real speech quality on your mobile phone.',
-      features: ['30 Free Calling Minutes', '1 AI Voice Agent', '2 Concurrent Lines', 'Full Website Lead Webhook', 'Full Transcripts & AI Summaries'],
+      features: [
+        '30 Free Calling Minutes',
+        '1 AI Voice Agent',
+        '2 Concurrent Lines',
+        'Full Website Lead Webhook',
+        'Full Transcripts & AI Summaries',
+      ],
       buttonText: 'Claim 30 Free Minutes',
       popular: false,
     },
@@ -77,7 +127,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenAuth, onOpenPric
       period: '/month',
       minutes: '300 Minutes Included (₹4.99/extra min)',
       desc: 'Ideal for local coaching academies, clinics, and service agencies.',
-      features: ['300 Voice Minutes Included', '3 AI Voice Agents', '5 Concurrent Lines', 'CRM Outgoing Webhook Sync', 'Basic Voice Broadcast', 'DNC Suppression Registry'],
+      features: [
+        '300 Voice Minutes Included',
+        '3 AI Voice Agents',
+        '5 Concurrent Lines',
+        'CRM Outgoing Webhook Sync',
+        'Basic Voice Broadcast',
+        'DNC Suppression Registry',
+      ],
       buttonText: 'Get Started',
       popular: false,
     },
@@ -88,7 +145,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenAuth, onOpenPric
       period: '/month',
       minutes: '1,000 Minutes Included (₹4.16/extra min)',
       desc: 'For high-growth institutions, real estate firms, and e-commerce.',
-      features: ['1,000 Voice Minutes Included', '10 AI Voice Agents', '10 Concurrent Lines', 'Unlimited Broadcast Campaigns', 'CSV Field Variable Personalization', 'Multi-User Team Workspace', 'Priority Exotel Telecom Trunk'],
+      features: [
+        '1,000 Voice Minutes Included',
+        '10 AI Voice Agents',
+        '10 Concurrent Lines',
+        'Unlimited Broadcast Campaigns',
+        'CSV Field Variable Personalization',
+        'Multi-User Team Workspace',
+        'Priority Exotel Telecom Trunk',
+      ],
       buttonText: 'Start Growth Plan',
       popular: true,
     },
@@ -99,7 +164,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenAuth, onOpenPric
       period: '/month',
       minutes: '3,500 Minutes Included (₹2.99/extra min)',
       desc: 'High-volume call centers and multi-branch educational academies.',
-      features: ['3,500 Voice Minutes Included', 'Unlimited AI Agents', '30 Concurrent Lines', 'Dedicated Virtual Caller IDs (ExoPhones)', 'Custom Telecom Trunks', 'Dedicated Account Engineer', 'Custom LLM Fine-Tuning'],
+      features: [
+        '3,500 Voice Minutes Included',
+        'Unlimited AI Agents',
+        '30 Concurrent Lines',
+        'Dedicated Virtual Caller IDs (ExoPhones)',
+        'Custom Telecom Trunks',
+        'Dedicated Account Engineer',
+        'Custom LLM Fine-Tuning',
+      ],
       buttonText: 'Contact Enterprise',
       popular: false,
     },
@@ -107,8 +180,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenAuth, onOpenPric
 
   return (
     <div className="min-h-screen bg-[#080c14] text-slate-100 font-sans selection:bg-emerald-500 selection:text-white">
-      {/* Navigation */}
-      <header className="sticky top-0 z-50 bg-[#080c14]/80 backdrop-blur-xl border-b border-slate-800/80 px-6 py-4">
+      {/* Navigation Bar */}
+      <header className="sticky top-0 z-50 bg-[#080c14]/85 backdrop-blur-xl border-b border-slate-800/80 px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <div className="h-10 w-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 p-0.5 flex items-center justify-center shadow-lg shadow-emerald-500/20">
@@ -129,19 +202,19 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenAuth, onOpenPric
           <div className="flex items-center space-x-3">
             <button
               onClick={onOpenPricing}
-              className="py-2 px-3 rounded-xl text-xs font-semibold text-slate-300 hover:text-emerald-400 transition-colors"
+              className="py-2 px-3 rounded-xl text-xs font-semibold text-slate-300 hover:text-emerald-400 transition-colors cursor-pointer"
             >
               Pricing & Plans
             </button>
             <button
               onClick={() => onOpenAuth('login')}
-              className="py-2 px-4 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors"
+              className="py-2 px-4 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors cursor-pointer"
             >
               Sign In
             </button>
             <button
               onClick={() => onOpenAuth('register')}
-              className="py-2 px-4 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-md shadow-emerald-900/30 transition-all active:scale-95"
+              className="py-2 px-4 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-md shadow-emerald-900/30 transition-all active:scale-95 cursor-pointer"
             >
               Start Free Trial (30 Mins)
             </button>
@@ -150,12 +223,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenAuth, onOpenPric
       </header>
 
       {/* Hero Section */}
-      <section className="relative pt-20 pb-24 px-6 overflow-hidden">
+      <section className="relative pt-16 pb-20 px-6 overflow-hidden">
         {/* Glow Spheres */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-emerald-500/15 rounded-full blur-[140px] pointer-events-none" />
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-emerald-500/15 rounded-full blur-[140px] pointer-events-none" />
 
         <div className="max-w-5xl mx-auto text-center relative z-10 space-y-6">
-          <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold tracking-wide">
+          <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold tracking-wide">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Autonomous Two-Way Voice Telephony</span>
           </div>
@@ -168,37 +241,37 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenAuth, onOpenPric
           </h1>
 
           <p className="max-w-2xl mx-auto text-sm sm:text-base text-slate-300 leading-relaxed">
-            AiBotCall automatically calls prospective students and clients as soon as they submit an enquiry. It speaks fluent <b>Hindi, Hinglish & English</b>, understands preferences, answers fees and batch questions, and syncs directly to your CRM.
+            AiBotCall automatically calls prospective customers and clients as soon as they submit an enquiry. It speaks fluent <b>Hindi, Hinglish & English</b>, understands preferences, answers fees and batch questions, and syncs directly to your CRM.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
             <button
               onClick={() => onOpenAuth('register')}
-              className="w-full sm:w-auto py-3.5 px-8 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-sm shadow-xl shadow-emerald-900/40 transition-all active:scale-95 flex items-center justify-center space-x-2"
+              className="w-full sm:w-auto py-3.5 px-8 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-sm shadow-xl shadow-emerald-900/40 transition-all active:scale-95 flex items-center justify-center space-x-2 cursor-pointer"
             >
               <span>Get Started Free (30 Mins)</span>
               <ArrowRight className="w-4 h-4" />
             </button>
             <button
               onClick={() => onOpenAuth('login')}
-              className="w-full sm:w-auto py-3.5 px-6 rounded-2xl bg-slate-900/80 hover:bg-slate-800 text-slate-200 border border-slate-800 text-sm font-semibold transition-colors"
+              className="w-full sm:w-auto py-3.5 px-6 rounded-2xl bg-slate-900/80 hover:bg-slate-800 text-slate-200 border border-slate-800 text-sm font-semibold transition-colors cursor-pointer"
             >
               Live Admin Demo
             </button>
           </div>
 
           {/* Interactive Audio Preview Widget */}
-          <div className="mt-12 max-w-xl mx-auto p-4 rounded-2xl bg-slate-900/80 border border-emerald-500/30 glass-card shadow-2xl flex items-center justify-between">
+          <div className="mt-8 max-w-xl mx-auto p-4 rounded-2xl bg-slate-900/80 border border-emerald-500/30 glass-card shadow-2xl flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <button
-                onClick={() => setIsPlayingDemo(!isPlayingDemo)}
-                className="w-12 h-12 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center shadow-lg shadow-emerald-500/30 hover:scale-105 transition-transform"
+                onClick={togglePlayAudio}
+                className="w-12 h-12 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center shadow-lg shadow-emerald-500/30 hover:scale-105 transition-transform cursor-pointer"
               >
                 {isPlayingDemo ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 ml-0.5" />}
               </button>
               <div className="text-left">
-                <p className="text-xs font-bold text-white">Agent Ritu (Quick Art Academy)</p>
-                <p className="text-[11px] text-emerald-400">Hindi/Hinglish Course Counselor Demo</p>
+                <p className="text-xs font-bold text-white">Agent Ritu (Admissions Counselor)</p>
+                <p className="text-[11px] text-emerald-400">Click to listen: Hindi/Hinglish Voice Demo</p>
               </div>
             </div>
 
@@ -206,13 +279,83 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenAuth, onOpenPric
               {[14, 28, 18, 32, 22, 12, 26, 30, 16, 20, 24, 18].map((h, idx) => (
                 <div
                   key={idx}
-                  className={`w-1 rounded-full bg-emerald-400 ${isPlayingDemo ? 'wave-bar' : ''}`}
+                  className={`w-1 rounded-full bg-emerald-400 ${isPlayingDemo ? 'animate-pulse' : ''}`}
                   style={{ height: `${h}px` }}
                 />
               ))}
             </div>
 
-            <span className="text-[11px] font-mono text-slate-400">0:14</span>
+            <span className="text-[11px] font-mono text-slate-400">{isPlayingDemo ? 'Playing...' : '0:14'}</span>
+          </div>
+        </div>
+
+        {/* Hero Visual Dashboard Showcase */}
+        <div className="mt-14 max-w-6xl mx-auto relative">
+          <div className="rounded-3xl border border-emerald-500/30 shadow-2xl shadow-emerald-950/50 overflow-hidden bg-slate-950 group relative">
+            <div className="absolute top-4 left-6 z-20 flex items-center space-x-2">
+              <span className="w-3 h-3 rounded-full bg-red-500/80" />
+              <span className="w-3 h-3 rounded-full bg-amber-500/80" />
+              <span className="w-3 h-3 rounded-full bg-emerald-500/80" />
+              <span className="ml-3 text-xs font-mono text-slate-400">app.aibotflow.in — AI Voice Calling Engine</span>
+            </div>
+            <img
+              src="/assets/dashboard_mockup.jpg"
+              alt="AiBotCall AI Voice Calling Dashboard Interface"
+              className="w-full object-cover rounded-3xl opacity-95 group-hover:opacity-100 transition-opacity pt-6"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Live Phone Interaction Split Showcase */}
+      <section className="py-20 px-6 border-t border-slate-800/80 bg-gradient-to-b from-slate-950/60 to-[#080c14]">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="space-y-6">
+            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold uppercase tracking-wider">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Next-Gen Telephony Experience</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
+              Human-Like Speech Quality with <br />
+              <span className="text-emerald-400">Sub-500ms Conversational Latency</span>
+            </h2>
+            <p className="text-sm text-slate-300 leading-relaxed">
+              No robotic IVR menus, no awkward pauses. AiBotCall listens to customer responses with real-time barge-in, adapts to Hindi, English, and local dialects, and automatically collects customer preferences.
+            </p>
+
+            <div className="space-y-3 pt-2">
+              <div className="flex items-start space-x-3 p-3.5 rounded-2xl bg-[#0f172a]/70 border border-slate-800">
+                <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+                <div>
+                  <h4 className="text-xs font-bold text-white">Full Indian PSTN Carrier Integration</h4>
+                  <p className="text-[11px] text-slate-400">Direct carrier trunk routing via Exotel for crystal clear audio with zero packet drops.</p>
+                </div>
+              </div>
+              <div className="flex items-start space-x-3 p-3.5 rounded-2xl bg-[#0f172a]/70 border border-slate-800">
+                <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+                <div>
+                  <h4 className="text-xs font-bold text-white">Strict Topic Adherence & Anti-Hallucination</h4>
+                  <p className="text-[11px] text-slate-400">AI answers exclusively from your verified business Knowledge Base and rejects off-topic chit-chat.</p>
+                </div>
+              </div>
+              <div className="flex items-start space-x-3 p-3.5 rounded-2xl bg-[#0f172a]/70 border border-slate-800">
+                <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+                <div>
+                  <h4 className="text-xs font-bold text-white">Automatic Call Recording & Instant CRM Webhooks</h4>
+                  <p className="text-[11px] text-slate-400">Delivers transcripts and lead dispositions to WhatsApp CRM and custom APIs in under 1 second.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="relative">
+            <div className="rounded-3xl border border-emerald-500/30 shadow-2xl shadow-emerald-950/40 overflow-hidden bg-slate-950">
+              <img
+                src="/assets/phone_mockup.jpg"
+                alt="AI Voice Calling Realtime Phone Interaction"
+                className="w-full object-cover rounded-3xl"
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -297,7 +440,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenAuth, onOpenPric
 
                 <button
                   onClick={() => onOpenAuth('register', tier.id)}
-                  className={`mt-8 w-full py-2.5 px-4 rounded-xl text-xs font-bold transition-all ${
+                  className={`mt-8 w-full py-2.5 px-4 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                     tier.popular
                       ? 'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 text-white shadow-lg shadow-emerald-900/30'
                       : 'bg-slate-800 hover:bg-slate-700 text-white'
@@ -311,14 +454,136 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onOpenAuth, onOpenPric
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-12 px-6 border-t border-slate-800/80 bg-slate-950 text-slate-500 text-xs">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center space-x-2 text-slate-300 font-semibold">
-            <PhoneCall className="w-4 h-4 text-emerald-400" />
-            <span>AiBotCall — AI Voice Calls & Smart Automation</span>
+      {/* Razorpay Verified Merchant & Security Compliance Strip */}
+      <section className="py-8 px-6 border-t border-slate-800/80 bg-slate-950/80">
+        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-6 text-xs text-slate-400">
+          <div className="flex items-center space-x-3">
+            <div className="p-2 rounded-xl bg-blue-500/10 border border-blue-500/30 text-blue-400 font-bold">
+              <CreditCard className="w-4 h-4" />
+            </div>
+            <div>
+              <span className="font-bold text-white block">Razorpay Verified Merchant</span>
+              <span className="text-[11px] text-slate-500">Secure Indian Cards, UPI, NetBanking & Wallets</span>
+            </div>
           </div>
-          <p>© {new Date().getFullYear()} AiBotCall Technologies. All rights reserved.</p>
+
+          <div className="flex items-center space-x-3">
+            <div className="p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-bold">
+              <ShieldCheck className="w-4 h-4" />
+            </div>
+            <div>
+              <span className="font-bold text-white block">TRAI & TCCCPR Compliant</span>
+              <span className="text-[11px] text-slate-500">Built-in DNC Suppression & Verified Caller ID</span>
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-3">
+            <div className="p-2 rounded-xl bg-purple-500/10 border border-purple-500/30 text-purple-400 font-bold">
+              <Lock className="w-4 h-4" />
+            </div>
+            <div>
+              <span className="font-bold text-white block">256-Bit Bank-Grade Encryption</span>
+              <span className="text-[11px] text-slate-500">TLS 1.3 Audio Streams & Encrypted Transcripts</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer with Compliance Links */}
+      <footer className="py-14 px-6 border-t border-slate-800/80 bg-slate-950 text-slate-400 text-xs">
+        <div className="max-w-7xl mx-auto space-y-10">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div className="space-y-3">
+              <div className="flex items-center space-x-2 text-white font-bold text-base">
+                <PhoneCall className="w-5 h-5 text-emerald-400" />
+                <span>AiBotCall</span>
+              </div>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Autonomous two-way AI conversational phone calling platform for admissions, sales qualification, and broadcast campaigns.
+              </p>
+              <p className="text-[11px] text-slate-500">
+                Operated by AiBotCall Technologies Pvt. Ltd.
+              </p>
+            </div>
+
+            <div>
+              <h4 className="font-bold text-white uppercase tracking-wider text-xs mb-3">Product</h4>
+              <ul className="space-y-2 text-xs">
+                <li>
+                  <button onClick={onOpenPricing} className="hover:text-emerald-400 cursor-pointer">
+                    Pricing & Calling Plans
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => onOpenAuth('register')} className="hover:text-emerald-400 cursor-pointer">
+                    Free Trial (30 Mins)
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => onOpenAuth('login')} className="hover:text-emerald-400 cursor-pointer">
+                    Dashboard Login
+                  </button>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-bold text-white uppercase tracking-wider text-xs mb-3">
+                Legal & Razorpay Compliance
+              </h4>
+              <ul className="space-y-2 text-xs">
+                <li>
+                  <button
+                    onClick={() => onOpenPolicy?.('terms')}
+                    className="hover:text-emerald-400 cursor-pointer"
+                  >
+                    Terms & Conditions
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => onOpenPolicy?.('privacy')}
+                    className="hover:text-emerald-400 cursor-pointer"
+                  >
+                    Privacy Policy
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => onOpenPolicy?.('refund')}
+                    className="hover:text-emerald-400 cursor-pointer"
+                  >
+                    Refund & Cancellation Policy
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => onOpenPolicy?.('contact')}
+                    className="hover:text-emerald-400 cursor-pointer"
+                  >
+                    Contact Us & Grievance Redressal
+                  </button>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-bold text-white uppercase tracking-wider text-xs mb-3">Contact Support</h4>
+              <ul className="space-y-1.5 text-xs text-slate-400">
+                <li className="text-white font-medium">Helpline: +91 95138 86363</li>
+                <li>Email: support@aibotflow.in</li>
+                <li>Billing: billing@aibotflow.in</li>
+                <li className="pt-2 text-[11px] text-slate-500">
+                  Andheri West, Mumbai, MH 400053, India
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="pt-8 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-500">
+            <p>© {new Date().getFullYear()} AiBotCall Technologies Pvt. Ltd. All rights reserved.</p>
+            <p>Certified Razorpay Payment Gateway & Telecom Integration</p>
+          </div>
         </div>
       </footer>
     </div>

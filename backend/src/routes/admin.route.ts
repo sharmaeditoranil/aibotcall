@@ -313,4 +313,99 @@ export async function adminRoute(fastify: FastifyInstance) {
       })),
     };
   });
+
+  /**
+   * GET /api/v1/admin/gateway/razorpay
+   * Return Razorpay settings for Super Admin
+   */
+  fastify.get('/api/v1/admin/gateway/razorpay', async () => {
+    const { config } = await import('../config/index.js');
+    const isLive = config.razorpay.keyId?.startsWith('rzp_live');
+    const isConfigured = Boolean(
+      config.razorpay.keyId &&
+      config.razorpay.keySecret &&
+      !config.razorpay.keyId.includes('DefaultKey')
+    );
+
+    return {
+      key_id: config.razorpay.keyId || '',
+      key_secret_masked: config.razorpay.keySecret
+        ? config.razorpay.keySecret.slice(0, 4) + '••••••••••••' + config.razorpay.keySecret.slice(-4)
+        : '',
+      webhook_secret: config.razorpay.webhookSecret || '',
+      webhook_url: `${config.appUrl || 'https://voice.aibotflow.in'}/api/v1/billing/razorpay/webhook`,
+      is_live: isLive,
+      is_configured: isConfigured,
+      currency: 'INR',
+    };
+  });
+
+  /**
+   * POST /api/v1/admin/gateway/razorpay
+   * Update Razorpay keys and persist to .env
+   */
+  fastify.post('/api/v1/admin/gateway/razorpay', async (request, reply) => {
+    const RazorpayConfigSchema = z.object({
+      key_id: z.string().min(1),
+      key_secret: z.string().min(1),
+      webhook_secret: z.string().optional().default(''),
+    });
+
+    const parseResult = RazorpayConfigSchema.safeParse(request.body);
+    if (!parseResult.success) {
+      return reply.status(400).send({
+        error: 'Validation failed',
+        details: parseResult.error.flatten(),
+      });
+    }
+
+    const { key_id, key_secret, webhook_secret } = parseResult.data;
+    const { config } = await import('../config/index.js');
+    const fs = await import('fs');
+    const path = await import('path');
+
+    // Update in-memory config
+    config.razorpay.keyId = key_id;
+    config.razorpay.keySecret = key_secret;
+    config.razorpay.webhookSecret = webhook_secret;
+
+    // Persist to .env files if present
+    const envPaths = [
+      path.resolve(process.cwd(), '.env'),
+      path.resolve(process.cwd(), '../.env'),
+    ];
+
+    for (const envPath of envPaths) {
+      if (fs.existsSync(envPath)) {
+        try {
+          let envContent = fs.readFileSync(envPath, 'utf8');
+          const updates: Record<string, string> = {
+            RAZORPAY_KEY_ID: key_id,
+            RAZORPAY_KEY_SECRET: key_secret,
+            RAZORPAY_WEBHOOK_SECRET: webhook_secret,
+          };
+
+          for (const [k, v] of Object.entries(updates)) {
+            const regex = new RegExp(`^${k}=.*$`, 'm');
+            if (regex.test(envContent)) {
+              envContent = envContent.replace(regex, `${k}="${v}"`);
+            } else {
+              envContent += `\n${k}="${v}"`;
+            }
+          }
+          fs.writeFileSync(envPath, envContent, 'utf8');
+        } catch (err: any) {
+          logger.warn({ err: err.message, envPath }, 'Failed updating .env with Razorpay keys');
+        }
+      }
+    }
+
+    logger.info({ key_id, is_live: key_id.startsWith('rzp_live') }, 'Razorpay gateway credentials updated by Super Admin');
+
+    return {
+      success: true,
+      message: 'Razorpay configuration updated successfully',
+      is_live: key_id.startsWith('rzp_live'),
+    };
+  });
 }

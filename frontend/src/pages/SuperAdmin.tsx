@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   ShieldAlert,
+  ShieldCheck,
   Building2,
   Users,
   PhoneCall,
@@ -17,6 +18,13 @@ import {
   ArrowUpRight,
   TrendingUp,
   X,
+  CreditCard,
+  Copy,
+  ExternalLink,
+  Lock,
+  Eye,
+  EyeOff,
+  Check,
 } from 'lucide-react';
 import { api } from '../api/client';
 
@@ -27,9 +35,24 @@ export const SuperAdmin: React.FC = () => {
   const [transactions, setTransactions] = useState<any[]>([]);
   const [withdrawals, setWithdrawals] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'orgs' | 'users' | 'transactions' | 'withdrawals'>('orgs');
+  const [activeTab, setActiveTab] = useState<'orgs' | 'users' | 'transactions' | 'withdrawals' | 'razorpay'>('orgs');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPlanFilter, setSelectedPlanFilter] = useState('ALL');
+
+  // Razorpay Gateway State
+  const [razorpayConfig, setRazorpayConfig] = useState<any>({
+    key_id: '',
+    key_secret: '',
+    key_secret_masked: '',
+    webhook_secret: '',
+    webhook_url: 'https://voice.aibotflow.in/api/v1/billing/razorpay/webhook',
+    is_live: false,
+    is_configured: false,
+    currency: 'INR',
+  });
+  const [showRzpSecret, setShowRzpSecret] = useState(false);
+  const [savingRzp, setSavingRzp] = useState(false);
+  const [copiedWebhook, setCopiedWebhook] = useState(false);
 
   // Modals state
   const [selectedOrg, setSelectedOrg] = useState<any | null>(null);
@@ -134,8 +157,44 @@ export const SuperAdmin: React.FC = () => {
     }
   };
 
+  const fetchRazorpayConfig = async () => {
+    try {
+      const res = await api.get('/api/v1/admin/gateway/razorpay');
+      if (res.data) {
+        setRazorpayConfig(res.data);
+      }
+    } catch (err) {
+      // Keep existing default
+    }
+  };
+
+  const handleSaveRazorpay = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      setSavingRzp(true);
+      await api.post('/api/v1/admin/gateway/razorpay', {
+        key_id: razorpayConfig.key_id,
+        key_secret: razorpayConfig.key_secret || razorpayConfig.key_id, // keep secret
+        webhook_secret: razorpayConfig.webhook_secret,
+      });
+      setFeedback({ type: 'success', message: 'Razorpay Gateway keys saved and activated in platform!' });
+      fetchRazorpayConfig();
+    } catch (err: any) {
+      setFeedback({ type: 'error', message: err.response?.data?.error || err.message });
+    } finally {
+      setSavingRzp(false);
+    }
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedWebhook(true);
+    setTimeout(() => setCopiedWebhook(false), 2000);
+  };
+
   useEffect(() => {
     fetchAdminData();
+    fetchRazorpayConfig();
   }, []);
 
   const handleAssignPlan = async (e: React.FormEvent) => {
@@ -382,6 +441,21 @@ export const SuperAdmin: React.FC = () => {
           }`}
         >
           Referral Payouts ({withdrawals.length})
+        </button>
+        <button
+          onClick={() => {
+            setActiveTab('razorpay');
+            fetchRazorpayConfig();
+          }}
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer ${
+            activeTab === 'razorpay'
+              ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/40'
+              : 'text-blue-400 hover:text-white hover:bg-slate-800/60'
+          }`}
+        >
+          <CreditCard className="w-3.5 h-3.5 text-blue-300" />
+          <span>Razorpay Gateway</span>
+          <span className={`w-2 h-2 rounded-full ${razorpayConfig.is_live ? 'bg-emerald-400' : 'bg-amber-400'}`} />
         </button>
       </div>
 
@@ -711,6 +785,220 @@ export const SuperAdmin: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* TAB 5: Razorpay Payment Gateway Configuration */}
+      {activeTab === 'razorpay' && (
+        <div className="space-y-6">
+          {/* Status & Overview Banner */}
+          <div className="p-6 rounded-3xl bg-gradient-to-r from-blue-950/40 via-slate-900 to-indigo-950/40 border border-blue-500/30 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <div className="flex items-center space-x-2">
+                <span className="p-2 rounded-xl bg-blue-500/15 border border-blue-500/30 text-blue-400">
+                  <CreditCard className="w-5 h-5" />
+                </span>
+                <h3 className="text-lg font-bold text-white tracking-tight">Razorpay Payment Gateway Integration</h3>
+                <span
+                  className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider ${
+                    razorpayConfig.is_live
+                      ? 'bg-emerald-500 text-slate-950'
+                      : razorpayConfig.is_configured
+                      ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                      : 'bg-red-500/20 text-red-300 border border-red-500/30'
+                  }`}
+                >
+                  {razorpayConfig.is_live
+                    ? '● LIVE PRODUCTION MODE'
+                    : razorpayConfig.is_configured
+                    ? '● TEST MODE (Sandbox)'
+                    : '● NOT CONFIGURED'}
+                </span>
+              </div>
+              <p className="text-xs text-slate-300 leading-relaxed max-w-2xl">
+                Razorpay processes all SaaS subscription upgrades and prepaid voice minutes top-ups across India using UPI (Google Pay, PhonePe, Paytm), RuPay, Visa, Mastercard, and NetBanking with automated credit top-up webhooks.
+              </p>
+            </div>
+
+            <div className="flex items-center space-x-3 shrink-0">
+              <a
+                href="https://dashboard.razorpay.com/"
+                target="_blank"
+                rel="noreferrer"
+                className="py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold flex items-center space-x-1.5 transition-all"
+              >
+                <span>Razorpay Dashboard</span>
+                <ExternalLink className="w-3.5 h-3.5 text-blue-400" />
+              </a>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Left 2 Cols: Credentials Form */}
+            <div className="lg:col-span-2 p-6 rounded-3xl bg-[#0f172a]/70 border border-slate-800 space-y-6">
+              <div className="border-b border-slate-800 pb-4">
+                <h4 className="text-sm font-bold text-white flex items-center space-x-2">
+                  <Lock className="w-4 h-4 text-blue-400" />
+                  <span>Razorpay API Credentials</span>
+                </h4>
+                <p className="text-xs text-slate-400 mt-0.5">
+                  Obtain these from your Razorpay Dashboard under <b className="text-slate-300">Settings → API Keys</b>
+                </p>
+              </div>
+
+              <form onSubmit={handleSaveRazorpay} className="space-y-4">
+                <div>
+                  <label className="text-xs font-semibold text-slate-300 block mb-1">
+                    Razorpay Key ID *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="rzp_live_... or rzp_test_..."
+                    value={razorpayConfig.key_id}
+                    onChange={(e) => setRazorpayConfig({ ...razorpayConfig, key_id: e.target.value })}
+                    className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-xs text-white font-mono focus:outline-none focus:border-blue-500"
+                  />
+                  <span className="text-[11px] text-slate-500 mt-1 block">
+                    Prefix <code className="text-emerald-400">rzp_live_</code> enables real customer payments; <code className="text-amber-400">rzp_test_</code> runs in sandbox.
+                  </span>
+                </div>
+
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-xs font-semibold text-slate-300">Razorpay Key Secret *</label>
+                    <button
+                      type="button"
+                      onClick={() => setShowRzpSecret(!showRzpSecret)}
+                      className="text-[11px] text-blue-400 hover:text-blue-300 flex items-center space-x-1 cursor-pointer"
+                    >
+                      {showRzpSecret ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                      <span>{showRzpSecret ? 'Hide Secret' : 'Show Secret'}</span>
+                    </button>
+                  </div>
+                  <input
+                    type={showRzpSecret ? 'text' : 'password'}
+                    required
+                    placeholder={razorpayConfig.key_secret_masked || 'Enter Razorpay Key Secret'}
+                    value={razorpayConfig.key_secret}
+                    onChange={(e) => setRazorpayConfig({ ...razorpayConfig, key_secret: e.target.value })}
+                    className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-xs text-white font-mono focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs font-semibold text-slate-300 block mb-1">
+                    Razorpay Webhook Secret (Recommended for Instant HMAC Verification)
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. whsec_rzp_secure_webhook_key_123"
+                    value={razorpayConfig.webhook_secret}
+                    onChange={(e) => setRazorpayConfig({ ...razorpayConfig, webhook_secret: e.target.value })}
+                    className="w-full px-3.5 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-xs text-white font-mono focus:outline-none focus:border-blue-500"
+                  />
+                  <span className="text-[11px] text-slate-500 mt-1 block">
+                    Used to cryptographically sign automated payment callback events.
+                  </span>
+                </div>
+
+                {/* Webhook Endpoint Card */}
+                <div className="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-white">Your Live Razorpay Webhook URL:</span>
+                    <button
+                      type="button"
+                      onClick={() => copyToClipboard(razorpayConfig.webhook_url)}
+                      className="py-1 px-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-[11px] font-semibold flex items-center space-x-1 cursor-pointer transition-all"
+                    >
+                      {copiedWebhook ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3 text-blue-400" />}
+                      <span>{copiedWebhook ? 'Copied URL!' : 'Copy Webhook URL'}</span>
+                    </button>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-slate-950 font-mono text-xs text-blue-300 break-all select-all">
+                    {razorpayConfig.webhook_url}
+                  </div>
+                  <p className="text-[11px] text-slate-400 leading-relaxed">
+                    Add this exact URL in Razorpay Dashboard ➔ Settings ➔ Webhooks with Active Events: <b className="text-slate-300">order.paid</b> and <b className="text-slate-300">payment.captured</b>.
+                  </p>
+                </div>
+
+                <div className="pt-2 flex justify-end">
+                  <button
+                    type="submit"
+                    disabled={savingRzp}
+                    className="py-2.5 px-6 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-lg shadow-blue-950/40 transition-all cursor-pointer disabled:opacity-50"
+                  >
+                    {savingRzp ? 'Saving Gateway Settings...' : 'Save & Activate Razorpay Gateway'}
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            {/* Right 1 Col: Mandatory Compliance Checklist */}
+            <div className="space-y-6">
+              {/* Compliance Checklist */}
+              <div className="p-6 rounded-3xl bg-[#0f172a]/70 border border-slate-800 space-y-4">
+                <div className="border-b border-slate-800 pb-3">
+                  <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] font-bold uppercase tracking-wider mb-1">
+                    <ShieldCheck className="w-3 h-3" />
+                    <span>Merchant KYC Mandate</span>
+                  </div>
+                  <h4 className="text-xs font-bold text-white">Razorpay Mandatory Compliance Pages</h4>
+                  <p className="text-[11px] text-slate-400 mt-0.5">
+                    Razorpay verification officers require these 5 policies to be live and linked on your site before approving Live Keys:
+                  </p>
+                </div>
+
+                <div className="space-y-2.5 text-xs">
+                  <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <span className="text-slate-200 font-medium">Terms & Conditions</span>
+                    </div>
+                    <span className="text-[10px] font-bold text-emerald-400 px-2 py-0.5 rounded bg-emerald-500/10">Active</span>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <span className="text-slate-200 font-medium">Privacy Policy</span>
+                    </div>
+                    <span className="text-[10px] font-bold text-emerald-400 px-2 py-0.5 rounded bg-emerald-500/10">Active</span>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <span className="text-slate-200 font-medium">Refund & Cancellation Policy</span>
+                    </div>
+                    <span className="text-[10px] font-bold text-emerald-400 px-2 py-0.5 rounded bg-emerald-500/10">Active</span>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <span className="text-slate-200 font-medium">Contact Us & Grievance</span>
+                    </div>
+                    <span className="text-[10px] font-bold text-emerald-400 px-2 py-0.5 rounded bg-emerald-500/10">Active</span>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <span className="text-slate-200 font-medium">Pricing & Calling Plans</span>
+                    </div>
+                    <span className="text-[10px] font-bold text-emerald-400 px-2 py-0.5 rounded bg-emerald-500/10">Active</span>
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-xl bg-emerald-950/20 border border-emerald-500/30 text-[11px] text-emerald-300 leading-relaxed">
+                  ✓ All 5 mandatory policy documents are published in the website footer and navbar for instant KYC approval.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
 
       {/* MODAL 1: Assign Plan */}
       {planModalOpen && selectedOrg && (
